@@ -16,34 +16,68 @@ public class ReplyButtons {
         replyKeyboardMarkup.setSelective(true);
         replyKeyboardMarkup.setResizeKeyboard(true);
         replyKeyboardMarkup.setOneTimeKeyboard(true);
-
         List<KeyboardRow> keyboardRowList = new ArrayList<KeyboardRow>();
         KeyboardRow keyboardFirstRow = new KeyboardRow();
         keyboardFirstRow.add(new KeyboardButton("/Univer"));
         keyboardFirstRow.add(new KeyboardButton("/SKUD"));
-        keyboardFirstRow.add(new KeyboardButton("/code"));
-
+        keyboardFirstRow.add(new KeyboardButton("/Anketa"));
         keyboardRowList.add(keyboardFirstRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
 
 
     }
-    public static void secondButtons(SendMessage sendMessage) {
+    public static void UniverButtons(SendMessage sendMessage) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
         replyKeyboardMarkup.setSelective(true);
         replyKeyboardMarkup.setResizeKeyboard(true);
         replyKeyboardMarkup.setOneTimeKeyboard(true);
-
         List<KeyboardRow> keyboardRowList = new ArrayList<KeyboardRow>();
         KeyboardRow keyboardFirstRow = new KeyboardRow();
-
-        keyboardFirstRow.add(new KeyboardButton(""));
-        keyboardFirstRow.add(new KeyboardButton("/sfdsfgdsfdsfds"));
-
+        if (telegrambotsql.getStatus(sendMessage.getChatId()) == 1){
+            keyboardFirstRow.add(new KeyboardButton(""));
+            keyboardFirstRow.add(new KeyboardButton("/sfdsfgdsfdsfds"));
+        }else{
+            keyboardFirstRow.add(new KeyboardButton("/bla person"));
+            keyboardFirstRow.add(new KeyboardButton("/bla2 person"));
+        }
         keyboardRowList.add(keyboardFirstRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
-
-
+    }
+    public static void SKUDButtons(SendMessage sendMessage) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        sendMessage.setReplyMarkup(replyKeyboardMarkup);
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(true);
+        List<KeyboardRow> keyboardRowList = new ArrayList<KeyboardRow>();
+        KeyboardRow keyboardFirstRow = new KeyboardRow();
+        if (telegrambotsql.getStatus(sendMessage.getChatId()) == 1){
+            keyboardFirstRow.add(new KeyboardButton(""));
+            keyboardFirstRow.add(new KeyboardButton("/sfdsfgdsfdsfds"));
+        }else{
+            keyboardFirstRow.add(new KeyboardButton("/bla person"));
+            keyboardFirstRow.add(new KeyboardButton("/bla2 person"));
+        }
+        keyboardRowList.add(keyboardFirstRow);
+        replyKeyboardMarkup.setKeyboard(keyboardRowList);
+    }
+    public static void CodeButtons(SendMessage sendMessage) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        sendMessage.setReplyMarkup(replyKeyboardMarkup);
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(true);
+        List<KeyboardRow> keyboardRowList = new ArrayList<KeyboardRow>();
+        KeyboardRow keyboardFirstRow = new KeyboardRow();
+        if (telegrambotsql.getStatus(sendMessage.getChatId()) == 1){
+            keyboardFirstRow.add(new KeyboardButton(""));
+            keyboardFirstRow.add(new KeyboardButton("/sfdsfgdsfdsfds"));
+        }else{
+            keyboardFirstRow.add(new KeyboardButton("/bla person"));
+            keyboardFirstRow.add(new KeyboardButton("/bla2 person"));
+        }
+        keyboardRowList.add(keyboardFirstRow);
+        replyKeyboardMarkup.setKeyboard(keyboardRowList);
     }
 }
