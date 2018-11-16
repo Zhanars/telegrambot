@@ -1,3 +1,5 @@
+import buttons.ReplyButtons;
+import buttons.setInline;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
@@ -20,7 +22,9 @@ import java.util.List;
 
 
 public class Bot extends TelegramLongPollingBot {
+//Запуск
 
+String verification = "";
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
         ApiContextInitializer.init();
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
@@ -30,11 +34,12 @@ public class Bot extends TelegramLongPollingBot {
             e.printStackTrace();
         }
     }
-
+//Получает сообщение с чата
     public void onUpdateReceived(Update update) {
         Model model = new Model();
         Message message = update.getMessage();
         CallbackQuery callbackQuery = update.getCallbackQuery();
+System.out.println(message);
         if (message != null && message.hasText()) {
             switch (message.getText()) {
                 case "/help":
@@ -44,30 +49,63 @@ public class Bot extends TelegramLongPollingBot {
                     sendMsg(message, "Что будем настраивать?");
                     break;
                 case "/start":
-                    sendMsg(message, "Привет я бот");
+                    sendMsg(message, "Здравствуйте! Введите иин!");
+                    break;
+                case "/Univer":
+
+                    try {
+                        sendMsg(message, Univer.IIN(telegrambotsql.getIIN(message.getChatId())));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case "/SKUD":
+                    //sendMsg(message, "Введите иин");
+                    try {
+                        sendMsg(message, MSSQL.getCount(telegrambotsql.getIIN(message.getChatId())));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+
                     break;
                 default:
                     try {
-                        sendMsg(message, MSSQL.getCount(message.getText()));
-                    }catch (SQLException e) {
+                        sendMsg(message, telegrambotsql.botsql(message.getText(), message.getChatId(),message.getText().length()));
+                    //sendMsg(message, Univer.IIN((message.getText())));
+                   // sendMsg(message, MSSQL.getCount(message.getText()));
+
+                } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (SQLException e) {
                         e.printStackTrace();
                     } catch (ClassNotFoundException e) {
-                        sendMsg(message, "Такой человек не найден");
-                    } catch (IOException e) {
                         e.printStackTrace();
                     }
+
             }
         } else if (update.hasCallbackQuery()) {
             String btnMsg = update.getCallbackQuery().getData();
             try {
-                answerCallbackQuery(callbackQuery.getId(), Weather.getWeather(btnMsg, model));
+                answerCallbackQuery(callbackQuery.getId(), Univer.IIN(btnMsg));
             } catch (IOException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }
 
     }
-
+// otvet na nazhatie knopki()
     private void answerCallbackQuery(String callbackId, String message) {
         AnswerCallbackQuery answer = new AnswerCallbackQuery();
         answer.setCallbackQueryId(callbackId);
@@ -79,53 +117,22 @@ public class Bot extends TelegramLongPollingBot {
             e.printStackTrace();
         }
     }
-
-    public void sendMsg(Message message, String text) {
+//otvet na soobshenie
+    private void sendMsg(Message message, String text) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
         sendMessage.setChatId(message.getChatId().toString());
         sendMessage.setReplyToMessageId(message.getMessageId());
         sendMessage.setText(text);
         try {
-            setButtons(sendMessage);
-            setInline(sendMessage);
+
+          //  setInline.setInline(sendMessage);
+
+            ReplyButtons.firstButtons(sendMessage);
             execute(sendMessage);
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
-
-
-    }
-
-    private void setInline(SendMessage sendMessage) {
-        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
-        List<InlineKeyboardButton> buttons1 = new ArrayList<>();
-        buttons1.add(new InlineKeyboardButton().setText("Погода в Алматы").setCallbackData("Almaty"));
-        buttons.add(buttons1);
-
-
-        InlineKeyboardMarkup markupKeyboard = new InlineKeyboardMarkup();
-        markupKeyboard.setKeyboard(buttons);
-        sendMessage.setReplyMarkup(markupKeyboard);
-    }
-
-    public void setButtons(SendMessage sendMessage) {
-        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
-        sendMessage.setReplyMarkup(replyKeyboardMarkup);
-        replyKeyboardMarkup.setSelective(true);
-        replyKeyboardMarkup.setResizeKeyboard(true);
-        replyKeyboardMarkup.setOneTimeKeyboard(true);
-
-        List<KeyboardRow> keyboardRowList = new ArrayList<KeyboardRow>();
-        KeyboardRow keyboardFirstRow = new KeyboardRow();
-
-        keyboardFirstRow.add(new KeyboardButton("Алматы"));
-        keyboardFirstRow.add(new KeyboardButton("/setting"));
-
-        keyboardRowList.add(keyboardFirstRow);
-        replyKeyboardMarkup.setKeyboard(keyboardRowList);
-
-
     }
 
     public String getBotUsername() {
