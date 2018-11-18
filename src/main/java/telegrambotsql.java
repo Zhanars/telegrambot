@@ -108,7 +108,7 @@ public class telegrambotsql {
         return countName;
     }
 
-    public static int getStatus(Long ChatId)
+    public static int getStatus(String ChatId)
     {
         int result = 0;
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
