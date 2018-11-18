@@ -8,10 +8,10 @@ public class telegrambotsql {
     private static String userName = "joker";
     private static String password = "Desant3205363";
     private static String connectUrl = "jdbc:sqlserver://185.97.115.127\\RUSGUARD;database=telegrambot";
-    public static String botsql(String message, Long chatid,int gettextlength) throws IOException, ClassNotFoundException, SQLException {
+    public static String registration(String message, Long chatid,int gettextlength) throws IOException, ClassNotFoundException, SQLException {
         String date = new SimpleDateFormat("yyyyMMdd").format(Calendar.getInstance().getTime());
         if (gettextlength == 12) {
-            if(Univer.checkIIN(message)) {
+            if(Univer.checkIINPersonalorStudent(message) > 0) {
                 if(checkChatId(chatid)){
                     try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
                         String SQL = "DELETE from [dbo].[bots] WHERE [chatid]='"+chatid+"' and IIN != '"+message+"'";
@@ -22,9 +22,9 @@ public class telegrambotsql {
                 }
                 if(checkIINandChatid(message, chatid)) {
                     try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
-                        String SQL = "INSERT INTO [dbo].[bots] ([IIN], [chatid], [Createdate], [firstName],[lastName] ) VALUES ('" + message + "',  '" + chatid + "' , '" + date + "', '"+Univer.getname(message)+"', '"+Univer.getlastname(message)+"'  ) ";
+                        String SQL = "INSERT INTO [dbo].[bots] ([IIN], [chatid], [Createdate], [firstName],[lastName], [checkperson]) VALUES ('" + message + "',  '" + chatid + "' , '" + date + "', '"+Univer.getname(message)+"', '"+Univer.getlastname(message)+"' , '"+Univer.checkIINPersonalorStudent(message)+"' ) ";
                         stmt.executeUpdate(SQL);
-                        countName = "ИИН зарегестрирован";
+                        countName = "ИИН подтвержден, теперь вы можете работать с ботом. Для изменения ИИНа введите в новый иин";
                         System.out.println(countName);
                     }
                 }else{
@@ -91,6 +91,38 @@ public class telegrambotsql {
             e.printStackTrace();
         }
         return countName;
+    }
+
+    public static String getName(Long ChatId){
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
+            String SQL = "select firstName, lastName from [dbo].[bots] where chatid = '"+ChatId+"'";
+            System.out.println(SQL);
+            ResultSet rs = stmt.executeQuery(SQL);
+            System.out.println(rs);
+            while (rs.next()) {
+                countName = "Здравствуйте " + rs.getString("firstName") + " " + rs.getString("lastName");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return countName;
+    }
+
+    public static int getStatus(Long ChatId)
+    {
+        int result = 0;
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
+            String SQL = "select checkperson from [dbo].[bots] where chatid = '"+ChatId+"'";
+            System.out.println(SQL);
+            ResultSet rs = stmt.executeQuery(SQL);
+            System.out.println(rs);
+            while (rs.next()) {
+                 result = rs.getInt("checkperson");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
 }

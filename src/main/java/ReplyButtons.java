@@ -1,5 +1,3 @@
-package buttons;
-
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
@@ -36,7 +34,7 @@ public class ReplyButtons {
         KeyboardRow keyboardFirstRow = new KeyboardRow();
         if (telegrambotsql.getStatus(sendMessage.getChatId()) == 1){
             keyboardFirstRow.add(new KeyboardButton(""));
-            keyboardFirstRow.add(new KeyboardButton("/sfdsfgdsfdsfds"));
+            keyboardFirstRow.add(new KeyboardButton("/sfdsfgdsfdssa"));
         }else{
             keyboardFirstRow.add(new KeyboardButton("/bla person"));
             keyboardFirstRow.add(new KeyboardButton("/bla2 person"));
@@ -54,7 +52,7 @@ public class ReplyButtons {
         KeyboardRow keyboardFirstRow = new KeyboardRow();
         if (telegrambotsql.getStatus(sendMessage.getChatId()) == 1){
             keyboardFirstRow.add(new KeyboardButton(""));
-            keyboardFirstRow.add(new KeyboardButton("/sfdsfgdsfdsfds"));
+            keyboardFirstRow.add(new KeyboardButton("/sfdsfgdsdas"));
         }else{
             keyboardFirstRow.add(new KeyboardButton("/bla person"));
             keyboardFirstRow.add(new KeyboardButton("/bla2 person"));
@@ -70,9 +68,10 @@ public class ReplyButtons {
         replyKeyboardMarkup.setOneTimeKeyboard(true);
         List<KeyboardRow> keyboardRowList = new ArrayList<KeyboardRow>();
         KeyboardRow keyboardFirstRow = new KeyboardRow();
+
         if (telegrambotsql.getStatus(sendMessage.getChatId()) == 1){
             keyboardFirstRow.add(new KeyboardButton(""));
-            keyboardFirstRow.add(new KeyboardButton("/sfdsfgdsfdsfds"));
+            keyboardFirstRow.add(new KeyboardButton("/dasdasd"));
         }else{
             keyboardFirstRow.add(new KeyboardButton("/bla person"));
             keyboardFirstRow.add(new KeyboardButton("/bla2 person"));
