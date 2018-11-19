@@ -7,7 +7,7 @@ public class telegrambotsql {
     private static String countName = "";
     private static String userName = "joker";
     private static String password = "Desant3205363";
-    private static String connectUrl = "jdbc:sqlserver://185.97.115.127\\RUSGUARD;database=telegrambot";
+    private static String connectUrl = "jdbc:sqlserver://192.168.5.141\\RUSGUARD;database=telegrambot";
     public static String registration(String message, Long chatid,int gettextlength) throws IOException, ClassNotFoundException, SQLException {
         String date = new SimpleDateFormat("yyyyMMdd").format(Calendar.getInstance().getTime());
         if (gettextlength == 12) {

@@ -11,7 +11,7 @@ public class MSSQL {
             String countName = "";
         String userName = "joker";
         String password = "Desant3205363";
-        String connectUrl = "jdbc:sqlserver://185.97.115.127\\RUSGUARD;database=RusGuardDB";
+        String connectUrl = "jdbc:sqlserver://192.168.5.141\\RUSGUARD;database=RusGuardDB";
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
         System.out.println("gvjhgjkghkj");
         Calendar c = new GregorianCalendar();
