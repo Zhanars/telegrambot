@@ -44,7 +44,7 @@ String verification = "";
                             sendMsg(message, telegrambotsql.getfromBotsName(message.getChatId()),1);
 
                         break;
-                    case "/Univer":
+                    case "ИПК Универ":
 
                         try {
                             sendMsg(message, Univer.IIN(telegrambotsql.getIIN(message.getChatId())),11);
@@ -55,6 +55,20 @@ String verification = "";
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
+                        break;
+                    case "Текущие оценки":
+                        break;
+                    case "Успеваемость":
+                        break;
+                    case "Расписание":
+                        break;
+                    case "Файлы преподователя":
+                        break;
+                    case "Академический календарь":
+                        break;
+                    case "Новости с универа":
+                        break;
+                    case "Новости":
                         break;
                     case "/SKUD":
                         //sendMsg(message, "Введите иин");
@@ -67,6 +81,10 @@ String verification = "";
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
+
+                        break;
+                    case "/back":
+                        sendMsg(message, "Вы вернулись на главную", 1);
 
                         break;
                     default:

@@ -16,7 +16,7 @@ public class ReplyButtons {
         replyKeyboardMarkup.setOneTimeKeyboard(true);
         List<KeyboardRow> keyboardRowList = new ArrayList<KeyboardRow>();
         KeyboardRow keyboardFirstRow = new KeyboardRow();
-        keyboardFirstRow.add(new KeyboardButton("/Univer"));
+        keyboardFirstRow.add(new KeyboardButton("ИПК Универ"));
         keyboardFirstRow.add(new KeyboardButton("/SKUD"));
         keyboardFirstRow.add(new KeyboardButton("/Anketa"));
         keyboardRowList.add(keyboardFirstRow);
@@ -33,9 +33,15 @@ public class ReplyButtons {
         List<KeyboardRow> keyboardRowList = new ArrayList<KeyboardRow>();
         KeyboardRow keyboardFirstRow = new KeyboardRow();
         if (telegrambotsql.getStatus(sendMessage.getChatId()) == 1){
-            keyboardFirstRow.add(new KeyboardButton(""));
-            keyboardFirstRow.add(new KeyboardButton("/sfdsfgdsfdssa"));
+            keyboardFirstRow.add(new KeyboardButton("Текущие оценки"));
+            keyboardFirstRow.add(new KeyboardButton("Успеваемость"));
+            keyboardFirstRow.add(new KeyboardButton("Расписание"));
+            keyboardFirstRow.add(new KeyboardButton("Расписание экзаменов"));
+            keyboardFirstRow.add(new KeyboardButton("Файлы преподователя"));
+            keyboardFirstRow.add(new KeyboardButton("Академический календарь"));
+            keyboardFirstRow.add(new KeyboardButton("/back"));
         }else{
+
             keyboardFirstRow.add(new KeyboardButton("/bla person"));
             keyboardFirstRow.add(new KeyboardButton("/bla2 person"));
         }
