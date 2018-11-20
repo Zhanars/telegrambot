@@ -14,8 +14,10 @@ import java.sql.*;
 
 public class Bot extends TelegramLongPollingBot {
 //Запуск
-
-String verification = "";
+ final String smiling_face_with_heart_eyes = new String(Character.toChars(0x1F60D));
+    final String winking_face = new String(Character.toChars(0x1F609));
+    final String bouquet = new String(Character.toChars(0x1F490));
+    final String party_popper = new String(Character.toChars(0x1F389));
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
         ApiContextInitializer.init();
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
@@ -31,11 +33,8 @@ String verification = "";
         Message message = update.getMessage();
         CallbackQuery callbackQuery = update.getCallbackQuery();
         System.out.println(message);
-        final String smiling_face_with_heart_eyes =
-                new String(Character.toChars(0x1F60D));
-        final String winking_face = new String(Character.toChars(0x1F609));
-        final String bouquet = new String(Character.toChars(0x1F490));
-        final String party_popper = new String(Character.toChars(0x1F389));
+
+
 
         if (message != null && message.hasText()) {
             if (telegrambotsql.checkChatId(message.getChatId())) {

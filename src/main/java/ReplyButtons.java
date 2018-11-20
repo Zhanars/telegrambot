@@ -8,6 +8,8 @@ import java.util.List;
 
 public class ReplyButtons {
     //knopka v klave
+
+
     public static void firstButtons(SendMessage sendMessage) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
@@ -16,7 +18,7 @@ public class ReplyButtons {
         replyKeyboardMarkup.setOneTimeKeyboard(true);
         List<KeyboardRow> keyboardRowList = new ArrayList<KeyboardRow>();
         KeyboardRow keyboardFirstRow = new KeyboardRow();
-        keyboardFirstRow.add(new KeyboardButton("%F0%9F%98%81 ИПК Универ"));
+        keyboardFirstRow.add(new KeyboardButton("ИПК Универ"));
         keyboardFirstRow.add(new KeyboardButton("/SKUD"));
         keyboardFirstRow.add(new KeyboardButton("/Anketa"));
         keyboardRowList.add(keyboardFirstRow);
