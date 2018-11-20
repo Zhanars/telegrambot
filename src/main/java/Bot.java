@@ -44,7 +44,7 @@ String verification = "";
                             sendMsg(message, telegrambotsql.getfromBotsName(message.getChatId()),1);
 
                         break;
-                    case "ИПК Универ":
+                    case "%F0%9F%98%81 ИПК Универ":
 
                         try {
                             sendMsg(message, Univer.IIN(telegrambotsql.getIIN(message.getChatId())),11);
@@ -64,7 +64,7 @@ String verification = "";
                         break;
                     case "Файлы преподователя":
                         break;
-                    case "Академический календарь":
+                    case "Календарь":
                         break;
                     case "Новости с универа":
                         break;
