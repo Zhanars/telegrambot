@@ -83,7 +83,7 @@ String verification = "";
                         }
 
                         break;
-                    case "/back":
+                    case "Вернуться на главную":
                         sendMsg(message, "Вы вернулись на главную", 1);
 
                         break;

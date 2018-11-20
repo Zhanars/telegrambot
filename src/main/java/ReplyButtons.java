@@ -33,6 +33,7 @@ public class ReplyButtons {
         List<KeyboardRow> keyboardRowList = new ArrayList<KeyboardRow>();
         KeyboardRow keyboardFirstRow = new KeyboardRow();
         KeyboardRow keyboardSecondRow = new KeyboardRow();
+        KeyboardRow keyboardThirdRow = new KeyboardRow();
         if (telegrambotsql.getStatus(sendMessage.getChatId()) == 1){
             keyboardFirstRow.add(new KeyboardButton("Текущие оценки"));
             keyboardFirstRow.add(new KeyboardButton("Успеваемость"));
@@ -40,7 +41,7 @@ public class ReplyButtons {
             keyboardSecondRow.add(new KeyboardButton("Расписание экзаменов"));
             keyboardSecondRow.add(new KeyboardButton("Файлы преподователя"));
             keyboardSecondRow.add(new KeyboardButton("Академический календарь"));
-            keyboardSecondRow.add(new KeyboardButton("/back"));
+            keyboardThirdRow.add(new KeyboardButton("Вернуться на главную"));
         }else{
 
             keyboardFirstRow.add(new KeyboardButton("/bla person"));
@@ -48,6 +49,7 @@ public class ReplyButtons {
         }
         keyboardRowList.add(keyboardFirstRow);
         keyboardRowList.add(keyboardSecondRow);
+        keyboardRowList.add(keyboardThirdRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
     }
     public static void SKUDButtons(SendMessage sendMessage) {
