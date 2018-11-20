@@ -31,6 +31,12 @@ String verification = "";
         Message message = update.getMessage();
         CallbackQuery callbackQuery = update.getCallbackQuery();
         System.out.println(message);
+        final String smiling_face_with_heart_eyes =
+                new String(Character.toChars(0x1F60D));
+        final String winking_face = new String(Character.toChars(0x1F609));
+        final String bouquet = new String(Character.toChars(0x1F490));
+        final String party_popper = new String(Character.toChars(0x1F389));
+
         if (message != null && message.hasText()) {
             if (telegrambotsql.checkChatId(message.getChatId())) {
                 switch (message.getText()) {
@@ -41,10 +47,10 @@ String verification = "";
                         sendMsg(message, "Что будем настраивать?",1);
                         break;
                     case "/start":
-                            sendMsg(message, telegrambotsql.getfromBotsName(message.getChatId()),1);
+                            sendMsg(message,smiling_face_with_heart_eyes + telegrambotsql.getfromBotsName(message.getChatId()),1);
 
                         break;
-                    case "%F0%9F%98%81 ИПК Универ":
+                    case "ИПК Универ":
 
                         try {
                             sendMsg(message, Univer.IIN(telegrambotsql.getIIN(message.getChatId())),11);
