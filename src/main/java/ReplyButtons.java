@@ -18,10 +18,17 @@ public class ReplyButtons {
         replyKeyboardMarkup.setOneTimeKeyboard(true);
         List<KeyboardRow> keyboardRowList = new ArrayList<KeyboardRow>();
         KeyboardRow keyboardFirstRow = new KeyboardRow();
+        KeyboardRow keyboardSecondRow = new KeyboardRow();
+        KeyboardRow keyboardThirdRow = new KeyboardRow();
         keyboardFirstRow.add(new KeyboardButton("ИПК Универ"));
-        keyboardFirstRow.add(new KeyboardButton("/SKUD"));
-        keyboardFirstRow.add(new KeyboardButton("/Anketa"));
+        keyboardFirstRow.add(new KeyboardButton("Посещение"));
+        keyboardFirstRow.add(new KeyboardButton("Опрос"));
+        keyboardSecondRow.add(new KeyboardButton("Новости"));
+        keyboardSecondRow.add(new KeyboardButton("Статистика"));
+        keyboardThirdRow.add(new KeyboardButton("Обратная связь"));
         keyboardRowList.add(keyboardFirstRow);
+        keyboardRowList.add(keyboardSecondRow);
+        keyboardRowList.add(keyboardThirdRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
 
 
