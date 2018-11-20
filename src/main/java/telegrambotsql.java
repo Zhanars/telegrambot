@@ -22,7 +22,7 @@ public class telegrambotsql {
                 }
                 if(checkIINandChatid(message, chatid)) {
                     try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
-                        String SQL = "INSERT INTO [dbo].[bots] ([IIN], [chatid], [Createdate], [firstName],[lastName], [checkperson]) VALUES ('" + message + "',  '" + chatid + "' , '" + date + "', '"+Univer.getname(message)+"', '"+Univer.getlastname(message)+"' , '"+Univer.checkIINPersonalorStudent(message)+"' ) ";
+                        String SQL = "INSERT INTO [dbo].[bots] ([IIN], [chatid], [Createdate], [firstName],[lastName], [checkperson]) VALUES ('" + message + "',  '" + chatid + "' , '" + date + "', '"+Univer.getStOrPersonName(message)+"' , '"+Univer.checkIINPersonalorStudent(message)+"' ) ";
                         stmt.executeUpdate(SQL);
                         countName = "ИИН подтвержден, теперь вы можете работать с ботом. Для изменения ИИНа введите в новый иин";
                         System.out.println(countName);
@@ -93,7 +93,7 @@ public class telegrambotsql {
         return countName;
     }
 
-    public static String getName(Long ChatId){
+    public static String getfromBotsName(Long ChatId){
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             String SQL = "select firstName, lastName from [dbo].[bots] where chatid = '"+ChatId+"'";
             System.out.println(SQL);

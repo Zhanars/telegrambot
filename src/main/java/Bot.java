@@ -41,7 +41,7 @@ String verification = "";
                         sendMsg(message, "Что будем настраивать?",1);
                         break;
                     case "/start":
-                            sendMsg(message, telegrambotsql.getName(message.getChatId()),1);
+                            sendMsg(message, telegrambotsql.getfromBotsName(message.getChatId()),1);
 
                         break;
                     case "/Univer":
@@ -84,7 +84,7 @@ String verification = "";
                 }
             } else {
 
-                if(message.getText().length() == 12 && Univer.checkIIN(message.getText())) {
+                if(message.getText().length() == 12 && Univer.checkIINPersonalorStudent(message.getText())> 0 ) {
                     try {
                         sendMsg(message, telegrambotsql.registration(message.getText(), message.getChatId(), message.getText().length()),1);
                     } catch (IOException e) {

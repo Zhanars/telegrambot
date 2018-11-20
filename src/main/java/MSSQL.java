@@ -23,7 +23,7 @@ public class MSSQL {
         System.out.println(date1);
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             String SQL = "SELECT [Employee].[SecondName], [Employee].[FirstName], [Employee].[LastName], [Log].[DateTime], [Log].[Message]  FROM [RusGuardDB].[dbo].[Employee]" +
-                    "JOIN [RusGuardDB].[dbo].[Log] ON [Log].[EmployeeID] = [Employee].[_id]  WHERE ([Log].[DateTime] > '"+date1+"' and [Log].[DateTime] < '"+date2+"') and [Employee].[PassportNumber] LIKE '%"+message+"%'";
+                    "JOIN [RusGuardDB].[dbo].[Log] ON [Log].[EmployeeID] = [Employee].[_id]  WHERE ([Log].[DateTime] >= '"+date1+"') and [Employee].[PassportNumber] LIKE '%"+message+"%'";
             System.out.println(SQL);
             ResultSet rs = stmt.executeQuery(SQL);
             System.out.println(rs);

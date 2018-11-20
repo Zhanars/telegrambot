@@ -37,28 +37,22 @@ public class Univer {
 
         return bool;
     }
-    public static String getname(String message) throws IOException, ClassNotFoundException, SQLException {
+    public static String getStOrPersonName(String IIN) throws IOException, ClassNotFoundException, SQLException {
 
         System.out.println("gvjhgjkghkj");
+        String SQL = "";
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
-            String SQL = "SELECT [students_name] FROM [atu_univer].[dbo].[univer_students] WHERE [students_identify_code] LIKE '%"+message+"%' and [student_edu_status_id] = 1 ";
-            ResultSet rs = stmt.executeQuery(SQL);
-            while (rs.next()) {
-                countName = rs.getString("students_name");
+            if(checkIINPersonalorStudent(IIN) == 1) {
+                SQL = "SELECT [students_name] as name,[students_sname] as sname FROM [atu_univer].[dbo].[univer_students] WHERE [students_identify_code] LIKE '%" + IIN + "%' and [student_edu_status_id] = 1  ";
+            }else {
+                SQL = "SELECT [personal_name] as name,[personal_sname] as sname FROM [atu_univer].[dbo].[univer_personal] WHERE [personal_identification_number] LIKE '%" + IIN + "%'";
             }
-            return countName;
-        }
-
-
-    }
-    public static String getlastname(String message) throws IOException, ClassNotFoundException, SQLException {
-
-        System.out.println("gvjhgjkghkj");
-        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
-            String SQL = "SELECT [students_sname] FROM [atu_univer].[dbo].[univer_students] WHERE [students_identify_code] LIKE '%"+message+"%' and [student_edu_status_id] = 1 ";
             ResultSet rs = stmt.executeQuery(SQL);
             while (rs.next()) {
-                countName = rs.getString("students_sname");
+                countName = rs.getString("name");
+                countName = countName + "','";
+                countName = countName + rs.getString("sname");
+
             }
             return countName;
         }
