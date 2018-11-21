@@ -102,10 +102,11 @@ public class Univer {
                         "JOIN  [atu_univer].[dbo].[univer_group] ON [univer_group].[group_id] = [univer_attendance].[group_id]" +
                         "JOIN  [atu_univer].[dbo].[univer_educ_plan_pos] ON [univer_educ_plan_pos].[educ_plan_pos_id] = [univer_group].[educ_plan_pos_id]" +
                         "JOIN  [atu_univer].[dbo].[univer_educ_type] ON [univer_educ_type].[educ_type_id] = [univer_group].[educ_type_id]" +
-                        "JOIN  [atu_univer].[dbo].[univer_controll_type_control_link] ON [univer_controll_type_control_link].[controll_type_id] = [univer_educ_plan_pos].[controll_type_id]" +
-                        "JOIN  [atu_univer].[dbo].[univer_control] ON [univer_control].[control_id] = [univer_controll_type_control_link].[control_id] " +
+                        "JOIN  [atu_univer].[dbo].[univer_academ_calendar_pos] ON [univer_academ_calendar_pos].[educ_plan_id] = [univer_educ_plan_pos].[educ_plan_id] " +
+                        "JOIN  [atu_univer].[dbo].[univer_control] ON [univer_control].[control_id] = [univer_academ_calendar_pos].[control_id] " +
                         "JOIN  [atu_univer].[dbo].[univer_subject] ON [univer_subject].[subject_id] = [univer_educ_plan_pos].[subject_id]" +
-                        "WHERE [univer_students].[students_identify_code] LIKE '%" + IIN + "%' and [univer_students].[student_edu_status_id] = 1 and [univer_attendance].[att_date] > '"+date1+"' and [univer_attendance].[ball] > '0' ";
+                        "WHERE [univer_students].[students_identify_code] LIKE '%" + IIN + "%' and [univer_students].[student_edu_status_id] = 1 and [univer_attendance].[att_date] > '"+date1+"' " +
+                        "and [univer_attendance].[ball] > '0' and [univer_academ_calendar_pos].[acpos_date_end] > '"+date2+"' and [univer_academ_calendar_pos].[acpos_date_start] <  '"+date2+"'";
 
             ResultSet rs1 = stmt.executeQuery(SQL);
 
