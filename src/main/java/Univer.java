@@ -99,7 +99,7 @@ public class Univer {
             if (rs1 != null) {
                 while (rs1.next()) {
                     for (int i = 1; i<= columns1; i++){
-                        countName = countName + rs1.getString(i)+ "\n";
+                        countName = countName + rs1.getString(i)+ "";
                     }
                     countName = countName + "\n";
                 }
