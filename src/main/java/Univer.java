@@ -106,7 +106,7 @@ public class Univer {
                         "JOIN  [atu_univer].[dbo].[univer_control] ON [univer_control].[control_id] = [univer_academ_calendar_pos].[control_id] " +
                         "JOIN  [atu_univer].[dbo].[univer_subject] ON [univer_subject].[subject_id] = [univer_educ_plan_pos].[subject_id]" +
                         "WHERE [univer_students].[students_identify_code] LIKE '%" + IIN + "%' and [univer_students].[student_edu_status_id] = 1 and [univer_attendance].[att_date] > '"+date1+"' " +
-                        "and [univer_attendance].[ball] > '0' and [univer_academ_calendar_pos].[acpos_date_end] > '"+date2+"' and [univer_academ_calendar_pos].[acpos_date_start] <  '"+date2+"'";
+                        "and [univer_attendance].[ball] > '0' and [univer_academ_calendar_pos].[acpos_date_end] > [univer_attendance].[att_date] and [univer_academ_calendar_pos].[acpos_date_start] <  [univer_attendance].[att_date] ";
 
             ResultSet rs1 = stmt.executeQuery(SQL);
 
