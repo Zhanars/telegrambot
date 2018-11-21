@@ -62,6 +62,15 @@ public class Bot extends TelegramLongPollingBot {
                         }
                         break;
                     case "Текущие оценки":
+                        try {
+                            sendMsg(message, Univer.getAttendance(telegrambotsql.getIIN(message.getChatId())),11);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
                         break;
                     case "Успеваемость":
                         break;
