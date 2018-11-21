@@ -94,13 +94,17 @@ public class Univer {
                         "JOIN  [atu_univer].[dbo].[univer_subject] ON [univer_subject].[subject_id] = [univer_educ_plan_pos].[subject_id]" +
                         "WHERE [univer_students].[students_identify_code] LIKE '%" + IIN + "%' and [univer_students].[student_edu_status_id] = 1  ";
 
-            ResultSet rs = stmt.executeQuery(SQL);
-            while (rs.next()) {
-                countName = rs.getString("[univer_subject].[subject_name_ru]");
-                countName = countName + "    ";
-                countName = countName + rs.getString("[univer_attendance].[att_date]");
-                countName = countName + "    ";
-                countName = countName + rs.getString("[univer_attendance].[ball]") + "/n";
+            ResultSet rs1 = stmt.executeQuery(SQL);
+            int columns1 = rs1.getMetaData().getColumnCount();
+            if (rs1 != null) {
+                while (rs1.next()) {
+                    for (int i = 1; i<= columns1; i++){
+                        countName = countName + rs1.getString(i)+ "\n";
+                    }
+                    countName = countName + "\n";
+                }
+            }else {
+                countName = "123456";
             }
 
             return countName;
