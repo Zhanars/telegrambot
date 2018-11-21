@@ -97,7 +97,7 @@ public class Univer {
         String date1 = new SimpleDateFormat("yyyyMMdd").format(c.getTime());
 
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
-                SQL = "SELECT [univer_subject].[subject_name_ru] ,[univer_attendance].[att_date], [univer_attendance].[ball] FROM [atu_univer].[dbo].[univer_students]" +
+                SQL = "SELECT [univer_subject].[subject_name_ru] , Convert(varchar(10),CONVERT(date,[univer_attendance].[att_date],106),103) as name, [univer_attendance].[ball] FROM [atu_univer].[dbo].[univer_students]" +
                         "JOIN  [atu_univer].[dbo].[univer_attendance] ON [univer_attendance].[student_id] = [univer_students].[students_id]" +
                         "JOIN  [atu_univer].[dbo].[univer_group] ON [univer_group].[group_id] = [univer_attendance].[group_id]" +
                         "JOIN  [atu_univer].[dbo].[univer_educ_plan_pos] ON [univer_educ_plan_pos].[educ_plan_pos_id] = [univer_group].[educ_plan_pos_id]" +
@@ -109,7 +109,7 @@ public class Univer {
             if (rs1 != null) {
                 while (rs1.next()) {
                     for (int i = 1; i<= columns1; i++){
-                        countName = countName + rs1.getString(i)+ "";
+                        countName = countName + rs1.getString(i)+ "  ";
                     }
                     countName = countName + "\n";
                 }
