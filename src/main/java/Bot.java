@@ -75,7 +75,7 @@ public class Bot extends TelegramLongPollingBot {
                         break;
                     case "Новости":
                         break;
-                    case "/SKUD":
+                    case "Контроль доступа":
                         //sendMsg(message, "Введите иин");
                         try {
                             sendMsg(message, MSSQL.getCount(telegrambotsql.getIIN(message.getChatId())),21);

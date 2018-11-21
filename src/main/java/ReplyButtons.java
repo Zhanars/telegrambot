@@ -16,10 +16,18 @@ public class ReplyButtons {
         replyKeyboardMarkup.setOneTimeKeyboard(true);
         List<KeyboardRow> keyboardRowList = new ArrayList<KeyboardRow>();
         KeyboardRow keyboardFirstRow = new KeyboardRow();
+        KeyboardRow keyboardSecondRow = new KeyboardRow();
+        KeyboardRow keyboardThirdRow = new KeyboardRow();
         keyboardFirstRow.add(new KeyboardButton("ИПК Универ"));
-        keyboardFirstRow.add(new KeyboardButton("/SKUD"));
-        keyboardFirstRow.add(new KeyboardButton("/Anketa"));
+        keyboardFirstRow.add(new KeyboardButton("Контроль доступа"));
+        keyboardFirstRow.add(new KeyboardButton( "Опросы"));
+        keyboardSecondRow.add(new KeyboardButton("Статистика"));
+        keyboardSecondRow.add(new KeyboardButton("Новости"));
+        keyboardSecondRow.add(new KeyboardButton( "Контакты"));
+        keyboardThirdRow.add(new KeyboardButton( "Блог ректора"));
         keyboardRowList.add(keyboardFirstRow);
+        keyboardRowList.add(keyboardSecondRow);
+        keyboardRowList.add(keyboardThirdRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
     }
     public static void UniverButtons(SendMessage sendMessage) {
@@ -32,14 +40,20 @@ public class ReplyButtons {
         KeyboardRow keyboardFirstRow = new KeyboardRow();
         KeyboardRow keyboardSecondRow = new KeyboardRow();
         KeyboardRow keyboardThirdRow = new KeyboardRow();
+        KeyboardRow keyboardFourthRow = new KeyboardRow();
+        KeyboardRow keyboardFifthRow = new KeyboardRow();
+        KeyboardRow keyboardSixthRow = new KeyboardRow();
         if (telegrambotsql.getStatus(sendMessage.getChatId()) == 1){
             keyboardFirstRow.add(new KeyboardButton("Текущие оценки"));
             keyboardFirstRow.add(new KeyboardButton("Успеваемость"));
-            keyboardFirstRow.add(new KeyboardButton("Расписание"));
-            keyboardSecondRow.add(new KeyboardButton("Расписание экзаменов"));
-            keyboardSecondRow.add(new KeyboardButton("Файлы преподователя"));
-            keyboardSecondRow.add(new KeyboardButton("Календарь"));
-            keyboardThirdRow.add(new KeyboardButton("Вернуться на главную"));
+            keyboardSecondRow.add(new KeyboardButton("Задолжность по оплате"));
+            keyboardThirdRow.add(new KeyboardButton("Расписание занятий"));
+            keyboardThirdRow.add(new KeyboardButton("Расписание экзаменов"));
+            keyboardFourthRow.add(new KeyboardButton("УМКД"));
+            keyboardFourthRow.add(new KeyboardButton("Календарь"));
+            keyboardFifthRow.add(new KeyboardButton("Контакты эдвайзера"));
+            keyboardFifthRow.add(new KeyboardButton("Сброс пароля"));
+            keyboardSixthRow.add(new KeyboardButton("Вернуться на главную"));
         }else{
 
             keyboardFirstRow.add(new KeyboardButton("/bla person"));
@@ -48,6 +62,9 @@ public class ReplyButtons {
         keyboardRowList.add(keyboardFirstRow);
         keyboardRowList.add(keyboardSecondRow);
         keyboardRowList.add(keyboardThirdRow);
+        keyboardRowList.add(keyboardFourthRow);
+        keyboardRowList.add(keyboardFifthRow);
+        keyboardRowList.add(keyboardSixthRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
     }
     public static void SKUDButtons(SendMessage sendMessage) {
