@@ -97,12 +97,13 @@ public class Univer {
         String date1 = new SimpleDateFormat("yyyyMMdd").format(c.getTime());
 
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
-                SQL = "SELECT [univer_subject].[subject_name_ru] , Convert(varchar(10),CONVERT(date,[univer_attendance].[att_date],106),103) as name, [univer_attendance].[ball] FROM [atu_univer].[dbo].[univer_students]" +
+                SQL = "SELECT [univer_subject].[subject_name_ru],[univer_educ_type].[educ_type_name_ru] , Convert(varchar(10),CONVERT(date,[univer_attendance].[att_date],106),103) as name , [univer_attendance].[ball] FROM [atu_univer].[dbo].[univer_students]" +
                         "JOIN  [atu_univer].[dbo].[univer_attendance] ON [univer_attendance].[student_id] = [univer_students].[students_id]" +
                         "JOIN  [atu_univer].[dbo].[univer_group] ON [univer_group].[group_id] = [univer_attendance].[group_id]" +
                         "JOIN  [atu_univer].[dbo].[univer_educ_plan_pos] ON [univer_educ_plan_pos].[educ_plan_pos_id] = [univer_group].[educ_plan_pos_id]" +
+                        "JOIN  [atu_univer].[dbo].[univer_educ_type] ON [univer_educ_type].[educ_type_id] = [univer_group].[educ_type_id]" +
                         "JOIN  [atu_univer].[dbo].[univer_subject] ON [univer_subject].[subject_id] = [univer_educ_plan_pos].[subject_id]" +
-                        "WHERE [univer_students].[students_identify_code] LIKE '%" + IIN + "%' and [univer_students].[student_edu_status_id] = 1 and [univer_attendance].[att_date] > '"+date1+"' ";
+                        "WHERE [univer_students].[students_identify_code] LIKE '%" + IIN + "%' and [univer_students].[student_edu_status_id] = 1 and [univer_attendance].[att_date] > '"+date1+"' and [univer_attendance].[ball] > '0' ";
 
             ResultSet rs1 = stmt.executeQuery(SQL);
             int columns1 = rs1.getMetaData().getColumnCount();
