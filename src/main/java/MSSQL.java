@@ -28,16 +28,19 @@ public class MSSQL {
             ResultSet rs = stmt.executeQuery(SQL);
             System.out.println(rs);
             int columns = rs.getMetaData().getColumnCount();
+            String HTMLString = "<pre>&lt;table&gt;";
             if (rs!=null) {
                 while (rs.next()) {
                     for (int i = 1; i<= columns; i++){
-                    countName = countName + rs.getString(i)+ "\n";
+                        HTMLString = HTMLString + "&lt;tr&gt;&lt;td&gt;"+rs.getString(i)+"&lt;/tr&gt;&lt;/td&gt;";
+                    //countName = countName + rs.getString(i)+ "\n";
                     }
-                    countName = countName + "\n";
+                    //countName = countName + "\n";
                 }
             }else {
                 countName = "123456";
             }
+            HTMLString = "&lt;/table&gt;</pre>";
             System.out.println(rs);
             System.out.println(countName);
             return countName;
