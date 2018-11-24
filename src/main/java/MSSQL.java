@@ -43,7 +43,8 @@ public class MSSQL {
             HTMLString = "&lt;/table&gt;</pre>";
             System.out.println(rs);
             System.out.println(countName);
-            return countName;
+            System.out.println(HTMLString);
+            return HTMLString;
         }
 
 
