@@ -1,3 +1,5 @@
+import com.google.common.html.HtmlEscapers;
+
 import java.io.IOException;
 import java.sql.*;
 import java.text.SimpleDateFormat;
@@ -22,31 +24,36 @@ public class MSSQL {
         String date1 = new SimpleDateFormat("yyyyMMdd").format(c.getTime());
         System.out.println(date1);
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
-            String SQL = "SELECT [Employee].[SecondName], [Employee].[FirstName], [Employee].[LastName], [Log].[DateTime], [Log].[Message]  FROM [RusGuardDB].[dbo].[Employee]" +
+            String SQL = "SELECT" +
+                    "[Log].[DateTime] as dt, [Log].[Message] as mess  FROM [RusGuardDB].[dbo].[Employee]" +
                     "JOIN [RusGuardDB].[dbo].[Log] ON [Log].[EmployeeID] = [Employee].[_id]  WHERE ([Log].[DateTime] >= '"+date1+"') and [Employee].[PassportNumber] LIKE '%"+message+"%'";
             System.out.println(SQL);
             ResultSet rs = stmt.executeQuery(SQL);
             System.out.println(rs);
             int columns = rs.getMetaData().getColumnCount();
-            String HTMLString = "<pre>&lt;table&gt;";
+            String HTMLString = "``` ";
+            HTMLString = HTMLString+"| Дата и время|Вход/Выход|\n" +
+                    " | ----------- | -------- |\n";
             if (rs!=null) {
                 while (rs.next()) {
-                    for (int i = 1; i<= columns; i++){
-                        HTMLString = HTMLString + "&lt;tr&gt;&lt;td&gt;"+rs.getString(i)+"&lt;/tr&gt;&lt;/td&gt;";
-                    //countName = countName + rs.getString(i)+ "\n";
+                    String mess = rs.getString("mess");
+                    while (mess.length()<9){
+                        mess = mess.concat(" ");
                     }
-                    //countName = countName + "\n";
+                    String dt = rs.getString("dt");
+                    dt = dt.substring(5,16);
+                    HTMLString = HTMLString + " | " + dt;
+                    HTMLString = HTMLString + " | " + mess;
+                    HTMLString = HTMLString + "|\n";
                 }
             }else {
                 countName = "123456";
             }
-            HTMLString = "&lt;/table&gt;</pre>";
+            HTMLString = HTMLString +"```";
             System.out.println(rs);
             System.out.println(countName);
             System.out.println(HTMLString);
             return HTMLString;
         }
-
-
     }
 }

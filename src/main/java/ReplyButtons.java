@@ -76,7 +76,7 @@ public class ReplyButtons {
         List<KeyboardRow> keyboardRowList = new ArrayList<KeyboardRow>();
         KeyboardRow keyboardFirstRow = new KeyboardRow();
         if (telegrambotsql.getStatus(sendMessage.getChatId()) == 1){
-            keyboardFirstRow.add(new KeyboardButton(""));
+            keyboardFirstRow.add(new KeyboardButton("fdsafsdfsd"));
             keyboardFirstRow.add(new KeyboardButton("/sfdsfgdsdas"));
         }else{
             keyboardFirstRow.add(new KeyboardButton("/bla person"));
