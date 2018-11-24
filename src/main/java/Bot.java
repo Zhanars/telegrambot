@@ -12,6 +12,9 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import javax.swing.text.html.HTML;
 import java.io.IOException;
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 
 public class Bot extends TelegramLongPollingBot {
@@ -64,8 +67,11 @@ public class Bot extends TelegramLongPollingBot {
                         }
                         break;
                     case "Текущие оценки":
+                        Calendar c = new GregorianCalendar();
+                        c.add(Calendar.DAY_OF_YEAR, -7);
+                        String date1 = new SimpleDateFormat("yyyyMMdd").format(c.getTime());
                         try {
-                            sendMsg(message, Univer.getAttendance(telegrambotsql.getIIN(message.getChatId())),11);
+                            sendMsg(message, Univer.getAttendance(telegrambotsql.getIIN(message.getChatId()),date1),11);
                         } catch (IOException e) {
                             e.printStackTrace();
                         } catch (ClassNotFoundException e) {
