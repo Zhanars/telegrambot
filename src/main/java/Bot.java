@@ -67,15 +67,9 @@ public class Bot extends TelegramLongPollingBot {
                         }
                         break;
                     case "Текущие оценки":
-                        Calendar c = new GregorianCalendar();
-                        c.add(Calendar.DAY_OF_YEAR, -7);
-                        String date1 = new SimpleDateFormat("yyyyMMdd").format(c.getTime());
+
                         try {
-                            sendMsg(message, Univer.getAttendance(telegrambotsql.getIIN(message.getChatId()),date1),11);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (ClassNotFoundException e) {
-                            e.printStackTrace();
+                            sendMsg(message, Univer.getAttendanceforweek(telegrambotsql.getIIN(message.getChatId())),11);
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
@@ -95,7 +89,7 @@ public class Bot extends TelegramLongPollingBot {
                     case "Контроль доступа":
                         //sendMsg(message, "Введите иин");
                         try {
-                            sendMsg(message, MSSQL.getCount(telegrambotsql.getIIN(message.getChatId())),21);
+                            sendMsg(message, RusGuard.getCount(telegrambotsql.getIIN(message.getChatId())),21);
                         } catch (IOException e) {
                             e.printStackTrace();
                         } catch (ClassNotFoundException e) {

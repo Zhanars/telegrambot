@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class MSSQL {
+public class RusGuard {
 
 
     public static String getCount(String message) throws IOException, ClassNotFoundException, SQLException {

@@ -89,53 +89,75 @@ public class Univer {
     public static String getAttendance(String IIN, String date3) throws IOException, ClassNotFoundException, SQLException {
         String SQL = "";
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
-                SQL = ";with cte_tbl as" +
-                        " (SELECT  [univer_subject].[subject_name_ru],[univer_educ_type].[educ_type_name_ru] ," +
-                        " [univer_attendance].[att_date], [univer_attendance].[ball]," +
-                        " max(case" +
-                        " when [univer_academ_calendar_pos].control_id=49 then [univer_academ_calendar_pos].acpos_date_start else 0 end) r1," +
-                        " max(case" +
-                        " when [univer_academ_calendar_pos].control_id=55 then [univer_academ_calendar_pos].acpos_date_end else 0 end) r2," +
-                        " max(case" +
-                        " when [univer_academ_calendar_pos].control_id=56 then [univer_academ_calendar_pos].acpos_date_end else 0 end) r3" +
-                        " FROM [atu_univer].[dbo].[univer_attendance]" +
-                        " JOIN  [atu_univer].[dbo].[univer_students] ON [univer_students].[students_id] =[univer_attendance].[student_id]" +
-                        " JOIN  [atu_univer].[dbo].[univer_group] ON [univer_group].[group_id] = [univer_attendance].[group_id]" +
-                        " JOIN  [atu_univer].[dbo].[univer_educ_plan_pos] ON [univer_educ_plan_pos].[educ_plan_pos_id] = [univer_group].[educ_plan_pos_id]" +
-                        " JOIN  [atu_univer].[dbo].[univer_educ_type] ON [univer_educ_type].[educ_type_id] = [univer_group].[educ_type_id]" +
-                        " JOIN  [atu_univer].[dbo].[univer_academ_calendar_pos] ON [univer_academ_calendar_pos].[educ_plan_id] = [univer_educ_plan_pos].[educ_plan_id]" +
-                        " JOIN  [atu_univer].[dbo].[univer_subject] ON [univer_subject].[subject_id] = [univer_educ_plan_pos].[subject_id]" +
-                        " WHERE [univer_students].[students_identify_code] LIKE '"+IIN+"' and [univer_students].[student_edu_status_id] = 1 " +
-                        " and [univer_academ_calendar_pos].[acpos_semester] = [univer_educ_plan_pos].[educ_plan_pos_semestr]" +
-                        " and  [univer_academ_calendar_pos].[acpos_module] = [univer_educ_plan_pos].[acpos_module] " +
-                        " and [univer_attendance].[ball]>= 0 and [univer_attendance].[att_date] >= '"+date3+"'" +
-                        " GROUP BY [univer_subject].[subject_name_ru],[univer_educ_type].[educ_type_name_ru] " +
-                        " ,[univer_attendance].[att_date],[univer_attendance].[ball] )" +
-                        " select  cte_tbl.[subject_name_ru],cte_tbl.[educ_type_name_ru] ," +
-                        " Convert(varchar(10),CONVERT(date,cte_tbl.[att_date],106),103) as qwer, cte_tbl.[ball] ," +
-                        " max(case" +
-                        " when cte_tbl.r1 < cte_tbl.[att_date] and cte_tbl.r2 >cte_tbl.[att_date] then 'RK1' " +
-                        " when cte_tbl.r2 < cte_tbl.[att_date] and cte_tbl.r3 > cte_tbl.att_date then 'RK2'" +
-                        " end) r4" +
-                        " from cte_tbl" +
-                        " GROUP BY cte_tbl.[subject_name_ru],cte_tbl.[educ_type_name_ru] , " +
-                        " cte_tbl.[att_date], cte_tbl.[ball] " +
-                        " ORder BY cte_tbl.[subject_name_ru]";
-                System.out.println(SQL);
-                ResultSet rs1 = stmt.executeQuery(SQL);
-            int columns1 = rs1.getMetaData().getColumnCount();
-            if (rs1 != null) {
-                while (rs1.next()) {
-                    for (int i = 1; i<= columns1; i++){
-                        countName = countName + rs1.getString(i)+ "  ";
-                    }
-                    countName = countName + "\n";
-                }
-            }else {
-                countName = "123456";
-            }
+            SQL = " ;with cte_tbl as" +
+                    " (SELECT  [univer_subject].[subject_name_ru],[univer_educ_type].[educ_type_name_ru] ," +
+                    " [univer_attendance].[att_date], [univer_attendance].[ball]," +
+                    " max(case" +
+                    " when [univer_academ_calendar_pos].control_id=49 then [univer_academ_calendar_pos].acpos_date_start else 0 end) r1," +
+                    " max(case" +
+                    " when [univer_academ_calendar_pos].control_id=55 then [univer_academ_calendar_pos].acpos_date_end else 0 end) r2," +
+                    " max(case" +
+                    " when [univer_academ_calendar_pos].control_id=56 then [univer_academ_calendar_pos].acpos_date_end else 0 end) r3" +
+                    " FROM [atu_univer].[dbo].[univer_attendance]" +
+                    " JOIN  [atu_univer].[dbo].[univer_students] ON [univer_students].[students_id] =[univer_attendance].[student_id]" +
+                    " JOIN  [atu_univer].[dbo].[univer_group] ON [univer_group].[group_id] = [univer_attendance].[group_id]" +
+                    " JOIN  [atu_univer].[dbo].[univer_educ_plan_pos] ON [univer_educ_plan_pos].[educ_plan_pos_id] = [univer_group].[educ_plan_pos_id]" +
+                    " JOIN  [atu_univer].[dbo].[univer_educ_type] ON [univer_educ_type].[educ_type_id] = [univer_group].[educ_type_id]" +
+                    " JOIN  [atu_univer].[dbo].[univer_academ_calendar_pos] ON [univer_academ_calendar_pos].[educ_plan_id] = [univer_educ_plan_pos].[educ_plan_id]" +
+                    " JOIN  [atu_univer].[dbo].[univer_subject] ON [univer_subject].[subject_id] = [univer_educ_plan_pos].[subject_id]" +
+                    " WHERE [univer_students].[students_identify_code] LIKE '" + IIN + "' and [univer_students].[student_edu_status_id] = 1 " +
+                    " and [univer_academ_calendar_pos].[acpos_semester] = [univer_educ_plan_pos].[educ_plan_pos_semestr]" +
+                    " and  [univer_academ_calendar_pos].[acpos_module] = [univer_educ_plan_pos].[acpos_module] " +
+                    " and [univer_attendance].[ball]>= 0 and [univer_attendance].[att_date] >= '" + date3 + "'" +
+                    " GROUP BY [univer_subject].[subject_name_ru],[univer_educ_type].[educ_type_name_ru] " +
+                    " ,[univer_attendance].[att_date],[univer_attendance].[ball] )" +
+                    " select  cte_tbl.[subject_name_ru],cte_tbl.[educ_type_name_ru] ," +
+                    " Convert(varchar(10),CONVERT(date,cte_tbl.[att_date],106),103) as qwer, cte_tbl.[ball] ," +
+                    " max(case" +
+                    " when cte_tbl.r1 < cte_tbl.[att_date] and cte_tbl.r2 >cte_tbl.[att_date] then 'RK1' " +
+                    " when cte_tbl.r2 < cte_tbl.[att_date] and cte_tbl.r3 > cte_tbl.att_date then 'RK2'" +
+                    " end) r4" +
+                    " from cte_tbl" +
+                    " GROUP BY cte_tbl.[subject_name_ru],cte_tbl.[educ_type_name_ru] , " +
+                    " cte_tbl.[att_date], cte_tbl.[ball] " +
+                    " ORder BY cte_tbl.[subject_name_ru]";
+            System.out.println(SQL);
+            ResultSet rs = stmt.executeQuery(SQL);
         }
-        return countName;
+
+
+        return SQL;
+    }
+
+
+public static String getAttendanceforweek(String IIN) throws SQLException {
+    Calendar c = new GregorianCalendar();
+    c.add(Calendar.DAY_OF_YEAR, -7);
+    String date1 = new SimpleDateFormat("yyyyMMdd").format(c.getTime());
+    ResultSet rs1 = null;
+    try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
+
+        rs1 = stmt.executeQuery(getAttendance(IIN,date1));
+    int columns1 = 0;
+        columns1 = rs1.getMetaData().getColumnCount();
+
+    if (rs1 != null) {
+        while (rs1.next()) {
+            for (int i = 1; i<= columns1; i++){
+                countName = countName + rs1.getString(i)+ "  ";
+            }
+            countName = countName + "\n";
+        }
+    }else {
+        countName = "123456";
+    }
+
+} catch (IOException e) {
+        e.printStackTrace();
+    } catch (ClassNotFoundException e) {
+        e.printStackTrace();
+    }
+    return  countName;
     }
 
     public static String getStartDate(String IIN) throws IOException, ClassNotFoundException, SQLException{
@@ -168,6 +190,9 @@ public class Univer {
         }
         return countName;
     }
+
+
+
 
 
 
