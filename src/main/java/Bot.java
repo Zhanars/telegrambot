@@ -1,4 +1,5 @@
 import com.itextpdf.text.DocumentException;
+import okhttp3.*;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
@@ -11,6 +12,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
 import javax.swing.text.html.HTML;
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.sql.*;
@@ -55,6 +57,7 @@ public class Bot extends TelegramLongPollingBot {
                     case "/start":
                             sendMsg(message,smiling_face_with_heart_eyes + telegrambotsql.getfromBotsName(message.getChatId()),1);
                             pdfMaker.createPdf();
+                            sendFile(message.getChatId(),"iTextHelloWorld.pdf");
                         break;
                     case "ИПК Универ":
 
@@ -183,8 +186,34 @@ public class Bot extends TelegramLongPollingBot {
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
+    }
+    private void sendFile(Long ChatId,String fileSource){
+        String url = "https://api.telegram.org/bot745779362:AAEFky83gaEOP4aB8RjUHq4_BcW7hCYSB68/sendDocument?chat_id="+ChatId;
+        OkHttpClient client = new OkHttpClient();
+        File sourceFile = new File(fileSource);
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("document", sourceFile.getName(), RequestBody.create(MediaType.parse("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"), sourceFile))
+                .build();
 
+        Request request = new Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .build();
 
+        Response response = null;
+        try {
+            response = client.newCall(request).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            String responseString = response.body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        new File(fileSource).delete();
     }
 
     public String getBotUsername() {
