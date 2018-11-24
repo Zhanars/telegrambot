@@ -1,3 +1,4 @@
+import com.itextpdf.text.DocumentException;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
@@ -11,6 +12,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
 import javax.swing.text.html.HTML;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -52,7 +54,7 @@ public class Bot extends TelegramLongPollingBot {
                         break;
                     case "/start":
                             sendMsg(message,smiling_face_with_heart_eyes + telegrambotsql.getfromBotsName(message.getChatId()),1);
-
+                            pdfMaker.createPdf();
                         break;
                     case "ИПК Универ":
 
