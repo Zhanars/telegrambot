@@ -77,9 +77,9 @@ public class ReplyButtons {
         KeyboardRow keyboardFirstRow = new KeyboardRow();
         if (telegrambotsql.getStatus(sendMessage.getChatId()) == 1){
             keyboardFirstRow.add(new KeyboardButton("fdsafsdfsd"));
-            keyboardFirstRow.add(new KeyboardButton("/sfdsfgdsdas"));
+            keyboardFirstRow.add(new KeyboardButton("Вернуться на главную"));
         }else{
-            keyboardFirstRow.add(new KeyboardButton("/bla person"));
+            keyboardFirstRow.add(new KeyboardButton("Вернуться на главную"));
             keyboardFirstRow.add(new KeyboardButton("/bla2 person"));
         }
         keyboardRowList.add(keyboardFirstRow);
