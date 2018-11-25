@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -12,7 +13,7 @@ public class Univer {
 
     public static String IIN(String message) throws IOException, ClassNotFoundException, SQLException {
 
-        System.out.println("gvjhgjkghkj");
+        
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             countName = "";
             String SQL = "SELECT [students_sname], [students_name] FROM [atu_univer].[dbo].[univer_students] WHERE [students_identify_code] LIKE '%" + message + "%' and [student_edu_status_id] = 1";
@@ -45,7 +46,7 @@ public class Univer {
 
     public static String getStOrPersonName(String IIN) throws IOException, ClassNotFoundException, SQLException {
 
-        System.out.println("gvjhgjkghkj");
+
         String SQL = "";
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             if (checkIINPersonalorStudent(IIN) == 1) {
@@ -123,7 +124,7 @@ public class Univer {
                     " GROUP BY cte_tbl.[subject_name_ru],cte_tbl.[educ_type_name_ru] , " +
                     " cte_tbl.[att_date], cte_tbl.[ball], cte_tbl.[subject_id]  " +
                     " ORder BY cte_tbl.[subject_name_ru]";
-            System.out.println(SQL);
+
             ResultSet rs = stmt.executeQuery(SQL);
         }
 
@@ -138,7 +139,9 @@ public class Univer {
         c.add(Calendar.DAY_OF_YEAR, -7);
         String date1 = new SimpleDateFormat("yyyyMMdd").format(c.getTime());
         ResultSet rs1 = null;
+        ArrayList<String> Attendencerk = new ArrayList<String>();
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
+            Attendencerk.addAll(getSumAttendance(IIN));
 
             rs1 = stmt.executeQuery(getAttendance(IIN, date1));
             int columns1 = 0;
@@ -148,17 +151,25 @@ public class Univer {
                 boolean bool=true;
 
 
+
                 while (rs1.next()) {
 
                     if (Integer.parseInt(rs1.getString("r4")) == 55 && bool) {
-                        countName = "Ваш текущий контроль РК1 \n\n";
                         bool = false;
+                        for(String person : Attendencerk){
+                            countName = person + "\n";
+                        }
+                        countName = countName + "\n\n" +"Ваш текущий контроль РК1 \n";
                     }else
                     if (Integer.parseInt(rs1.getString("r4")) == 56 && bool)
                         {
-                        countName = "Ваш текущий контроль РК2 \n\n";
                         bool = false;
+                            for(String person : Attendencerk){
+                                countName = person + "\n";
+                            }
+                            countName = countName + "\n\n" +"Ваш текущий контроль РК2 \n";
                     }
+
                     for (int i = 1; i <= columns1 - 2; i++) {
                         countName = countName + rs1.getString(i) + "  ";
                     }
@@ -207,11 +218,12 @@ public class Univer {
         return countName;
     }
 
-    public static String getSumAttendance(String IIN) throws SQLException  {
+    public static ArrayList<String> getSumAttendance(String IIN) throws SQLException  {
 
         ResultSet rs1 = null;
-        int sumrk1 = -1, sumrk2 = -1;
+        int sumrk1 = -1, sumrk2 = -1, i = 1;
         int subject_name = 0;
+        ArrayList<String> SumAttendance = new ArrayList<String>();
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             rs1 = stmt.executeQuery(getAttendance(IIN, getStartDate(IIN)));
             countName = "";
@@ -221,10 +233,13 @@ public class Univer {
                     if (subject_name != Integer.parseInt(rs1.getString("subject_name"))) {
                         if(sumrk1!=-1) {
                             countName = countName + " РК1: " + Integer.toString(sumrk1) + " РК2: " + Integer.toString(sumrk2) +"\n"+ rs1.getString("subname");
+                            SumAttendance.add(countName);
                         } else {
+
                             countName = rs1.getString("subname");
                         }
                             subject_name = Integer.parseInt(rs1.getString("subject_name"));
+                            i = i +1;
                             sumrk1 = 0;
                             sumrk2 = 0;
                     }
@@ -239,7 +254,8 @@ public class Univer {
                         }
                     }
                 }
-                countName = countName + " РК1: " + Integer.toString(sumrk1) + "  " + Integer.toString(sumrk2);
+                countName = countName + " РК1: " + Integer.toString(sumrk1) + " РК2: " + Integer.toString(sumrk2);
+                SumAttendance.add(countName);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -248,7 +264,7 @@ public class Univer {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        System.out.println(countName);
-        return  countName;
+
+        return  SumAttendance;
     }
 }

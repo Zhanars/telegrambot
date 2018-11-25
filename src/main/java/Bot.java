@@ -80,12 +80,7 @@ public class Bot extends TelegramLongPollingBot {
                         }
                         break;
                     case "Успеваемость":
-                        try {
-                            sendMsg(message, Univer.getSumAttendance(telegrambotsql.getIIN(message.getChatId())),11);
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        }
-                        break;
+
                     case "Расписание":
                         break;
                     case "Файлы преподователя":
