@@ -13,7 +13,7 @@ public class Univer {
 
     public static String IIN(String message) throws IOException, ClassNotFoundException, SQLException {
 
-        
+
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             countName = "";
             String SQL = "SELECT [students_sname], [students_name] FROM [atu_univer].[dbo].[univer_students] WHERE [students_identify_code] LIKE '%" + message + "%' and [student_edu_status_id] = 1";
@@ -156,16 +156,16 @@ public class Univer {
 
                     if (Integer.parseInt(rs1.getString("r4")) == 55 && bool) {
                         bool = false;
-                        for(String person : Attendencerk){
-                            countName = person + "\n";
+                        for(String SumAttendecerk : Attendencerk){
+                            countName = SumAttendecerk + "\n";
                         }
                         countName = countName + "\n\n" +"Ваш текущий контроль РК1 \n";
                     }else
                     if (Integer.parseInt(rs1.getString("r4")) == 56 && bool)
                         {
                         bool = false;
-                            for(String person : Attendencerk){
-                                countName = person + "\n";
+                            for(String SumAttendecerk : Attendencerk){
+                                countName = SumAttendecerk + "\n";
                             }
                             countName = countName + "\n\n" +"Ваш текущий контроль РК2 \n";
                     }
