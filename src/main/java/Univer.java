@@ -149,11 +149,7 @@ public class Univer {
 
             if (rs1 != null) {
                 boolean bool=true;
-
-
-
                 while (rs1.next()) {
-
                     if (Integer.parseInt(rs1.getString("r4")) == 55 && bool) {
                         bool = false;
                         for(String SumAttendecerk : Attendencerk){
@@ -169,7 +165,6 @@ public class Univer {
                             }
                             countName = countName + "\n\n" +"Ваш текущий контроль РК2 \n";
                     }
-
                     for (int i = 1; i <= columns1 - 2; i++) {
                         countName = countName + rs1.getString(i) + "  ";
                     }
