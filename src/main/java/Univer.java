@@ -133,6 +133,7 @@ public class Univer {
 
 
     public static String getAttendanceforweek(String IIN) throws SQLException {
+        countName = "";
         Calendar c = new GregorianCalendar();
         c.add(Calendar.DAY_OF_YEAR, -7);
         String date1 = new SimpleDateFormat("yyyyMMdd").format(c.getTime());
@@ -144,8 +145,21 @@ public class Univer {
             columns1 = rs1.getMetaData().getColumnCount();
 
             if (rs1 != null) {
+                boolean bool=true;
+
+
                 while (rs1.next()) {
-                    for (int i = 1; i <= columns1; i++) {
+
+                    if (Integer.parseInt(rs1.getString("r4")) == 55 && bool) {
+                        countName = "Ваш текущий контроль РК1 \n\n";
+                        bool = false;
+                    }else
+                    if (Integer.parseInt(rs1.getString("r4")) == 56 && bool)
+                        {
+                        countName = "Ваш текущий контроль РК2 \n\n";
+                        bool = false;
+                    }
+                    for (int i = 1; i <= columns1 - 2; i++) {
                         countName = countName + rs1.getString(i) + "  ";
                     }
                     countName = countName + "\n";
