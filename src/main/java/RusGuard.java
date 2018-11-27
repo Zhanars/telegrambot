@@ -13,7 +13,7 @@ public class RusGuard {
             String countName = "";
         String userName = "joker";
         String password = "Desant3205363";
-        String connectUrl = "jdbc:sqlserver://185.97.115.131\\RUSGUARD;database=RusGuardDB";
+        String connectUrl = "jdbc:sqlserver://185.97.115.131\\RUSGUARD:49181;database=RusGuardDB";
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
         System.out.println("gvjhgjkghkj");
         Calendar c = new GregorianCalendar();

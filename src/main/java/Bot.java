@@ -60,16 +60,7 @@ public class Bot extends TelegramLongPollingBot {
                             sendFile(message.getChatId(),"iTextHelloWorld.pdf");
                         break;
                     case "ИПК Универ":
-
-                        try {
-                            sendMsg(message, Univer.IIN(telegrambotsql.getIIN(message.getChatId())),11);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (ClassNotFoundException e) {
-                            e.printStackTrace();
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        }
+                            sendMsg(message, "ИПК Универ",11);
                         break;
                     case "Текущие оценки":
 
