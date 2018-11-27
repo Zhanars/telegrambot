@@ -76,11 +76,11 @@ public class ReplyButtons {
         List<KeyboardRow> keyboardRowList = new ArrayList<KeyboardRow>();
         KeyboardRow keyboardFirstRow = new KeyboardRow();
         if (telegrambotsql.getStatus(sendMessage.getChatId()) == 1){
-            keyboardFirstRow.add(new KeyboardButton("fdsafsdfsd"));
+            keyboardFirstRow.add(new KeyboardButton("Выписка на месяц"));
             keyboardFirstRow.add(new KeyboardButton("Вернуться на главную"));
         }else{
             keyboardFirstRow.add(new KeyboardButton("Вернуться на главную"));
-            keyboardFirstRow.add(new KeyboardButton("/bla2 person"));
+            keyboardFirstRow.add(new KeyboardButton("Выписка на месяц"));
         }
         keyboardRowList.add(keyboardFirstRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowList);

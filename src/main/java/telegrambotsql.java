@@ -64,9 +64,7 @@ public class telegrambotsql {
         Boolean bool = false;
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             String SQL = "select chatid from [dbo].[bots] where chatid = '"+ChatId+"'";
-            System.out.println(SQL);
             ResultSet rs = stmt.executeQuery(SQL);
-            System.out.println(rs);
             if (rs.next()) {
                 bool = true;
             } else {
@@ -81,9 +79,7 @@ public class telegrambotsql {
     public static String getIIN(Long ChatId){
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             String SQL = "select IIN from [dbo].[bots] where chatid = '"+ChatId+"'";
-            System.out.println(SQL);
             ResultSet rs = stmt.executeQuery(SQL);
-            System.out.println(rs);
             while (rs.next()) {
                 countName = rs.getString("IIN");
             }
@@ -96,11 +92,9 @@ public class telegrambotsql {
     public static String getfromBotsName(Long ChatId){
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             String SQL = "select firstName, lastName from [dbo].[bots] where chatid = '"+ChatId+"'";
-            System.out.println(SQL);
             ResultSet rs = stmt.executeQuery(SQL);
-            System.out.println(rs);
             while (rs.next()) {
-                countName = "Здравствуйте " + rs.getString("firstName") + " " + rs.getString("lastName");
+                countName = rs.getString("firstName") + " " + rs.getString("lastName");
             }
         } catch (SQLException e) {
             e.printStackTrace();
