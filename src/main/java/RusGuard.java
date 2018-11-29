@@ -54,7 +54,7 @@ public class RusGuard {
             String SQL = " ;with skudtbl as" +
                     "                     (SELECT CONVERT(date,[Log].[DateTime],106) as dateday, (datepart(weekday, [Log].[DateTime]) + @@datefirst - 2) % 7 + 1 as weekofday," +
                     "                     min (case" +
-                    "                    when [Log].[LogMessageSubType] = 66 then CONVERT(CHAR(12), [Log].[DateTime],114) else '00:00:00' end) r1," +
+                    "                    when [Log].[LogMessageSubType] = 66 then CONVERT(CHAR(12), [Log].[DateTime],114) else '23:23:23' end) r1," +
                     "                    max (case" +
                     "                    when [Log].[LogMessageSubType]= 67 then CONVERT(CHAR(12), [Log].[DateTime],114) else '00:00:00' end) r2," +
                     "                    max (case " +
@@ -81,16 +81,15 @@ public class RusGuard {
                     "                        min (case" +
                     "                    when skudtbl.[LogMessageSubType] = 66 then skudtbl.r1 " +
                     "                    when skudtbl.[LogMessageSubType] = 69 then skudtbl.r3 + skudtbl.[Message]" +
-                    "                    else skudtbl.r2 end) inside," +
+                    "                    else skudtbl.r1 end) inside," +
                     "                    max (case" +
-                    "                    when skudtbl.[LogMessageSubType]= 67 then skudtbl.r2 " +
+                    "                    when skudtbl.[LogMessageSubType]= 67  then skudtbl.r2 " +
                     "                    when skudtbl.[LogMessageSubType] = 69 then skudtbl.r3 + skudtbl.[Message] " +
-                    "                    else skudtbl.r1 end) outside" +
+                    "                    else skudtbl.r2 end) outside" +
                     "                from skudtbl" +
                     "                GROUP BY skudtbl.dateday";
             ResultSet rs1 = stmt.executeQuery(SQL);
             int rowCount = getRowCount(rs1);
-            System.out.println(rowCount);
             int colCount = rs1.getMetaData().getColumnCount();
             System.out.println(colCount);
             rs1.close();
