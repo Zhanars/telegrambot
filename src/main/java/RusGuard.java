@@ -58,7 +58,7 @@ public class RusGuard {
                     "                     (SELECT CONVERT(date,[Log].[DateTime],106) as dateday," +
                     "                     min (case" +
                     "                    when [Log].[LogMessageSubType] = 66 then CONVERT(CHAR(12), [Log].[DateTime],114) else '00:00:00' end) r1," +
-                    "                    max (case\n" +
+                    "                    max (case" +
                     "                    when [Log].[LogMessageSubType]= 67 then CONVERT(CHAR(12), [Log].[DateTime],114) else '00:00:00' end) r2," +
                     " [Log].[DateTime]" +
                     " ,[Log].[LogMessageSubType]" +
