@@ -91,7 +91,6 @@ public class RusGuard {
             ResultSet rs1 = stmt.executeQuery(SQL);
             int rowCount = getRowCount(rs1);
             int colCount = rs1.getMetaData().getColumnCount();
-            System.out.println(colCount);
             rs1.close();
             String[][] result = new String[rowCount+1][colCount];
             ResultSet rs2 = stmt.executeQuery(SQL);
@@ -102,11 +101,7 @@ public class RusGuard {
             int j = 1;
             while (rs2.next()) {
                 for (int i = 0; i < colCount; i++) {
-                    if (rs2.getString(i+1) == "23:23:23"){
-                        System.out.println(rs2.getString(i+1));
-                        result[j][i] = "--:--:--";
-                    } else if (rs2.getString(i+1)  == "00:00:00") {
-                        System.out.println(rs2.getString(i+1));
+                    if (rs2.getString(i+1).equals("23:23:23") || rs2.getString(i+1).equals("00:00:00")){
                         result[j][i] = "--:--:--";
                     } else {
                         result[j][i] = rs2.getString(i + 1);
