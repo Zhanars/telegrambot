@@ -87,20 +87,15 @@ public  class pdfMaker {
             c.add(Calendar.MONTH, -1);
             String date1 = DateFormat.getDateInstance(SimpleDateFormat.LONG, new Locale("ru")).format(c.getTime());
             document1.add(new Paragraph("За период: " + date1 + " - " + date2,f1));
-            document1.add(new Paragraph("========================================================================"));
-            PdfPTable table = new PdfPTable(4);
-            table.addCell(new Paragraph("№",th));
-            table.addCell(new Paragraph("Дата и время",th));
-            table.addCell(new Paragraph("Вход",th));
-            table.addCell(new Paragraph("Выход",th));
+            document1.add(new Paragraph("========================================================================\n\n"));
+            int colCount = Record[0].length;
+            int rowCount = Record.length;
+            PdfPTable table = new PdfPTable(colCount);
             table.setHeaderRows(1);
-            int colCount = Record.length;
-            for (int i=0; i<colCount; i++){
-                int k=i+1;
-                table.addCell(new Paragraph(String.valueOf(k),f1));
-                table.addCell(new Paragraph(Record[i][0],f1));
-                table.addCell(new Paragraph(Record[i][1],f1));
-                table.addCell(new Paragraph(Record[i][2],f1));
+            for (int i=0; i < rowCount; i++){
+                for (int j=0; j < colCount; j++) {
+                    table.addCell(new Paragraph(Record[i][j], f1));
+                }
             }
             document1.add(table);
         } catch (DocumentException e) {

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -48,9 +49,6 @@ public class RusGuard {
     public static String[][] getReportForMonth(String IIN) throws SQLException {
         Calendar c = new GregorianCalendar();
         c.add(Calendar.MONTH, -1);
-        ArrayList<String> firstCol = new ArrayList<>();
-        ArrayList<String> secondCol = new ArrayList<>();
-        ArrayList<String> FirthCol = new ArrayList<>();
         String date1 = new SimpleDateFormat("yyyyMMdd").format(c.getTime());
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             String SQL = " ;with skudtbl as" +
@@ -66,7 +64,7 @@ public class RusGuard {
                     "                 ,[Log].[LogMessageSubType]" +
                     "                FROM [RusGuardDB].[dbo].[Log]" +
                     "                JOIN [RusGuardDB].[dbo].[Employee] ON [Employee].[_id] = [Log].[EmployeeID]" +
-                    "                Where [Employee].[PassportNumber] LIKE '%" + IIN + "%' and [Log].[DateTime] > '"+date1+"' and ([Log].[LogMessageSubType] = 66" +
+                    "                Where [Employee].[PassportNumber] LIKE '%" + IIN + "%' and [Log].[DateTime] > '" + date1 + "' and ([Log].[LogMessageSubType] = 66" +
                     "                or [Log].[LogMessageSubType]=67 or [Log].[LogMessageSubType]=69 )" +
                     "                GROUP BY [Log].[DateTime],[Log].[LogMessageSubType], [Log].[Message] " +
                     " )" +
@@ -91,46 +89,43 @@ public class RusGuard {
                     "                from skudtbl" +
                     "                GROUP BY skudtbl.dateday";
             ResultSet rs1 = stmt.executeQuery(SQL);
-            if (rs1 != null){
-                int rowCount = getRowCount(rs1);
-                System.out.println(rowCount);
-                int colCount = rs1.getMetaData().getColumnCount();
-                System.out.println(colCount);
-                rs1.beforeFirst();
-                while (rs1.next()) {
-                    firstCol.add(rs1.getString("weekofday"));
-                    secondCol.add(rs1.getString("inside"));
-                    FirthCol.add(rs1.getString("outside"));
+            int rowCount = getRowCount(rs1);
+            System.out.println(rowCount);
+            int colCount = rs1.getMetaData().getColumnCount();
+            System.out.println(colCount);
+            rs1.close();
+            String[][] result = new String[rowCount+1][colCount];
+            ResultSet rs2 = stmt.executeQuery(SQL);
+            result[0][0] = "Дата";
+            result[0][1] = "День недели";
+            result[0][2] = "Время входа";
+            result[0][3] = "Время выхода";
+            int j = 1;
+            while (rs2.next()) {
+                for (int i = 0; i < colCount; i++) {
+                    result[j][i] = rs2.getString(i + 1);
                 }
-            }
-            int colCount = firstCol.size();
-            String[][] result = new String[colCount][3];
-            for (int i=0; i<colCount; i++){
-                result[i][0] = firstCol.get(i);
-                result[i][1] = secondCol.get(i);
-                result[i][2] = FirthCol.get(i);
+                j++;
             }
             return result;
         }
 
     }
     private static int getRowCount(ResultSet resultSet) {
+        int count = 0;
         if (resultSet == null) {
             return 0;
         }
         try {
-            resultSet.last();
-            return resultSet.getRow();
+            while (resultSet.next()){
+                count++;
+            }
         } catch (SQLException exp) {
             exp.printStackTrace();
         } finally {
-            try {
-                resultSet.beforeFirst();
-            } catch (SQLException exp) {
-                exp.printStackTrace();
-            }
+
         }
-        return 0;
+        return count;
     }
 
 }
