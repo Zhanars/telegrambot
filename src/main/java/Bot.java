@@ -39,13 +39,9 @@ public class Bot extends TelegramLongPollingBot {
     }
 //Получает сообщение с чата
     public void onUpdateReceived(Update update) {
-        Model model = new Model();
         Message message = update.getMessage();
         CallbackQuery callbackQuery = update.getCallbackQuery();
         System.out.println(message);
-
-
-
         if (message != null && message.hasText()) {
             if (telegrambotsql.checkChatId(message.getChatId())) {
                 switch (message.getText()) {
