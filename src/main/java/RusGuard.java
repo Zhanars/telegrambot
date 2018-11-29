@@ -60,13 +60,16 @@ public class RusGuard {
                     "                    when [Log].[LogMessageSubType] = 66 then CONVERT(CHAR(12), [Log].[DateTime],114) else '00:00:00' end) r1," +
                     "                    max (case" +
                     "                    when [Log].[LogMessageSubType]= 67 then CONVERT(CHAR(12), [Log].[DateTime],114) else '00:00:00' end) r2," +
+                    "                    max (case " +
+                    "                    when  [Log].[LogMessageSubType]= 69 then CONVERT(CHAR(12), [Log].[DateTime],114) else '00:00:00' end) r3," +
                     "                   [Log].[DateTime]" +
+                    "                   ,[Log].[Message]" +
                     "                 ,[Log].[LogMessageSubType]" +
                     "                FROM [RusGuardDB].[dbo].[Log]" +
                     "                JOIN [RusGuardDB].[dbo].[Employee] ON [Employee].[_id] = [Log].[EmployeeID]" +
                     "                Where [Employee].[PassportNumber] LIKE '%" + IIN + "%' and [Log].[DateTime] > '"+date1+"' and ([Log].[LogMessageSubType] = 66" +
-                    "                or [Log].[LogMessageSubType]=67)" +
-                    "                GROUP BY [Log].[DateTime],[Log].[LogMessageSubType]" +
+                    "                or [Log].[LogMessageSubType]=67 or [Log].[LogMessageSubType]=69 )" +
+                    "                GROUP BY [Log].[DateTime],[Log].[LogMessageSubType], [Log].[Message] " +
                     " )" +
                     "                Select DISTINCT skudtbl.dateday as calendardate," +
                     " max(case " +
@@ -79,9 +82,13 @@ public class RusGuard {
                     "                when skudtbl.weekofday = 7 then 'Вс' " +
                     "                    else '' end) weekofday , " +
                     "                        min (case" +
-                    "                    when skudtbl.[LogMessageSubType] = 66 then skudtbl.r1 else skudtbl.r2 end) inside," +
+                    "                    when skudtbl.[LogMessageSubType] = 66 then skudtbl.r1 " +
+                    "                    when skudtbl.[LogMessageSubType] = 69 then skudtbl.r3 + skudtbl.[Message]" +
+                    "                    else skudtbl.r2 end) inside," +
                     "                    max (case" +
-                    "                    when skudtbl.[LogMessageSubType]= 67 then skudtbl.r2 else skudtbl.r1 end) outside" +
+                    "                    when skudtbl.[LogMessageSubType]= 67 then skudtbl.r2 " +
+                    "                    when skudtbl.[LogMessageSubType] = 69 then skudtbl.r3 + skudtbl.[Message] " +
+                    "                    else skudtbl.r1 end) outside" +
                     "                from skudtbl" +
                     "                GROUP BY skudtbl.dateday";
             ResultSet rs1 = stmt.executeQuery(SQL);
