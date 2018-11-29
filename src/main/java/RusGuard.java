@@ -84,7 +84,7 @@ public class RusGuard {
                 }
             }
             int colCount = firstCol.size();
-            String[][] result = new String[colCount][2];
+            String[][] result = new String[colCount][3];
             for (int i=0; i<colCount; i++){
                 result[i][0] = firstCol.get(i);
                 result[i][1] = secondCol.get(i);

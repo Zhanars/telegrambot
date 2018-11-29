@@ -88,7 +88,7 @@ public  class pdfMaker {
             String date1 = DateFormat.getDateInstance(SimpleDateFormat.LONG, new Locale("ru")).format(c.getTime());
             document1.add(new Paragraph("За период: " + date1 + " - " + date2,f1));
             document1.add(new Paragraph("========================================================================"));
-            PdfPTable table = new PdfPTable(3);
+            PdfPTable table = new PdfPTable(4);
             table.addCell(new Paragraph("№",th));
             table.addCell(new Paragraph("Дата и время",th));
             table.addCell(new Paragraph("Вход",th));
