@@ -23,8 +23,6 @@ public class Univer {
             }
             return countName;
         }
-
-
     }
 
     public static Boolean checkIIN(String IIN) {
@@ -40,7 +38,6 @@ public class Univer {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return bool;
     }
 
@@ -59,7 +56,6 @@ public class Univer {
                 countName = rs.getString("name");
                 countName = countName + "','";
                 countName = countName + rs.getString("sname");
-
             }
             return countName;
         }
@@ -84,7 +80,6 @@ public class Univer {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return result;
     }
 
@@ -124,11 +119,8 @@ public class Univer {
                     " GROUP BY cte_tbl.[subject_name_ru],cte_tbl.[educ_type_name_ru] , " +
                     " cte_tbl.[att_date], cte_tbl.[ball], cte_tbl.[subject_id]  " +
                     " ORder BY cte_tbl.[subject_name_ru]";
-
             ResultSet rs = stmt.executeQuery(SQL);
         }
-
-
         return SQL;
     }
 
@@ -142,11 +134,9 @@ public class Univer {
         ArrayList<String> Attendencerk = new ArrayList<String>();
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             Attendencerk.addAll(getSumAttendance(IIN));
-
             rs1 = stmt.executeQuery(getAttendance(IIN, date1));
             int columns1 = 0;
             columns1 = rs1.getMetaData().getColumnCount();
-
             if (rs1 != null) {
                 boolean bool=true;
                 while (rs1.next()) {

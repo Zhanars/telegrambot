@@ -53,7 +53,6 @@ public class RusGuard {
         ArrayList<String> FirthCol = new ArrayList<>();
         String date1 = new SimpleDateFormat("yyyyMMdd").format(c.getTime());
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
-
             String SQL = " ;with skudtbl as" +
                     "                     (SELECT CONVERT(date,[Log].[DateTime],106) as dateday, (datepart(weekday, [Log].[DateTime]) + @@datefirst - 2) % 7 + 1 as weekofday," +
                     "                     min (case" +
@@ -86,6 +85,11 @@ public class RusGuard {
                     "                GROUP BY skudtbl.dateday";
             ResultSet rs1 = stmt.executeQuery(SQL);
             if (rs1 != null){
+                int rowCount = getRowCount(rs1);
+                System.out.println(rowCount);
+                int colCount = rs1.getMetaData().getColumnCount();
+                System.out.println(colCount);
+                rs1.beforeFirst();
                 while (rs1.next()) {
                     firstCol.add(rs1.getString("weekofday"));
                     secondCol.add(rs1.getString("inside"));
@@ -103,4 +107,23 @@ public class RusGuard {
         }
 
     }
+    private static int getRowCount(ResultSet resultSet) {
+        if (resultSet == null) {
+            return 0;
+        }
+        try {
+            resultSet.last();
+            return resultSet.getRow();
+        } catch (SQLException exp) {
+            exp.printStackTrace();
+        } finally {
+            try {
+                resultSet.beforeFirst();
+            } catch (SQLException exp) {
+                exp.printStackTrace();
+            }
+        }
+        return 0;
+    }
+
 }
