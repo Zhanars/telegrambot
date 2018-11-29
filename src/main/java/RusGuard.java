@@ -50,15 +50,37 @@ public class RusGuard {
         c.add(Calendar.MONTH, -1);
         ArrayList<String> firstCol = new ArrayList<>();
         ArrayList<String> secondCol = new ArrayList<>();
+        ArrayList<String> FirthCol = new ArrayList<>();
         String date1 = new SimpleDateFormat("yyyyMMdd").format(c.getTime());
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
-            String SQL = "SELECT [Log].[DateTime] as dt, [Log].[Message] as mess  FROM [RusGuardDB].[dbo].[Employee]" +
-                    "JOIN [RusGuardDB].[dbo].[Log] ON [Log].[EmployeeID] = [Employee].[_id]  WHERE ([Log].[DateTime] >= '" + date1 + "') and [Employee].[PassportNumber] LIKE '%" + IIN + "%'";
+
+            String SQL = ";with skudtbl as" +
+                    "                    (SELECT CONVERT(date,[Log].[DateTime],106) as dateday," +
+                    "            min (case" +
+                    "                    when [Log].[LogMessageSubType] = 66 then CONVERT(CHAR(12), [Log].[DateTime],114) else '00:00:00' end) r1," +
+                    "                    max (case\n" +
+                    "                    when [Log].[LogMessageSubType]= 67 then CONVERT(CHAR(12), [Log].[DateTime],114) else '00:00:00' end) r2," +
+                    "[Log].[DateTime]" +
+                    ",[Log].[LogMessageSubType]" +
+                    "                FROM [RusGuardDB].[dbo].[Log]" +
+                    "                JOIN [RusGuardDB].[dbo].[Employee] ON [Employee].[_id] = [Log].[EmployeeID]" +
+                    "                Where [Employee].[PassportNumber] LIKE '%" + IIN + "%' and [Log].[DateTime] > '"+date1+"' and ([Log].[LogMessageSubType] = 66" +
+                    "                or [Log].[LogMessageSubType]=67)" +
+                    "                GROUP BY [Log].[DateTime],[Log].[LogMessageSubType]" +
+                    ")" +
+                    "                Select DISTINCT skudtbl.dateday as date3," +
+                    "                        min (case" +
+                    "                    when skudtbl.[LogMessageSubType] = 66 then skudtbl.r1 else skudtbl.r2 end) inside," +
+                    "                    max (case" +
+                    "                    when skudtbl.[LogMessageSubType]= 67 then skudtbl.r2 else skudtbl.r1 end) outside" +
+                    "                from skudtbl" +
+                    "                GROUP BY skudtbl.dateday";
             ResultSet rs1 = stmt.executeQuery(SQL);
             if (rs1 != null){
                 while (rs1.next()) {
-                    firstCol.add(rs1.getString("dt"));
-                    secondCol.add(rs1.getString("mess"));
+                    firstCol.add(rs1.getString("date3"));
+                    secondCol.add(rs1.getString("inside"));
+                    FirthCol.add(rs1.getString("outside"));
                 }
             }
             int colCount = firstCol.size();
@@ -66,6 +88,7 @@ public class RusGuard {
             for (int i=0; i<colCount; i++){
                 result[i][0] = firstCol.get(i);
                 result[i][1] = secondCol.get(i);
+                result[i][2] = FirthCol.get(i);
             }
             return result;
         }

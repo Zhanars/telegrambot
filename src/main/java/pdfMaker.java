@@ -91,7 +91,8 @@ public  class pdfMaker {
             PdfPTable table = new PdfPTable(3);
             table.addCell(new Paragraph("№",th));
             table.addCell(new Paragraph("Дата и время",th));
-            table.addCell(new Paragraph("Вход / выход",th));
+            table.addCell(new Paragraph("Вход",th));
+            table.addCell(new Paragraph("Выход",th));
             table.setHeaderRows(1);
             int colCount = Record.length;
             for (int i=0; i<colCount; i++){
@@ -99,6 +100,7 @@ public  class pdfMaker {
                 table.addCell(new Paragraph(String.valueOf(k),f1));
                 table.addCell(new Paragraph(Record[i][0],f1));
                 table.addCell(new Paragraph(Record[i][1],f1));
+                table.addCell(new Paragraph(Record[i][2],f1));
             }
             document1.add(table);
         } catch (DocumentException e) {
