@@ -55,13 +55,13 @@ public class RusGuard {
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
 
             String SQL = " ;with skudtbl as" +
-                    "                     (SELECT CONVERT(date,[Log].[DateTime],106) as dateday," +
+                    "                     (SELECT CONVERT(date,[Log].[DateTime],106) as dateday, (datepart(weekday, [Log].[DateTime]) + @@datefirst - 2) % 7 + 1 as weekofday," +
                     "                     min (case" +
                     "                    when [Log].[LogMessageSubType] = 66 then CONVERT(CHAR(12), [Log].[DateTime],114) else '00:00:00' end) r1," +
                     "                    max (case" +
                     "                    when [Log].[LogMessageSubType]= 67 then CONVERT(CHAR(12), [Log].[DateTime],114) else '00:00:00' end) r2," +
-                    " [Log].[DateTime]" +
-                    " ,[Log].[LogMessageSubType]" +
+                    "                   [Log].[DateTime]" +
+                    "                 ,[Log].[LogMessageSubType]" +
                     "                FROM [RusGuardDB].[dbo].[Log]" +
                     "                JOIN [RusGuardDB].[dbo].[Employee] ON [Employee].[_id] = [Log].[EmployeeID]" +
                     "                Where [Employee].[PassportNumber] LIKE '%" + IIN + "%' and [Log].[DateTime] > '"+date1+"' and ([Log].[LogMessageSubType] = 66" +
@@ -69,6 +69,15 @@ public class RusGuard {
                     "                GROUP BY [Log].[DateTime],[Log].[LogMessageSubType]" +
                     " )" +
                     "                Select DISTINCT skudtbl.dateday as calendardate," +
+                    " max(case " +
+                    "  when skudtbl.weekofday = 1 then 'Пн' " +
+                    "    when skudtbl.weekofday = 2 then 'Вт' " +
+                    "      when skudtbl.weekofday = 3 then 'Ср' " +
+                    "         when skudtbl.weekofday = 4 then 'Чт' " +
+                    "           when skudtbl.weekofday = 5 then 'Пт' " +
+                    "             when skudtbl.weekofday = 6 then 'Сб' " +
+                    "                when skudtbl.weekofday = 7 then 'Вс' " +
+                    "                    else '' end) weekofday , " +
                     "                        min (case" +
                     "                    when skudtbl.[LogMessageSubType] = 66 then skudtbl.r1 else skudtbl.r2 end) inside," +
                     "                    max (case" +
@@ -78,7 +87,7 @@ public class RusGuard {
             ResultSet rs1 = stmt.executeQuery(SQL);
             if (rs1 != null){
                 while (rs1.next()) {
-                    firstCol.add(rs1.getString("calendardate"));
+                    firstCol.add(rs1.getString("weekofday"));
                     secondCol.add(rs1.getString("inside"));
                     FirthCol.add(rs1.getString("outside"));
                 }
