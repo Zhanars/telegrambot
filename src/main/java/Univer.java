@@ -89,13 +89,19 @@ public class Univer {
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             SQL = " ;with cte_tbl as" +
                     " (SELECT  [univer_subject].[subject_name_ru],[univer_subject].[subject_id],[univer_educ_type].[educ_type_name_ru] ," +
-                    " [univer_attendance].[att_date], [univer_attendance].[ball]," +
+                    " [univer_attendance].[att_date], [univer_attendance].[ball], [univer_sheet_result].[date_keep],[univer_sheet_result].[result]," +
                     " max(case" +
                     " when [univer_academ_calendar_pos].control_id=49 then [univer_academ_calendar_pos].acpos_date_start else 0 end) r1," +
                     " max(case" +
                     " when [univer_academ_calendar_pos].control_id=55 then [univer_academ_calendar_pos].acpos_date_end else 0 end) r2," +
                     " max(case" +
-                    " when [univer_academ_calendar_pos].control_id=56 then [univer_academ_calendar_pos].acpos_date_end else 0 end) r3" +
+                    " when [univer_academ_calendar_pos].control_id=56 then [univer_academ_calendar_pos].acpos_date_end else 0 end) r3," +
+                    " max(case" +
+                    " when [univer_academ_calendar_pos].control_id = 57  then acpos_date_start else 0 end) r4," +
+                    " max(case" +
+                    " when [univer_academ_calendar_pos].control_id = 57  then acpos_date_end else 0 end) r5," +
+                    " max(case" +
+                    " when [univer_sheet_result].[result] is null then 0 else [univer_sheet_result].[result] end) r6" +
                     " FROM [atu_univer].[dbo].[univer_attendance]" +
                     " JOIN  [atu_univer].[dbo].[univer_students] ON [univer_students].[students_id] =[univer_attendance].[student_id]" +
                     " JOIN  [atu_univer].[dbo].[univer_group] ON [univer_group].[group_id] = [univer_attendance].[group_id]" +
@@ -103,18 +109,27 @@ public class Univer {
                     " JOIN  [atu_univer].[dbo].[univer_educ_type] ON [univer_educ_type].[educ_type_id] = [univer_group].[educ_type_id]" +
                     " JOIN  [atu_univer].[dbo].[univer_academ_calendar_pos] ON [univer_academ_calendar_pos].[educ_plan_id] = [univer_educ_plan_pos].[educ_plan_id]" +
                     " JOIN  [atu_univer].[dbo].[univer_subject] ON [univer_subject].[subject_id] = [univer_educ_plan_pos].[subject_id]" +
+                    " JOIN [atu_univer].[dbo].[univer_sheet_result] ON [univer_sheet_result].[student_id] = [univer_students].[students_id]" +
                     " WHERE [univer_students].[students_identify_code] LIKE '" + IIN + "' and [univer_students].[student_edu_status_id] = 1 " +
                     " and [univer_academ_calendar_pos].[acpos_semester] = [univer_educ_plan_pos].[educ_plan_pos_semestr]" +
                     " and  [univer_academ_calendar_pos].[acpos_module] = [univer_educ_plan_pos].[acpos_module] " +
                     " and [univer_attendance].[ball]>= 0 and [univer_attendance].[att_date] >= '" + date3 + "'" +
+                    " and [univer_sheet_result].[subject_id] =  [univer_subject].[subject_id]" +
+                    " and [univer_academ_calendar_pos].[acpos_semester] = [univer_sheet_result].[n_seme]" +
                     " GROUP BY [univer_subject].[subject_name_ru],[univer_subject].[subject_id],[univer_educ_type].[educ_type_name_ru] " +
-                    " ,[univer_attendance].[att_date],[univer_attendance].[ball] )" +
+                    " ,[univer_attendance].[att_date],[univer_attendance].[ball], [univer_sheet_result].[date_keep],[univer_sheet_result].[result]" +
+                    ")" +
                     " select  cte_tbl.[subject_name_ru] as subname ,cte_tbl.[educ_type_name_ru] ," +
                     " Convert(varchar(10),CONVERT(date,cte_tbl.[att_date],106),103) as qwer, cte_tbl.[ball] as ball ," +
                     " max(case" +
                     " when cte_tbl.r1 <= cte_tbl.[att_date] and cte_tbl.r2 >= cte_tbl.[att_date] then '55' " +
                     " when cte_tbl.r2 < cte_tbl.[att_date] and cte_tbl.r3 >= cte_tbl.att_date then '56'" +
-                    " end) r4, cte_tbl.[subject_id] as subject_name" +
+                    " end) r4" +
+                    ", cte_tbl.[subject_id] as subject_name," +
+                    "max(case" +
+                    " when cte_tbl.r4 < cte_tbl.[date_keep] and cte_tbl.r5 >= cte_tbl.[date_keep] then cte_tbl.r6" +
+                    " else 0" +
+                    " end) as r8" +
                     " from cte_tbl" +
                     " GROUP BY cte_tbl.[subject_name_ru],cte_tbl.[educ_type_name_ru] , " +
                     " cte_tbl.[att_date], cte_tbl.[ball], cte_tbl.[subject_id]  " +
@@ -155,7 +170,7 @@ public class Univer {
                             }
                             countName = countName + "\n\n" +"Ваш текущий контроль РК2 \n";
                     }
-                    for (int i = 1; i <= columns1 - 2; i++) {
+                    for (int i = 1; i <= columns1 - 3; i++) {
                         countName = countName + rs1.getString(i) + "  ";
                     }
                     countName = countName + "\n";
@@ -212,12 +227,13 @@ public class Univer {
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             rs1 = stmt.executeQuery(getAttendance(IIN, getStartDate(IIN)));
             countName = "";
+            String ekz = "";
 
             if (rs1 != null) {
                 while (rs1.next()) {
                     if (subject_name != Integer.parseInt(rs1.getString("subject_name"))) {
                         if(sumrk1!=-1) {
-                            countName = countName + " РК1: " + Integer.toString(sumrk1) + " РК2: " + Integer.toString(sumrk2) +"\n"+ rs1.getString("subname");
+                            countName = countName + " РК1: " + Integer.toString(sumrk1) + " РК2: " + Integer.toString(sumrk2) + " Экз: " + rs1.getString("r8") +"\n"+ rs1.getString("subname");
                             SumAttendance.add(countName);
                         } else {
 
@@ -238,8 +254,9 @@ public class Univer {
                             sumrk2 = sumrk2 + Integer.parseInt(ball);
                         }
                     }
+                    ekz = rs1.getString("r8");
                 }
-                countName = countName + " РК1: " + Integer.toString(sumrk1) + " РК2: " + Integer.toString(sumrk2);
+                countName = countName + " РК1: " + Integer.toString(sumrk1) + " РК2: " + Integer.toString(sumrk2) + " Экз: " + ekz;
                 SumAttendance.add(countName);
             }
         } catch (SQLException e) {
