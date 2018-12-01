@@ -52,7 +52,6 @@ public class Bot extends TelegramLongPollingBot {
                             sendMsg(message, "ИПК Универ",11);
                         break;
                     case "Текущие оценки":
-
                         try {
                             sendMsg(message, Univer.getAttendanceforweek(telegrambotsql.getIIN(message.getChatId())),11);
                         } catch (SQLException e) {
@@ -60,10 +59,17 @@ public class Bot extends TelegramLongPollingBot {
                         }
                         break;
                     case "Успеваемость":
-
+                        break;
                     case "Расписание":
                         break;
                     case "Файлы преподователя":
+                        break;
+                    case "Опросы":
+                        if (!telegrambotsql.hasAnswerQuiz(message.getChatId(), "Вам нравится наш бот?")) {
+                            sendMsg(message, "Вам нравится наш бот?", 41);
+                        } else {
+                            sendMsg(message, "Вы уже прошли опрос", 1);
+                        }
                         break;
                     case "Календарь":
                         break;
@@ -97,16 +103,13 @@ public class Bot extends TelegramLongPollingBot {
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
-
                         break;
                     case "\uD83D\uDD19 Вернуться на главную":
                         sendMsg(message, "Вы вернулись на главную", 1);
-
                         break;
                     default:
                         try {
                             sendMsg(message, telegrambotsql.registration(message.getText(), message.getChatId(), message.getText().length()),1);
-
                         } catch (IOException e) {
                             e.printStackTrace();
                         } catch (SQLException e) {
@@ -114,10 +117,8 @@ public class Bot extends TelegramLongPollingBot {
                         } catch (ClassNotFoundException e) {
                             e.printStackTrace();
                         }
-
                 }
             } else {
-
                 if(message.getText().length() == 12 && Univer.checkIINPersonalorStudent(message.getText())> 0 ) {
                     try {
                         sendMsg(message, telegrambotsql.registration(message.getText(), message.getChatId(), message.getText().length()),1);
@@ -133,24 +134,16 @@ public class Bot extends TelegramLongPollingBot {
                 }
             }
         } else if (update.hasCallbackQuery()) {
-            String btnMsg = update.getCallbackQuery().getData();
-            try {
-                answerCallbackQuery(callbackQuery.getId(), Univer.IIN(btnMsg));
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
+            answerCallbackQuery(callbackQuery.getId(),telegrambotsql.saveQuiz(callbackQuery.getMessage(),callbackQuery.getData()));
+            sendMsg(callbackQuery.getMessage(), "Спасибо за ответ!\nНам очень важен ваше мнение.", 1);
         }
     }
 
 // otvet na nazhatie knopki()
-    private void answerCallbackQuery(String callbackId, String message) {
+    private void answerCallbackQuery(String callbackId, String text) {
         AnswerCallbackQuery answer = new AnswerCallbackQuery();
         answer.setCallbackQueryId(callbackId);
-        answer.setText(message);
+        answer.setText(text);
         answer.setShowAlert(true);
         try {
             execute(answer);
@@ -167,17 +160,19 @@ public class Bot extends TelegramLongPollingBot {
         sendMessage.setParseMode("Markdown");
         sendMessage.setText(text);
             try {
-
                 if (button == 1){
                     ReplyButtons.firstButtons(sendMessage);
                 } else if (button == 11){
                     ReplyButtons.UniverButtons(sendMessage);
                 } else if (button == 21){
                     ReplyButtons.SKUDButtons(sendMessage);
-                }else if (button == 31){
+                } else if (button == 31){
                     ReplyButtons.CodeButtons(sendMessage);
+                } else if (button == 41){
+                    setInline.setInline(sendMessage);
                 }
                 execute(sendMessage);
+
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }

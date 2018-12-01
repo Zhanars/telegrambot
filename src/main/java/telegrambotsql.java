@@ -1,3 +1,5 @@
+import org.telegram.telegrambots.meta.api.objects.Message;
+
 import java.io.IOException;
 import java.sql.*;
 import java.text.SimpleDateFormat;
@@ -112,5 +114,27 @@ public class telegrambotsql {
         }
         return result;
     }
-
+    public static String saveQuiz(Message message, String answer){
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
+            String SQL = "INSERT INTO [dbo].[quizSample] ([ChatId], [question], [answer]) VALUES ('" + message.getChatId() + "',  '" + message.getText() + "' , '" + answer + "') ";
+            stmt.executeUpdate(SQL);
+            countName = "Спасибо за ответ!\nНам очень важен ваше мнение.";
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return countName;
+    }
+    public static Boolean hasAnswerQuiz(Long ChatId, String text){
+        boolean result = false;
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
+            String SQL = "SELECT * from [dbo].[quizSample] WHERE ChatId ='"+ChatId+"' and question ='"+text+"'";
+            ResultSet rs = stmt.executeQuery(SQL);
+            if (rs.next()) {
+                result = true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }
