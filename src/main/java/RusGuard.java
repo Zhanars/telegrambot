@@ -49,6 +49,7 @@ public class RusGuard {
 
     public static String[][] getReportForMonth(String IIN, int month) throws SQLException {
         Calendar c = new GregorianCalendar();
+        c.add(Calendar.DAY_OF_MONTH,1);
         String date2 = new SimpleDateFormat("yyyyMMdd").format(c.getTime());
         c.set(Calendar.DAY_OF_MONTH, 1);
         c.add(Calendar.MONTH, month);
