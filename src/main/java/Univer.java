@@ -269,23 +269,17 @@ public class Univer {
         return  SumAttendance;
     }
 
-    public static String getTranskript(String IIN){
+    public static String[][] getTranskript(String IIN){
         String SQL = "";
+        String SQL1 = "";
         countName = "";
+        String[][] result1 = new String[1][1];
+        ArrayList<String> GPA = new ArrayList<String>();
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             SQL = " SELECT CONCAT ([univer_students].[students_sname],' ',[univer_students].[students_name],' ',[univer_students].[students_father_name]) as fio" +
                     "   ,[univer_faculty].[faculty_name_ru]" +
                     "  ,[univer_speciality].[speciality_name_ru]" +
                     "   ,[univer_students].[students_curce_number]" +
-                    "      ,[univer_progress].[subject_name_ru]" +
-                    "      ,[univer_progress].[progress_credit]" +
-                    "      ,[univer_mark_type].[mark_type_symbol]" +
-                    " ,[univer_mark_type].[mark_type_gpa]" +
-                    "      ,[univer_progress].[progress_result]" +
-                    "      ,[univer_progress].[progress_result_rk1]" +
-                    "      ,[univer_progress].[progress_result_rk2]" +
-                    "      ,[univer_progress].[n_seme]" +
-                    "      ,[univer_progress].[status]" +
                     "  FROM [atu_univer].[dbo].[univer_progress]" +
                     "  JOIN  [atu_univer].[dbo].[univer_students] ON [univer_students].[students_id] =[univer_progress].[student_id]" +
                     "  JOIN [atu_univer].[dbo].[univer_faculty] ON [univer_faculty].[faculty_id] = [univer_students].faculty_id" +
@@ -293,12 +287,71 @@ public class Univer {
                     "  JOIN [atu_univer].[dbo].[univer_mark_type] ON [univer_mark_type].[mark_type_id] = [univer_progress].mark_type_id" +
                     " WHERE [univer_students].[students_identify_code] LIKE '" + IIN + "' and [univer_progress].[status] = 1";
 
-                  ResultSet rs = stmt.executeQuery(SQL);
+            SQL1 = " SELECT [univer_progress].[subject_name_ru]" +
+                    "      ,[univer_progress].[progress_credit]" +
+                    " ,ROUND(((0.6*(([univer_progress].[progress_result_rk1] + [univer_progress].[progress_result_rk2])/2))+ (([univer_progress].[progress_result])*0.4)),0) as resultekz" +
+                    "      ,[univer_mark_type].[mark_type_symbol]" +
+                    " ,[univer_mark_type].[mark_type_gpa]" +
+                    "      ,[univer_progress].[n_seme]" +
+                    "  FROM [atu_univer].[dbo].[univer_progress]" +
+                    "  JOIN  [atu_univer].[dbo].[univer_students] ON [univer_students].[students_id] =[univer_progress].[student_id]" +
+                    "  JOIN [atu_univer].[dbo].[univer_faculty] ON [univer_faculty].[faculty_id] = [univer_students].faculty_id" +
+                    "  JOIN [atu_univer].[dbo].[univer_speciality] ON [univer_speciality].[speciality_id] = [univer_students].[speciality_id]" +
+                    "  JOIN [atu_univer].[dbo].[univer_mark_type] ON [univer_mark_type].[mark_type_id] = [univer_progress].mark_type_id" +
+                    " WHERE [univer_students].[students_identify_code] LIKE '" + IIN + "' and [univer_progress].[status] = 1";
+            ResultSet rs = stmt.executeQuery(SQL1);
+            int rowCount = getRowCount(rs);
+            int colCount = rs.getMetaData().getColumnCount();
+            rs.close();
+            String[][] result = new String[rowCount + 2][colCount];
+            ResultSet rs1 = stmt.executeQuery(SQL);
+            result[0][0] = rs1.getString("fio");
+            result[0][1] = rs1.getString("[univer_faculty].[faculty_name_ru]");
+            result[0][2] = rs1.getString("[univer_speciality].[speciality_name_ru]");
+            result[0][3] = rs1.getString("[univer_students].[students_curce_number]");
+            result[1][0] = "Дисциплина";
+            result[1][1] = "Кол-во кредитов";
+            result[1][2] = "Оценка";
+            result[1][3] = "Оценка";
+            result[1][4] = "Оценка";
+            result[1][5] = "Семестр";
+            rs1.close();
+            ResultSet rs2 = stmt.executeQuery(SQL1);
+            int i = 2;
+            while (rs2.next()) {
+                for (int j = 0; j < colCount; j++) {
+                    result[i][j] = rs2.getString(i + 1);
+                }
+                i++;
+            }
+            return  result;
 
         } catch (SQLException e) {
             e.printStackTrace();
+            return  result1;
         }
-        return  countName;
 
+
+    }
+
+
+
+
+
+    private static int getRowCount(ResultSet resultSet) {
+        int count = 0;
+        if (resultSet == null) {
+            return 0;
+        }
+        try {
+            while (resultSet.next()){
+                count++;
+            }
+        } catch (SQLException exp) {
+            exp.printStackTrace();
+        } finally {
+
+        }
+        return count;
     }
 }

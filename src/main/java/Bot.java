@@ -60,6 +60,7 @@ public class Bot extends TelegramLongPollingBot {
                         }
                         break;
                     case "Успеваемость":
+                        pdfMaker.createUniverTranskriptPdf(telegrambotsql.getfromBotsName(message.getChatId()),"Транскрипт", Univer.getTranskript(telegrambotsql.getIIN(message.getChatId())));
                         break;
                     case "Расписание":
                         break;
