@@ -84,7 +84,7 @@ public  class pdfMaker {
             document1.add(new Paragraph(Tablename+" "+Username, f1));
             Calendar c = new GregorianCalendar();
             String date2 = DateFormat.getDateInstance(SimpleDateFormat.LONG, new Locale("ru")).format(c.getTime());
-            c.add(Calendar.MONTH, -1);
+            c.set(Calendar.DAY_OF_MONTH, 1);
             String date1 = DateFormat.getDateInstance(SimpleDateFormat.LONG, new Locale("ru")).format(c.getTime());
             document1.add(new Paragraph("За период: " + date1 + " - " + date2,f1));
             document1.add(new Paragraph("========================================================================\n\n"));

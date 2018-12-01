@@ -88,7 +88,6 @@ public class Bot extends TelegramLongPollingBot {
                         sendFile(message.getChatId(),telegrambotsql.getfromBotsName(message.getChatId())+".pdf");
                         break;
                     case "Контроль доступа":
-                        //sendMsg(message, "Введите иин");
                         try {
                             sendMsg(message, RusGuard.getCount(telegrambotsql.getIIN(message.getChatId())),21);
                         } catch (IOException e) {

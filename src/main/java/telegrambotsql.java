@@ -17,7 +17,6 @@ public class telegrambotsql {
                         String SQL = "DELETE from [dbo].[bots] WHERE [chatid]='"+chatid+"' and IIN != '"+message+"'";
                         stmt.executeUpdate(SQL);
                         countName = "ИИН удален";
-                        System.out.println(countName);
                     }
                 }
                 if(checkIINandChatid(message, chatid)) {
@@ -25,7 +24,6 @@ public class telegrambotsql {
                         String SQL = "INSERT INTO [dbo].[bots] ([IIN], [chatid], [Createdate], [firstName],[lastName], [checkperson]) VALUES ('" + message + "',  '" + chatid + "' , '" + date + "', '"+Univer.getStOrPersonName(message)+"' , '"+Univer.checkIINPersonalorStudent(message)+"' ) ";
                         stmt.executeUpdate(SQL);
                         countName = "ИИН подтвержден, теперь вы можете работать с ботом. Для изменения ИИНа введите в новый иин";
-                        System.out.println(countName);
                     }
                 }else{
                     countName = "ИИН используется";
@@ -47,9 +45,7 @@ public class telegrambotsql {
         Boolean bool = false;
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             String SQL = "select IIN from [dbo].[bots] where IIN ='"+IIN+"' and chatid = '"+ChatId+"'";
-            System.out.println(SQL);
             ResultSet rs = stmt.executeQuery(SQL);
-            System.out.println(rs);
             if (rs.next()) {
                 bool = false;
             } else {
@@ -107,9 +103,7 @@ public class telegrambotsql {
         int result = 0;
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             String SQL = "select checkperson from [dbo].[bots] where chatid = '"+ChatId+"'";
-            System.out.println(SQL);
             ResultSet rs = stmt.executeQuery(SQL);
-            System.out.println(rs);
             while (rs.next()) {
                  result = rs.getInt("checkperson");
             }

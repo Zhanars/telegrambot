@@ -1,3 +1,4 @@
+import com.vdurmont.emoji.EmojiParser;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
@@ -53,7 +54,7 @@ public class ReplyButtons {
             keyboardFourthRow.add(new KeyboardButton("Календарь"));
             keyboardFifthRow.add(new KeyboardButton("Контакты эдвайзера"));
             keyboardFifthRow.add(new KeyboardButton("Сброс пароля"));
-            keyboardSixthRow.add(new KeyboardButton("Вернуться на главную"));
+            keyboardSixthRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":back: Вернуться на главную")));
         }else{
 
             keyboardFirstRow.add(new KeyboardButton("/bla person"));
@@ -75,14 +76,12 @@ public class ReplyButtons {
         replyKeyboardMarkup.setOneTimeKeyboard(true);
         List<KeyboardRow> keyboardRowList = new ArrayList<KeyboardRow>();
         KeyboardRow keyboardFirstRow = new KeyboardRow();
-        if (telegrambotsql.getStatus(sendMessage.getChatId()) == 1){
-            keyboardFirstRow.add(new KeyboardButton("Выписка на месяц"));
-            keyboardFirstRow.add(new KeyboardButton("Вернуться на главную"));
-        }else{
-            keyboardFirstRow.add(new KeyboardButton("Вернуться на главную"));
-            keyboardFirstRow.add(new KeyboardButton("Выписка на месяц"));
-        }
+        KeyboardRow keyboardSecondRow = new KeyboardRow();
+        keyboardFirstRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":smile:Выписка на месяц")));
+        keyboardFirstRow.add(new KeyboardButton("Выписка на прошлый месяц"));
+        keyboardSecondRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":back: Вернуться на главную")));
         keyboardRowList.add(keyboardFirstRow);
+        keyboardRowList.add(keyboardSecondRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
     }
     public static void CodeButtons(SendMessage sendMessage) {
