@@ -45,16 +45,8 @@ public class Bot extends TelegramLongPollingBot {
         if (message != null && message.hasText()) {
             if (telegrambotsql.checkChatId(message.getChatId())) {
                 switch (message.getText()) {
-                    case "/help":
-                        sendMsg(message, "Чем могу помочь?",1);
-                        break;
-                    case "/setting":
-                        sendMsg(message, "Что будем настраивать?",1);
-                        break;
                     case "/start":
                             sendMsg(message,smiling_face_with_heart_eyes + "Здравствуйте " +telegrambotsql.getfromBotsName(message.getChatId()),1);
-                            pdfMaker.createPdf(telegrambotsql.getfromBotsName(message.getChatId()),"Контроль прохода", 4);
-                            sendFile(message.getChatId(),"iTextHelloWorld.pdf");
                         break;
                     case "ИПК Универ":
                             sendMsg(message, "ИПК Универ",11);
@@ -79,7 +71,7 @@ public class Bot extends TelegramLongPollingBot {
                         break;
                     case "Новости":
                         break;
-                    case "Выписка на месяц":
+                    case "\uD83D\uDCC5Выписка на месяц":
                         try {
                             pdfMaker.createGuardPdf(telegrambotsql.getfromBotsName(message.getChatId()),"Контроль прохода", RusGuard.getReportForMonth(telegrambotsql.getIIN(message.getChatId())));
                         } catch (SQLException e) {
@@ -99,7 +91,7 @@ public class Bot extends TelegramLongPollingBot {
                         }
 
                         break;
-                    case "Вернуться на главную":
+                    case "\uD83D\uDD19 Вернуться на главную":
                         sendMsg(message, "Вы вернулись на главную", 1);
 
                         break;

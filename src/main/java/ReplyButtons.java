@@ -77,7 +77,7 @@ public class ReplyButtons {
         List<KeyboardRow> keyboardRowList = new ArrayList<KeyboardRow>();
         KeyboardRow keyboardFirstRow = new KeyboardRow();
         KeyboardRow keyboardSecondRow = new KeyboardRow();
-        keyboardFirstRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":smile:Выписка на месяц")));
+        keyboardFirstRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":date:Выписка на месяц")));
         keyboardFirstRow.add(new KeyboardButton("Выписка на прошлый месяц"));
         keyboardSecondRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":back: Вернуться на главную")));
         keyboardRowList.add(keyboardFirstRow);
