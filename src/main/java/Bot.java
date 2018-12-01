@@ -1,4 +1,5 @@
 import com.itextpdf.text.DocumentException;
+import com.vdurmont.emoji.EmojiParser;
 import okhttp3.*;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -48,10 +49,10 @@ public class Bot extends TelegramLongPollingBot {
                     case "/start":
                             sendMsg(message,smiling_face_with_heart_eyes + "Здравствуйте " +telegrambotsql.getfromBotsName(message.getChatId()),1);
                         break;
-                    case "ИПК Универ":
+                    case "\uD83C\uDFEBИПК Универ":
                             sendMsg(message, "ИПК Универ",11);
                         break;
-                    case "Текущие оценки":
+                    case "\uD83D\uDCAFТекущие оценки":
                         try {
                             sendMsg(message, Univer.getAttendanceforweek(telegrambotsql.getIIN(message.getChatId())),11);
                         } catch (SQLException e) {
@@ -65,7 +66,7 @@ public class Bot extends TelegramLongPollingBot {
                     case "Файлы преподователя":
                         break;
                     case "Опросы":
-                        if (!telegrambotsql.hasAnswerQuiz(message.getChatId(), "Вам нравится наш бот?")) {
+                        if (!Quiz.hasAnswerQuiz(message.getChatId(), "Вам нравится наш бот?")) {
                             sendMsg(message, "Вам нравится наш бот?", 41);
                         } else {
                             sendMsg(message, "Вы уже прошли опрос", 1);
@@ -73,9 +74,17 @@ public class Bot extends TelegramLongPollingBot {
                         break;
                     case "Календарь":
                         break;
+                    case "\uD83D\uDCDEКонтакты":
+                        break;
+                    case "\uD83D\uDCDEКонтакты эдвайзера":
+                        break;
+                    case "\uD83D\uDCCAСтатистика":
+                        break;
+                    case "✉Блог ректора":
+                        break;
                     case "Новости с универа":
                         break;
-                    case "Новости":
+                    case "\uD83D\uDCF0Новости":
                         break;
                     case "\uD83D\uDCC5Выписка на месяц":
                         try {
@@ -93,7 +102,7 @@ public class Bot extends TelegramLongPollingBot {
                         }
                         sendFile(message.getChatId(),telegrambotsql.getfromBotsName(message.getChatId())+".pdf");
                         break;
-                    case "Контроль доступа":
+                    case "\uD83D\uDD63Контроль доступа":
                         try {
                             sendMsg(message, RusGuard.getCount(telegrambotsql.getIIN(message.getChatId())),21);
                         } catch (IOException e) {
@@ -104,7 +113,7 @@ public class Bot extends TelegramLongPollingBot {
                             e.printStackTrace();
                         }
                         break;
-                    case "\uD83D\uDD19 Вернуться на главную":
+                    case "⏪Вернуться на главную":
                         sendMsg(message, "Вы вернулись на главную", 1);
                         break;
                     default:
@@ -130,11 +139,11 @@ public class Bot extends TelegramLongPollingBot {
                         e.printStackTrace();
                     }
                 }else{
-                    sendMsg(message, "Здравствуйте! Для работы с ботом введите иин!",0);
+                    sendMsg(message, EmojiParser.parseToUnicode(":lock:Здравствуйте! Для работы с ботом введите иин!"),0);
                 }
             }
         } else if (update.hasCallbackQuery()) {
-            answerCallbackQuery(callbackQuery.getId(),telegrambotsql.saveQuiz(callbackQuery.getMessage(),callbackQuery.getData()));
+            answerCallbackQuery(callbackQuery.getId(),Quiz.saveQuiz(callbackQuery.getMessage(),callbackQuery.getData()));
             sendMsg(callbackQuery.getMessage(), "Спасибо за ответ!\nНам очень важен ваше мнение.", 1);
         }
     }
