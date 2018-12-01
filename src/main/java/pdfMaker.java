@@ -9,10 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
+import java.util.*;
 
 public  class pdfMaker {
     public static final String FONT = "C:\\Windows\\Fonts\\ARIAL.ttf";
@@ -111,7 +108,7 @@ public  class pdfMaker {
 
     }
 
-    public static void createUniverTranskriptPdf(String Username, String Tablename, String[][] Record) {
+    public static void createUniverTranskriptPdf(String Username, String Tablename, String[][] Record , ArrayList<String> GPA) {
 
         Document document1 = new Document();
         try {
@@ -139,6 +136,9 @@ public  class pdfMaker {
             document1.add(new Paragraph("Факультет: " + Record[0][1] + "\n",f1));
             document1.add(new Paragraph("Специальность: " + Record[0][2] + "\n",f1));
             document1.add(new Paragraph("Курс: " + Record[0][3] + "\n",f1));
+            for(String gpa : GPA){
+                document1.add(new Paragraph("" + gpa + "\n",f1));
+            }
             document1.add(new Paragraph("========================================================================\n\n"));
             int colCount = Record[0].length;
             int rowCount = Record.length;
@@ -156,6 +156,8 @@ public  class pdfMaker {
         document1.close();
 
     }
+
+
 
 
 

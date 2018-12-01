@@ -272,9 +272,8 @@ public class Univer {
     public static String[][] getTranskript(String IIN){
         String SQL = "";
         String SQL1 = "";
-        countName = "";
+
         String[][] result1 = new String[1][1];
-        ArrayList<String> GPA = new ArrayList<String>();
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             SQL = " SELECT CONCAT ([univer_students].[students_sname],' ',[univer_students].[students_name],' ',[univer_students].[students_father_name]) as fio" +
                     "   ,[univer_faculty].[faculty_name_ru]" +
@@ -316,8 +315,8 @@ public class Univer {
             result[1][0] = "Дисциплина";
             result[1][1] = "Кол-во кредитов";
             result[1][2] = "Оценка";
-            result[1][3] = "Оценка";
-            result[1][4] = "Оценка";
+            result[1][3] = "Оценка по буквенной системе";
+            result[1][4] = "Цифровой эквивалент";
             result[1][5] = "Семестр";
             rs1.close();
             ResultSet rs2 = stmt.executeQuery(SQL1);
@@ -334,6 +333,67 @@ public class Univer {
             e.printStackTrace();
             return  result1;
         }
+    }
+
+    public static ArrayList<String> getGPAforTranskript(String IIN){
+        String SQL = "";
+
+        ResultSet rs1 = null;
+        int kr = -1, i = 1, sumkr = 0;
+        double gpa = 0 , zifr = 0, sumzifkr = 0, sum = 0;
+        int academ_year = 0;
+        ArrayList<String> GPA = new ArrayList<String>();
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
+            String countName = "";
+
+            SQL = " SELECT [univer_progress].[subject_name_ru]" +
+                    "      ,[univer_progress].[progress_credit]" +
+                    " ,[univer_mark_type].[mark_type_gpa]" +
+                    "      ,[univer_progress].[academ_year]" +
+                    "  FROM [atu_univer].[dbo].[univer_progress]" +
+                    "  JOIN  [atu_univer].[dbo].[univer_students] ON [univer_students].[students_id] =[univer_progress].[student_id]" +
+                    "  JOIN [atu_univer].[dbo].[univer_mark_type] ON [univer_mark_type].[mark_type_id] = [univer_progress].mark_type_id" +
+                    " WHERE [univer_students].[students_identify_code] LIKE '" + IIN + "' and [univer_progress].[status] = 1";
+            ResultSet rs = stmt.executeQuery(SQL);
+            if (rs != null) {
+                while (rs.next()) {
+                    if (academ_year != Integer.parseInt(rs.getString("academ_year"))) {
+                        gpa = sum / sumkr;
+                        if(sumkr!=0) {
+                            countName = countName + Double.toString(gpa) +"\n"+ " GPA за " + rs1.getString("academ_year") + " год : ";
+                            GPA.add(countName);
+                        } else {
+
+                            countName = "GPA за " + rs1.getString("academ_year") + " год : ";
+                        }
+                        academ_year = Integer.parseInt(rs1.getString("academ_year"));
+                        i = i +1;
+                        sumzifkr = 0;
+                        sum = 0;
+                        sumkr = 0;
+                        gpa = 0;
+                    }
+                    if (academ_year == Integer.parseInt(rs1.getString("academ_year"))){
+                        kr = Integer.parseInt(rs1.getString("progress_credit"));
+                        zifr = Integer.parseInt(rs1.getString("mark_type_gpa"));
+                        sumzifkr = kr * zifr;
+                        sum = sum + sumzifkr;
+                        sumkr = sumkr+kr;
+
+                    }
+                }
+                gpa = sum / sumkr;
+                countName = countName + Double.toString(gpa);
+                GPA.add(countName);
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return GPA;
+        }
+        return GPA;
+
     }
 
 
