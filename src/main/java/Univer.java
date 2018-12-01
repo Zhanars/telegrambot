@@ -339,8 +339,8 @@ public class Univer {
         String SQL = "";
 
         ResultSet rs1 = null;
-        int kr = -1, i = 1, sumkr = 0;
-        double gpa = 0 , zifr = 0, sumzifkr = 0, sum = 0;
+        int i = 1;
+        double gpa = 0 , zifr = 0, sumzifkr = 0, sum = 0,kr = 0, sumkr = 0;
         int academ_year = 0;
         ArrayList<String> GPA = new ArrayList<String>();
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
@@ -358,8 +358,12 @@ public class Univer {
             if (rs != null) {
                 while (rs.next()) {
                     if (academ_year != Integer.parseInt(rs.getString("academ_year"))) {
-                        gpa = sum / sumkr;
+
+                        System.out.println(sum);
+                        System.out.println(sumkr);
+                        System.out.println(academ_year);
                         if(sumkr!=0) {
+                            gpa = sum / sumkr;
                             countName = countName + Double.toString(gpa) +"\n"+ " GPA за " + rs1.getString("academ_year") + " год : ";
                             GPA.add(countName);
                         } else {
@@ -374,7 +378,7 @@ public class Univer {
                         gpa = 0;
                     }
                     if (academ_year == Integer.parseInt(rs1.getString("academ_year"))){
-                        kr = Integer.parseInt(rs1.getString("progress_credit"));
+                        kr = Double.parseDouble(rs1.getString("progress_credit"));
                         zifr = Double.parseDouble(rs1.getString("mark_type_gpa"));
                         sumzifkr = kr * zifr;
                         sum = sum + sumzifkr;
@@ -382,7 +386,7 @@ public class Univer {
 
                     }
                 }
-                gpa = sum / sumkr;
+
                 countName = countName + Double.toString(gpa);
                 GPA.add(countName);
             }
