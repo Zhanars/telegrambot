@@ -375,7 +375,7 @@ public class Univer {
                     }
                     if (academ_year == Integer.parseInt(rs1.getString("academ_year"))){
                         kr = Integer.parseInt(rs1.getString("progress_credit"));
-                        zifr = Integer.parseInt(rs1.getString("mark_type_gpa"));
+                        zifr = Double.parseDouble(rs1.getString("mark_type_gpa"));
                         sumzifkr = kr * zifr;
                         sum = sum + sumzifkr;
                         sumkr = sumkr+kr;
