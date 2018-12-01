@@ -302,13 +302,17 @@ public class Univer {
             ResultSet rs = stmt.executeQuery(SQL1);
             int rowCount = getRowCount(rs);
             int colCount = rs.getMetaData().getColumnCount();
+            System.out.println(rowCount);
+            System.out.println(colCount);
             rs.close();
             String[][] result = new String[rowCount + 2][colCount];
             ResultSet rs1 = stmt.executeQuery(SQL);
-            result[0][0] = rs1.getString("fio");
-            result[0][1] = rs1.getString("[univer_faculty].[faculty_name_ru]");
-            result[0][2] = rs1.getString("[univer_speciality].[speciality_name_ru]");
-            result[0][3] = rs1.getString("[univer_students].[students_curce_number]");
+            while (rs1.next()) {
+                result[0][0] = rs1.getString("fio");
+                result[0][1] = rs1.getString("faculty_name_ru");
+                result[0][2] = rs1.getString("speciality_name_ru");
+                result[0][3] = rs1.getString("students_curce_number");
+            }
             result[1][0] = "Дисциплина";
             result[1][1] = "Кол-во кредитов";
             result[1][2] = "Оценка";
@@ -320,7 +324,7 @@ public class Univer {
             int i = 2;
             while (rs2.next()) {
                 for (int j = 0; j < colCount; j++) {
-                    result[i][j] = rs2.getString(i + 1);
+                    result[i][j] = rs2.getString(j+1);
                 }
                 i++;
             }
