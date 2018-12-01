@@ -139,7 +139,6 @@ public class Univer {
         return SQL;
     }
 
-
     public static String getAttendanceforweek(String IIN) throws SQLException {
         countName = "";
         Calendar c = new GregorianCalendar();
@@ -268,5 +267,38 @@ public class Univer {
         }
 
         return  SumAttendance;
+    }
+
+    public static String getTranskript(String IIN){
+        String SQL = "";
+        countName = "";
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
+            SQL = " SELECT CONCAT ([univer_students].[students_sname],' ',[univer_students].[students_name],' ',[univer_students].[students_father_name]) as fio" +
+                    "   ,[univer_faculty].[faculty_name_ru]" +
+                    "  ,[univer_speciality].[speciality_name_ru]" +
+                    "   ,[univer_students].[students_curce_number]" +
+                    "      ,[univer_progress].[subject_name_ru]" +
+                    "      ,[univer_progress].[progress_credit]" +
+                    "      ,[univer_mark_type].[mark_type_symbol]" +
+                    " ,[univer_mark_type].[mark_type_gpa]" +
+                    "      ,[univer_progress].[progress_result]" +
+                    "      ,[univer_progress].[progress_result_rk1]" +
+                    "      ,[univer_progress].[progress_result_rk2]" +
+                    "      ,[univer_progress].[n_seme]" +
+                    "      ,[univer_progress].[status]" +
+                    "  FROM [atu_univer].[dbo].[univer_progress]" +
+                    "  JOIN  [atu_univer].[dbo].[univer_students] ON [univer_students].[students_id] =[univer_progress].[student_id]" +
+                    "  JOIN [atu_univer].[dbo].[univer_faculty] ON [univer_faculty].[faculty_id] = [univer_students].faculty_id" +
+                    "  JOIN [atu_univer].[dbo].[univer_speciality] ON [univer_speciality].[speciality_id] = [univer_students].[speciality_id]" +
+                    "  JOIN [atu_univer].[dbo].[univer_mark_type] ON [univer_mark_type].[mark_type_id] = [univer_progress].mark_type_id" +
+                    " WHERE [univer_students].[students_identify_code] LIKE '" + IIN + "' and [univer_progress].[status] = 1";
+
+                  ResultSet rs = stmt.executeQuery(SQL);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return  countName;
+
     }
 }
