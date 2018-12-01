@@ -73,7 +73,15 @@ public class Bot extends TelegramLongPollingBot {
                         break;
                     case "\uD83D\uDCC5Выписка на месяц":
                         try {
-                            pdfMaker.createGuardPdf(telegrambotsql.getfromBotsName(message.getChatId()),"Контроль прохода", RusGuard.getReportForMonth(telegrambotsql.getIIN(message.getChatId())));
+                            pdfMaker.createGuardPdf(telegrambotsql.getfromBotsName(message.getChatId()),"Контроль прохода", RusGuard.getReportForMonth(telegrambotsql.getIIN(message.getChatId()),0),0);
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                        sendFile(message.getChatId(),telegrambotsql.getfromBotsName(message.getChatId())+".pdf");
+                        break;
+                    case "\uD83D\uDCC5Выписка на прошлый месяц":
+                        try {
+                            pdfMaker.createGuardPdf(telegrambotsql.getfromBotsName(message.getChatId()),"Контроль прохода", RusGuard.getReportForMonth(telegrambotsql.getIIN(message.getChatId()),-1),-1);
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }

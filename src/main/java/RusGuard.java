@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class RusGuard {
@@ -46,10 +47,16 @@ public class RusGuard {
         }
     }
 
-    public static String[][] getReportForMonth(String IIN) throws SQLException {
+    public static String[][] getReportForMonth(String IIN, int month) throws SQLException {
         Calendar c = new GregorianCalendar();
+        String date2 = new SimpleDateFormat("yyyyMMdd").format(c.getTime());
         c.set(Calendar.DAY_OF_MONTH, 1);
+        c.add(Calendar.MONTH, month);
         String date1 = new SimpleDateFormat("yyyyMMdd").format(c.getTime());
+        if (month<0) {
+            c.add(Calendar.MONTH, 1);
+            date2 = new SimpleDateFormat("yyyyMMdd").format(c.getTime());
+            System.out.println(date2);        }
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             String SQL = " ;with skudtbl as" +
                     "                     (SELECT CONVERT(date,[Log].[DateTime],106) as dateday, (datepart(weekday, [Log].[DateTime]) + @@datefirst - 2) % 7 + 1 as weekofday," +
@@ -64,7 +71,7 @@ public class RusGuard {
                     "                 ,[Log].[LogMessageSubType]" +
                     "                FROM [RusGuardDB].[dbo].[Log]" +
                     "                JOIN [RusGuardDB].[dbo].[Employee] ON [Employee].[_id] = [Log].[EmployeeID]" +
-                    "                Where [Employee].[PassportNumber] LIKE '%" + IIN + "%' and [Log].[DateTime] > '" + date1 + "' and ([Log].[LogMessageSubType] = 66" +
+                    "                Where [Employee].[PassportNumber] LIKE '%" + IIN + "%' and ([Log].[DateTime] >= '" + date1 + "' and [Log].[DateTime] < '" + date2 + "') and ([Log].[LogMessageSubType] = 66" +
                     "                or [Log].[LogMessageSubType]=67 or [Log].[LogMessageSubType]=69 )" +
                     "                GROUP BY [Log].[DateTime],[Log].[LogMessageSubType], [Log].[Message] " +
                     " )" +
@@ -92,7 +99,7 @@ public class RusGuard {
             int rowCount = getRowCount(rs1);
             int colCount = rs1.getMetaData().getColumnCount();
             rs1.close();
-            String[][] result = new String[rowCount+1][colCount];
+            String[][] result = new String[rowCount + 1][colCount];
             ResultSet rs2 = stmt.executeQuery(SQL);
             result[0][0] = "Дата";
             result[0][1] = "День недели";
@@ -101,7 +108,7 @@ public class RusGuard {
             int j = 1;
             while (rs2.next()) {
                 for (int i = 0; i < colCount; i++) {
-                    if (rs2.getString(i+1).equals("23:23:23") || rs2.getString(i+1).equals("00:00:00")){
+                    if (rs2.getString(i + 1).equals("23:23:23") || rs2.getString(i + 1).equals("00:00:00")) {
                         result[j][i] = "--:--:--";
                     } else {
                         result[j][i] = rs2.getString(i + 1);

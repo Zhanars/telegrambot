@@ -58,7 +58,7 @@ public  class pdfMaker {
         document.close();
 
     }
-    public static void createGuardPdf(String Username, String Tablename, String[][] Record) {
+    public static void createGuardPdf(String Username, String Tablename, String[][] Record, int month) {
 
         Document document1 = new Document();
         try {
@@ -85,7 +85,13 @@ public  class pdfMaker {
             Calendar c = new GregorianCalendar();
             String date2 = DateFormat.getDateInstance(SimpleDateFormat.LONG, new Locale("ru")).format(c.getTime());
             c.set(Calendar.DAY_OF_MONTH, 1);
+            c.add(Calendar.MONTH, month);
             String date1 = DateFormat.getDateInstance(SimpleDateFormat.LONG, new Locale("ru")).format(c.getTime());
+            if (month<0) {
+                c.add(Calendar.DAY_OF_WEEK, month);
+                c.add(Calendar.MONTH, 1);
+                date2 = DateFormat.getDateInstance(SimpleDateFormat.LONG, new Locale("ru")).format(c.getTime());
+            }
             document1.add(new Paragraph("За период: " + date1 + " - " + date2,f1));
             document1.add(new Paragraph("========================================================================\n\n"));
             int colCount = Record[0].length;
