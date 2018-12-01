@@ -56,7 +56,7 @@ public class RusGuard {
         if (month<0) {
             c.add(Calendar.MONTH, 1);
             date2 = new SimpleDateFormat("yyyyMMdd").format(c.getTime());
-            System.out.println(date2);        }
+        }
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             String SQL = " ;with skudtbl as" +
                     "                     (SELECT CONVERT(date,[Log].[DateTime],106) as dateday, (datepart(weekday, [Log].[DateTime]) + @@datefirst - 2) % 7 + 1 as weekofday," +
