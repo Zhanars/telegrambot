@@ -340,61 +340,60 @@ public class Univer {
 
         ResultSet rs1 = null;
         int i = 1;
-        double gpa = 0 , zifr = 0, sumzifkr = 0, sum = 0,kr = 0, sumkr = 0;
-        int academ_year = 0;
+        double gpa = 0 , zifr = 0, sumzifkr = 0, sum = 0,kr = 0, sumkr = 999;
+        int academ_year1 = 0;
         ArrayList<String> GPA = new ArrayList<String>();
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
-            String countName = "";
+            countName = "";
 
             SQL = " SELECT [univer_progress].[subject_name_ru]" +
                     "      ,[univer_progress].[progress_credit]" +
-                    " ,[univer_mark_type].[mark_type_gpa]" +
+                    "      ,[univer_mark_type].[mark_type_gpa]" +
                     "      ,[univer_progress].[academ_year]" +
+                    "       ,[univer_progress].[n_seme] " +
                     "  FROM [atu_univer].[dbo].[univer_progress]" +
                     "  JOIN  [atu_univer].[dbo].[univer_students] ON [univer_students].[students_id] =[univer_progress].[student_id]" +
                     "  JOIN [atu_univer].[dbo].[univer_mark_type] ON [univer_mark_type].[mark_type_id] = [univer_progress].mark_type_id" +
-                    " WHERE [univer_students].[students_identify_code] LIKE '" + IIN + "' and [univer_progress].[status] = 1";
+                    " WHERE [univer_students].[students_identify_code] LIKE '" + IIN + "' and [univer_progress].[status] = 1" +
+                    " ORDER BY  [univer_progress].[academ_year]";
             ResultSet rs = stmt.executeQuery(SQL);
             if (rs != null) {
                 while (rs.next()) {
-                    if (academ_year != Integer.parseInt(rs.getString("academ_year"))) {
-
-                        System.out.println(sum);
-                        System.out.println(sumkr);
-                        System.out.println(academ_year);
-                        if(sumkr!=0) {
+                    if (academ_year1 != Integer.parseInt(rs.getString("academ_year"))) {
+                        if(sumkr !=999 ) {
                             gpa = sum / sumkr;
-                            countName = countName + Double.toString(gpa) +"\n"+ " GPA за " + rs1.getString("academ_year") + " год : ";
+                            countName = countName + Double.toString(gpa) +"\n" + " GPA за " + rs.getString("n_seme") + " год : ";
+                            System.out.println(countName);
                             GPA.add(countName);
-                        } else {
-
-                            countName = "GPA за " + rs1.getString("academ_year") + " год : ";
+                        }else{
+                            countName = "GPA за " + rs.getString("n_seme") + " год : ";
                         }
-                        academ_year = Integer.parseInt(rs1.getString("academ_year"));
+                        academ_year1 = Integer.parseInt(rs.getString("academ_year"));
                         i = i +1;
                         sumzifkr = 0;
                         sum = 0;
                         sumkr = 0;
                         gpa = 0;
                     }
-                    if (academ_year == Integer.parseInt(rs1.getString("academ_year"))){
-                        kr = Double.parseDouble(rs1.getString("progress_credit"));
-                        zifr = Double.parseDouble(rs1.getString("mark_type_gpa"));
+                    if (academ_year1 == Integer.parseInt(rs.getString("academ_year"))){
+                        kr = Double.parseDouble(rs.getString("progress_credit"));
+                        zifr = Double.parseDouble(rs.getString("mark_type_gpa"));
                         sumzifkr = kr * zifr;
                         sum = sum + sumzifkr;
                         sumkr = sumkr+kr;
 
                     }
                 }
+                gpa = sum / sumkr;
 
-                countName = countName + Double.toString(gpa);
-                GPA.add(countName);
+
+
             }
-
+            countName = countName + Double.toString(gpa);
+            GPA.add(countName);
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return GPA;
         }
         return GPA;
 
