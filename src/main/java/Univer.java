@@ -359,8 +359,9 @@ public class Univer {
             ResultSet rs = stmt.executeQuery(SQL);
             if (rs != null) {
                 while (rs.next()) {
+                    System.out.println(rs.getString("academ_year"));
                     if (academ_year1 != Integer.parseInt(rs.getString("academ_year"))) {
-                        if(sumkr !=999 ) {
+                        if( i != 1 ) {
                             gpa = sum / sumkr;
                             countName = countName + Double.toString(gpa) +"\n" + " GPA за " + rs.getString("n_seme") + " год : ";
                             System.out.println(countName);
@@ -370,27 +371,29 @@ public class Univer {
                         }
                         academ_year1 = Integer.parseInt(rs.getString("academ_year"));
                         i = i +1;
-                        sumzifkr = 0;
                         sum = 0;
                         sumkr = 0;
-                        gpa = 0;
                     }
                     if (academ_year1 == Integer.parseInt(rs.getString("academ_year"))){
                         kr = Double.parseDouble(rs.getString("progress_credit"));
                         zifr = Double.parseDouble(rs.getString("mark_type_gpa"));
+                        if (zifr  == 0 ){
+                            zifr = 1;
+                        }
                         sumzifkr = kr * zifr;
                         sum = sum + sumzifkr;
-                        sumkr = sumkr+kr;
+                        sumkr = sumkr + kr;
 
                     }
+                    gpa = sum / sumkr;
                 }
-                gpa = sum / sumkr;
 
+                countName = countName + Double.toString(gpa);
+                GPA.add(countName);
 
 
             }
-            countName = countName + Double.toString(gpa);
-            GPA.add(countName);
+
 
         } catch (SQLException e) {
             e.printStackTrace();
