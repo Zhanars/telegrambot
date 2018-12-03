@@ -337,7 +337,6 @@ public class Univer {
 
     public static ArrayList<String> getGPAforTranskript(String IIN){
         String SQL = "";
-
         ResultSet rs1 = null;
         int i = 1;
         double gpa = 0 , zifr = 0, sumzifkr = 0, sum = 0,kr = 0, sumkr = 999;
@@ -345,7 +344,6 @@ public class Univer {
         ArrayList<String> GPA = new ArrayList<String>();
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             countName = "";
-
             SQL = " SELECT [univer_progress].[subject_name_ru]" +
                     "      ,[univer_progress].[progress_credit]" +
                     "      ,[univer_mark_type].[mark_type_gpa]" +
@@ -359,12 +357,10 @@ public class Univer {
             ResultSet rs = stmt.executeQuery(SQL);
             if (rs != null) {
                 while (rs.next()) {
-                    System.out.println(rs.getString("academ_year"));
                     if (academ_year1 != Integer.parseInt(rs.getString("academ_year"))) {
                         if( i != 1 ) {
                             gpa = sum / sumkr;
                             countName = countName + Double.toString(gpa) +"\n" + " GPA за " + rs.getString("n_seme") + " год : ";
-                            System.out.println(countName);
                             GPA.add(countName);
                         }else{
                             countName = "GPA за " + rs.getString("n_seme") + " год : ";
@@ -383,33 +379,18 @@ public class Univer {
                         sumzifkr = kr * zifr;
                         sum = sum + sumzifkr;
                         sumkr = sumkr + kr;
-
                     }
                     gpa = sum / sumkr;
                 }
-
                 countName = countName + Double.toString(gpa);
                 GPA.add(countName);
-
-
             }
-
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return GPA;
 
     }
-
-
-
-
-
-
-
-
-
     private static int getRowCount(ResultSet resultSet) {
         int count = 0;
         if (resultSet == null) {

@@ -136,19 +136,46 @@ public  class pdfMaker {
             document1.add(new Paragraph("Факультет: " + Record[0][1] + "\n",f1));
             document1.add(new Paragraph("Специальность: " + Record[0][2] + "\n",f1));
             document1.add(new Paragraph("Курс: " + Record[0][3] + "\n",f1));
-            for(String gpa : GPA){
-                document1.add(new Paragraph("" + gpa + "\n",f1));
-            }
             document1.add(new Paragraph("========================================================================\n\n"));
             int colCount = Record[0].length;
             int rowCount = Record.length;
             PdfPTable table = new PdfPTable(colCount);
             table.setHeaderRows(1);
+            int creditCount = 0, AllCreditCount = 0;
+            double Sum = 0, AllSum = 0;
+            String semestr = Record[2][colCount-1];
             for (int i=1; i < rowCount; i++){
+                if (i > 1) {
+                    if (Record[i][colCount - 1].equals(semestr)) {
+                        creditCount = creditCount + Integer.parseInt(Record[i][1]);
+                        Sum = Sum + Double.parseDouble(Record[i][4]) * Integer.parseInt(Record[i][1]);
+                    } else {
+                        PdfPCell cell = new PdfPCell(new Paragraph("GPA за " + semestr + " семестр: " + Double.toString(Sum / creditCount), th));
+                        cell.setColspan(colCount);
+                        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                        cell.setBackgroundColor(BaseColor.YELLOW);
+                        table.addCell(cell);
+                        AllCreditCount = AllCreditCount + creditCount;
+                        AllSum = AllSum + Sum;
+                        semestr = Record[i][colCount - 1];
+                        creditCount = Integer.parseInt(Record[i][1]);
+                        Sum = Double.parseDouble(Record[i][4]) * Integer.parseInt(Record[i][1]);
+                    }
+                }
                 for (int j=0; j < colCount; j++) {
                     table.addCell(new Paragraph(Record[i][j], f1));
                 }
             }
+            PdfPCell cell = new PdfPCell(new Paragraph("GPA за " + semestr + " семестр: " + Double.toString(Sum / creditCount), th));
+            cell.setColspan(colCount);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell.setBackgroundColor(BaseColor.YELLOW);
+            table.addCell(cell);
+            PdfPCell cell1 = new PdfPCell(new Paragraph("GPA за весь семестр: " + Double.toString(AllSum / AllCreditCount), th));
+            cell1.setColspan(colCount);
+            cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell1.setBackgroundColor(BaseColor.YELLOW);
+            table.addCell(cell1);
             document1.add(table);
         } catch (DocumentException e) {
             e.printStackTrace();
