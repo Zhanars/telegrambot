@@ -108,7 +108,7 @@ public  class pdfMaker {
 
     }
 
-    public static void createUniverTranskriptPdf(String Username, String Tablename, String[][] Record , ArrayList<String> GPA) {
+    public static void createUniverTranskriptPdf(String Username, String Tablename, String[][] Record) {
 
         Document document1 = new Document();
         try {
