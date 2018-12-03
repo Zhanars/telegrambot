@@ -292,6 +292,7 @@ public class Univer {
                     "      ,[univer_mark_type].[mark_type_symbol]" +
                     " ,[univer_mark_type].[mark_type_gpa]" +
                     "      ,[univer_progress].[n_seme]" +
+                    "      ,[univer_progress].[academ_year]" +
                     "  FROM [atu_univer].[dbo].[univer_progress]" +
                     "  JOIN  [atu_univer].[dbo].[univer_students] ON [univer_students].[students_id] =[univer_progress].[student_id]" +
                     "  JOIN [atu_univer].[dbo].[univer_faculty] ON [univer_faculty].[faculty_id] = [univer_students].faculty_id" +
@@ -322,7 +323,7 @@ public class Univer {
             ResultSet rs2 = stmt.executeQuery(SQL1);
             int i = 2;
             while (rs2.next()) {
-                for (int j = 0; j < colCount; j++) {
+                for (int j = 0; j < colCount - 1; j++) {
                     result[i][j] = rs2.getString(j+1);
                 }
                 i++;
