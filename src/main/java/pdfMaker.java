@@ -150,7 +150,7 @@ public  class pdfMaker {
                         creditCount = creditCount + Integer.parseInt(Record[i][1]);
                         Sum = Sum + Double.parseDouble(Record[i][4]) * Integer.parseInt(Record[i][1]);
                     } else {
-                        PdfPCell cell = new PdfPCell(new Paragraph("GPA за " + semestr + " год: " + String.format(Double.toString(Sum / creditCount) ,"%.2f"), th));
+                        PdfPCell cell = new PdfPCell(new Paragraph("GPA за " + semestr + " год: " + String.format("%d",Double.toString(Sum / creditCount)), th));
                         cell.setColspan(colCount);
                         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                         cell.setBackgroundColor(BaseColor.YELLOW);
@@ -166,12 +166,12 @@ public  class pdfMaker {
                     table.addCell(new Paragraph(Record[i][j], f1));
                 }
             }
-            PdfPCell cell = new PdfPCell(new Paragraph("GPA за " + semestr + " год: " + Double.toString(Sum / creditCount), th));
+            PdfPCell cell = new PdfPCell(new Paragraph("GPA за " + semestr + " год: " + String.format("%d",Double.toString(Sum / creditCount)), th));
             cell.setColspan(colCount);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell.setBackgroundColor(BaseColor.YELLOW);
             table.addCell(cell);
-            PdfPCell cell1 = new PdfPCell(new Paragraph("GPA: " + Double.toString(AllSum / AllCreditCount), th));
+            PdfPCell cell1 = new PdfPCell(new Paragraph("GPA: " + String.format("%d",Double.toString(AllSum / AllCreditCount)), th));
             cell1.setColspan(colCount);
             cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell1.setBackgroundColor(BaseColor.YELLOW);
