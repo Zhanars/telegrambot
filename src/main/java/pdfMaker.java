@@ -137,27 +137,27 @@ public  class pdfMaker {
             document1.add(new Paragraph("Специальность: " + Record[0][2] + "\n",f1));
             document1.add(new Paragraph("Курс: " + Record[0][3] + "\n",f1));
             document1.add(new Paragraph("========================================================================\n\n"));
-            int colCount = Record[0].length;
+            int colCount = Record[0].length - 1;
             int rowCount = Record.length;
             PdfPTable table = new PdfPTable(colCount);
             table.setHeaderRows(1);
             int creditCount = 0, AllCreditCount = 0;
             double Sum = 0, AllSum = 0;
-            String semestr = Record[2][colCount-1];
+            String semestr = Record[2][colCount];
             for (int i=1; i < rowCount; i++){
                 if (i > 1) {
-                    if (Record[i][colCount - 1].equals(semestr)) {
+                    if (Record[i][colCount].equals(semestr)) {
                         creditCount = creditCount + Integer.parseInt(Record[i][1]);
                         Sum = Sum + Double.parseDouble(Record[i][4]) * Integer.parseInt(Record[i][1]);
                     } else {
-                        PdfPCell cell = new PdfPCell(new Paragraph("GPA за " + semestr + " семестр: " + Double.toString(Sum / creditCount), th));
+                        PdfPCell cell = new PdfPCell(new Paragraph("GPA за " + semestr + " год: " + String.format(Double.toString(Sum / creditCount) ,"%.2f"), th));
                         cell.setColspan(colCount);
                         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                         cell.setBackgroundColor(BaseColor.YELLOW);
                         table.addCell(cell);
                         AllCreditCount = AllCreditCount + creditCount;
                         AllSum = AllSum + Sum;
-                        semestr = Record[i][colCount - 1];
+                        semestr = Record[i][colCount];
                         creditCount = Integer.parseInt(Record[i][1]);
                         Sum = Double.parseDouble(Record[i][4]) * Integer.parseInt(Record[i][1]);
                     }
@@ -166,12 +166,12 @@ public  class pdfMaker {
                     table.addCell(new Paragraph(Record[i][j], f1));
                 }
             }
-            PdfPCell cell = new PdfPCell(new Paragraph("GPA за " + semestr + " семестр: " + Double.toString(Sum / creditCount), th));
+            PdfPCell cell = new PdfPCell(new Paragraph("GPA за " + semestr + " год: " + Double.toString(Sum / creditCount), th));
             cell.setColspan(colCount);
             cell.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell.setBackgroundColor(BaseColor.YELLOW);
             table.addCell(cell);
-            PdfPCell cell1 = new PdfPCell(new Paragraph("GPA за весь семестр: " + Double.toString(AllSum / AllCreditCount), th));
+            PdfPCell cell1 = new PdfPCell(new Paragraph("GPA: " + Double.toString(AllSum / AllCreditCount), th));
             cell1.setColspan(colCount);
             cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
             cell1.setBackgroundColor(BaseColor.YELLOW);

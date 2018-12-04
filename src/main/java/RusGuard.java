@@ -116,11 +116,14 @@ public class RusGuard {
                     }
                 }
                 j++;
+
+
             }
             return result;
         }
 
     }
+
     private static int getRowCount(ResultSet resultSet) {
         int count = 0;
         if (resultSet == null) {

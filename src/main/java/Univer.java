@@ -298,7 +298,8 @@ public class Univer {
                     "  JOIN [atu_univer].[dbo].[univer_faculty] ON [univer_faculty].[faculty_id] = [univer_students].faculty_id" +
                     "  JOIN [atu_univer].[dbo].[univer_speciality] ON [univer_speciality].[speciality_id] = [univer_students].[speciality_id]" +
                     "  JOIN [atu_univer].[dbo].[univer_mark_type] ON [univer_mark_type].[mark_type_id] = [univer_progress].mark_type_id" +
-                    " WHERE [univer_students].[students_identify_code] LIKE '" + IIN + "' and [univer_progress].[status] = 1";
+                    " WHERE [univer_students].[students_identify_code] LIKE '" + IIN + "' and [univer_progress].[status] = 1" +
+                    " ORDER BY [univer_progress].[academ_year]";
             ResultSet rs = stmt.executeQuery(SQL1);
             int rowCount = getRowCount(rs);
             int colCount = rs.getMetaData().getColumnCount();
@@ -323,7 +324,7 @@ public class Univer {
             ResultSet rs2 = stmt.executeQuery(SQL1);
             int i = 2;
             while (rs2.next()) {
-                for (int j = 0; j < colCount - 1; j++) {
+                for (int j = 0; j < colCount; j++) {
                     result[i][j] = rs2.getString(j+1);
                 }
                 i++;
