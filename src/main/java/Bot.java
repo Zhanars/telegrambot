@@ -65,6 +65,10 @@ public class Bot extends TelegramLongPollingBot {
                         break;
                     case "Расписание":
                         break;
+                    case "Расписание экзаменов":
+                        pdfMaker.createUniverExamSchudelePdf(telegrambotsql.getfromBotsName(message.getChatId()),"Расписание экзаменов", Univer.getExamSchedule(telegrambotsql.getIIN(message.getChatId())));
+                        sendFile(message.getChatId(),telegrambotsql.getfromBotsName(message.getChatId())+".pdf");
+                        break;
                     case "Файлы преподователя":
                         break;
                     case "Опросы":

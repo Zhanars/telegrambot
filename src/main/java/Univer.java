@@ -11,6 +11,8 @@ public class Univer {
     private static String password = "Desant3205363";
     private static String connectUrl = "jdbc:sqlserver://185.97.115.134\\MSSQLSERVER;database=atu_univer";
 
+
+
     public static String IIN(String message) throws IOException, ClassNotFoundException, SQLException {
 
 
@@ -303,8 +305,6 @@ public class Univer {
             ResultSet rs = stmt.executeQuery(SQL1);
             int rowCount = getRowCount(rs);
             int colCount = rs.getMetaData().getColumnCount();
-            System.out.println(rowCount);
-            System.out.println(colCount);
             rs.close();
             String[][] result = new String[rowCount + 2][colCount];
             ResultSet rs1 = stmt.executeQuery(SQL);
@@ -336,6 +336,128 @@ public class Univer {
             return  result1;
         }
     }
+
+
+    public static String[][] getExamSchedule(String IIN){
+        Calendar c = new GregorianCalendar();
+        String nowDate = new SimpleDateFormat("yyyyMMdd").format(c.getTime());
+        c.add(Calendar.MONTH, -1);
+        String takeMonth = new SimpleDateFormat("yyyyMMdd").format(c.getTime());
+        c.add(Calendar.MONTH, 1);
+        String addMonth = new SimpleDateFormat("yyyyMMdd").format(c.getTime());
+        String SQL = "";
+        String[][] result1 = new String[1][1];
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
+            SQL = " SELECT  [subject_name_ru]" +
+                    " ,CONCAT([personal_sname] ,' '" +
+                    "       ,[personal_name],' '" +
+                    "       ,[personal_father_name]) as FIO" +
+                    " ,CONCAT ([building_name_ru], ' | Ауд:'" +
+                    " , [audience_number_ru]) as audience" +
+                    " ,[exam_time]" +
+                    " ,[univer_educ_plan_pos].[exam_form_id]" +
+                    " FROM [atu_univer].[dbo].[univer_exam_schedule]" +
+                    " JOIN [atu_univer].[dbo].[univer_group_student] ON [univer_group_student].[group_id] = [univer_exam_schedule].[group_id]" +
+                    " JOIN [atu_univer].[dbo].[univer_group] ON [univer_group].[group_id] = [univer_exam_schedule].[group_id]" +
+                    " JOIN [atu_univer].[dbo].[univer_educ_plan_pos] ON [univer_educ_plan_pos].[educ_plan_pos_id] = [univer_group].[educ_plan_pos_id]" +
+                    " JOIN [atu_univer].[dbo].[univer_subject] ON [univer_subject].[subject_id] = [univer_educ_plan_pos].[subject_id]" +
+                    " JOIN [atu_univer].[dbo].[univer_students] ON [univer_students].[students_id] = [univer_group_student].[student_id]" +
+                    " JOIN [atu_univer].[dbo].[univer_teacher] ON [univer_teacher].teacher_id = [univer_exam_schedule].examiner_teacher_id" +
+                    " JOIN [atu_univer].[dbo].[univer_personal] ON [univer_personal].personal_id = [univer_teacher].personal_id " +
+                    " JOIN [atu_univer].[dbo].[univer_audience] ON [univer_audience].audience_id = [univer_exam_schedule].audience_id" +
+                    " JOIN [atu_univer].[dbo].[univer_building] ON [univer_building].building_id = [univer_audience].building_id" +
+                    " Where [univer_students].[students_identify_code] LIKE '" + IIN + "' and [univer_students].[student_edu_status_id] = 1 and " +
+                    " [univer_exam_schedule].[exam_time] > '"+takeMonth+"'";
+            ResultSet rs1 = stmt.executeQuery(SQL);
+            int rowCount = getRowCount(rs1);
+            int colCount = rs1.getMetaData().getColumnCount();
+            rs1.close();
+            String[][] result = new String[rowCount + 1][colCount];
+            ResultSet rs2 = stmt.executeQuery(SQL);
+            result[0][0] = "Дисциплина";
+            result[0][1] = "ФИО Преподавателя";
+            result[0][2] = "Аудитория";
+            result[0][3] = "Время";
+            result[0][4] = "Тип";
+            int j = 1;
+            while (rs2.next()) {
+                for (int i = 0; i < colCount; i++) {
+                    if (rs2.getString(i + 1).equals("1") ) {
+                        result[j][i] = "Устный";
+                    }else if (rs2.getString(i + 1).equals("0")){
+                        result[j][i] = "Письменный";
+                    }
+                    else {
+                        result[j][i] = rs2.getString(i + 1);
+                    }
+                }
+                j++;
+
+
+            }
+            return  result;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return  result1;
+
+    }
+
+    public static String[][] getAcademcal(String IIN) throws IOException, ClassNotFoundException, SQLException {
+        String SQL = "";
+        String dataStart = getStartDate(IIN);
+        String[][] result1 = new String[1][1];
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
+            SQL = " SELECT [univer_control].[control_name_ru]" +
+                    "       ,[acpos_semester]" +
+                    "       ,Convert(varchar(10),CONVERT(date,[acpos_date_start],106),103) as qwer" +
+                    "       ,Convert(varchar(10),CONVERT(date,[acpos_date_end],106),103) as qwer1" +
+                    "  FROM [atu_univer].[dbo].[univer_academ_calendar_pos]" +
+                    "  JOIN [atu_univer].[dbo].[univer_educ_plan_pos] ON [univer_educ_plan_pos].educ_plan_id = [univer_academ_calendar_pos].educ_plan_id" +
+                    "  JOIN [atu_univer].[dbo].[univer_group] ON [univer_group].educ_plan_pos_id = [univer_educ_plan_pos].educ_plan_pos_id" +
+                    "  JOIN [atu_univer].[dbo].[univer_group_student] ON [univer_group_student].group_id = [univer_group].group_id" +
+                    "  JOIN [atu_univer].[dbo].[univer_students] ON [univer_students].[students_id] = [univer_group_student].[student_id]" +
+                    "  JOIN [atu_univer].[dbo].[univer_control] ON [univer_control].control_id = [univer_academ_calendar_pos].control_id" +
+                    "  where[univer_students].[students_identify_code] LIKE '" + IIN + "' and [univer_students].[student_edu_status_id] = 1  " +
+                    " and [acpos_date_start] >= '"+dataStart+"' and [univer_academ_calendar_pos].acpos_module = 0" +
+                    "  GROUP BY " +
+                    "       [acpos_semester]" +
+                    "      ,[univer_control].[control_name_ru]" +
+                    "      ,[acpos_date_start]" +
+                    "      ,[acpos_date_end]";
+            ResultSet rs = stmt.executeQuery(SQL);
+
+            return result1;
+        }
+    }
+
+    public static String getAdvicer(String IIN){
+        String SQL = "";
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
+            SQL = " SELECT CONCAT([personal_sname] , ' '" +
+                    "      ,[personal_name], ' '" +
+                    "      ,[personal_father_name]) as fio" +
+                    "      ,[personal_email]" +
+                    "      ,[personal_mobile_phone]" +
+                    "      ,[personal_home_phone]" +
+                    "  FROM [atu_univer].[dbo].[univer_advicer]" +
+                    "  JOIN [atu_univer].[dbo].[univer_advicer_student_link] ON [univer_advicer_student_link].advicer_id = [univer_advicer].advicer_id" +
+                    "  JOIN [atu_univer].[dbo].[univer_personal] ON [univer_personal].personal_id = [univer_advicer].personal_id" +
+                    "  JOIN [atu_univer].[dbo].[univer_students] ON [univer_students].[students_id] = [univer_advicer_student_link].[student_id]" +
+                    "   where [univer_students].[students_identify_code] LIKE '" + IIN + "' and [univer_students].[student_edu_status_id] = 1";
+            ResultSet rs = stmt.executeQuery(SQL);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return  SQL;
+    }
+
+
+
+
+
+
 
     public static Double getGPA(String IIN){
         int creditSum = 0;
