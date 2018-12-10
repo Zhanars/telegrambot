@@ -207,24 +207,32 @@ public  class pdfMaker {
         Font th = new Font(bf,12,Font.BOLD, BaseColor.DARK_GRAY);
         try {
 
-            document1.add(new Paragraph(Tablename+" "+Username, f1));
-            int colCount = Record[0].length;
+            document1.add(new Paragraph(Tablename+" "+Username + "\n\n\n", f1));
+            int colCount = Record[0].length -2;
             int rowCount = Record.length;
+
             PdfPTable table = new PdfPTable(colCount);
             table.setHeaderRows(1);
             for (int i=0; i < rowCount; i++){
                 if (i > 0) {
-                    PdfPCell cell = new PdfPCell(new Paragraph(Record[i][3], th));
+                    PdfPCell cell = new PdfPCell(new Paragraph(Record[i][4], th));
                     cell.setColspan(colCount);
                     cell.setHorizontalAlignment(Element.ALIGN_CENTER);
                     cell.setBackgroundColor(BaseColor.YELLOW);
                     table.addCell(cell);
+
                 }
                 for (int j=0; j < colCount; j++) {
-                    if(j != 3)
-                    table.addCell(new Paragraph(Record[i][j], f1));
+                    if (i>0){
+                        if(j != 4)
+                            table.addCell(new Paragraph(Record[i][j], f1));
+                    }
+                    else
+                    if(j != 4)
+                        table.addCell(new Paragraph(Record[i][j], f1));
                 }
             }
+
             document1.add(table);
         } catch (DocumentException e) {
             e.printStackTrace();

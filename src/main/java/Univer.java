@@ -352,10 +352,10 @@ public class Univer {
                     " ,CONCAT([personal_sname] ,' '" +
                     "       ,[personal_name],' '" +
                     "       ,[personal_father_name]) as FIO" +
-                    " ,CONCAT ([building_name_ru], ' | Ауд:'" +
-                    " , [audience_number_ru]) as audience" +
-                    " ,[exam_time]" +
+                    " ,[building_name_ru]" +
                     " ,[univer_educ_plan_pos].[exam_form_id]" +
+                    " ,[exam_time]" +
+                    ", [audience_number_ru]" +
                     " FROM [atu_univer].[dbo].[univer_exam_schedule]" +
                     " JOIN [atu_univer].[dbo].[univer_group_student] ON [univer_group_student].[group_id] = [univer_exam_schedule].[group_id]" +
                     " JOIN [atu_univer].[dbo].[univer_group] ON [univer_group].[group_id] = [univer_exam_schedule].[group_id]" +
@@ -367,7 +367,8 @@ public class Univer {
                     " JOIN [atu_univer].[dbo].[univer_audience] ON [univer_audience].audience_id = [univer_exam_schedule].audience_id" +
                     " JOIN [atu_univer].[dbo].[univer_building] ON [univer_building].building_id = [univer_audience].building_id" +
                     " Where [univer_students].[students_identify_code] LIKE '" + IIN + "' and [univer_students].[student_edu_status_id] = 1 and " +
-                    " [univer_exam_schedule].[exam_time] > '"+takeMonth+"'";
+                    " [univer_exam_schedule].[exam_time] > '"+takeMonth+"'" +
+                    " ORDER BY [exam_time]";
             ResultSet rs1 = stmt.executeQuery(SQL);
             int rowCount = getRowCount(rs1);
             int colCount = rs1.getMetaData().getColumnCount();
@@ -377,8 +378,7 @@ public class Univer {
             result[0][0] = "Дисциплина";
             result[0][1] = "ФИО Преподавателя";
             result[0][2] = "Аудитория";
-            result[0][3] = "Время";
-            result[0][4] = "Тип";
+            result[0][3] = "Тип";
             int j = 1;
             while (rs2.next()) {
                 for (int i = 0; i < colCount; i++) {
@@ -388,7 +388,11 @@ public class Univer {
                         result[j][i] = "Письменный";
                     }
                     else {
+                        if(i == 2)
+                            result[j][i] = rs2.getString(i + 1) + " | Ауд " + rs2.getString(i + 4);
+                        else
                         result[j][i] = rs2.getString(i + 1);
+
                     }
                 }
                 j++;
