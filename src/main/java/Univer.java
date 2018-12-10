@@ -429,15 +429,34 @@ public class Univer {
                     "       [acpos_semester]" +
                     "      ,[univer_control].[control_name_ru]" +
                     "      ,[acpos_date_start]" +
-                    "      ,[acpos_date_end]";
-            ResultSet rs = stmt.executeQuery(SQL);
+                    "      ,[acpos_date_end]" +
+                    "ORDER BY [acpos_semester], [acpos_date_start]";
+            ResultSet rs1 = stmt.executeQuery(SQL);
+            int rowCount = getRowCount(rs1);
+            int colCount = rs1.getMetaData().getColumnCount();
+            rs1.close();
+            String[][] result = new String[rowCount + 1][colCount];
+            ResultSet rs2 = stmt.executeQuery(SQL);
+            result[0][0] = "Контроль";
+            result[0][1] = "Семестр";
+            result[0][2] = "Дата начала";
+            result[0][3] = "Дата конца";
+            int j = 1;
+            while (rs2.next()) {
+                for (int i = 0; i < colCount; i++) {
+                            result[j][i] = rs2.getString(i + 1);
+                    }
+                j++;
+                }
 
-            return result1;
+            return  result;
         }
     }
 
     public static String getAdvicer(String IIN){
+        countName = "Ваш эдвайзер \n";
         String SQL = "";
+        int i = 1;
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             SQL = " SELECT CONCAT([personal_sname] , ' '" +
                     "      ,[personal_name], ' '" +
@@ -451,10 +470,13 @@ public class Univer {
                     "  JOIN [atu_univer].[dbo].[univer_students] ON [univer_students].[students_id] = [univer_advicer_student_link].[student_id]" +
                     "   where [univer_students].[students_identify_code] LIKE '" + IIN + "' and [univer_students].[student_edu_status_id] = 1";
             ResultSet rs = stmt.executeQuery(SQL);
+            while (rs.next()){
+                    countName = countName +" "+ rs.getString("fio");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return  SQL;
+        return  countName;
     }
 
 

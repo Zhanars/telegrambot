@@ -79,10 +79,23 @@ public class Bot extends TelegramLongPollingBot {
                         }
                         break;
                     case "Календарь":
+                        try {
+                            pdfMaker.createNewPdf(telegrambotsql.getfromBotsName(message.getChatId()),"Академический календарь", Univer.getAcademcal(telegrambotsql.getIIN(message.getChatId())));
+                            sendFile(message.getChatId(),telegrambotsql.getfromBotsName(message.getChatId())+".pdf");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+
                         break;
                     case "\uD83D\uDCDEКонтакты":
                         break;
                     case "\uD83D\uDCDEКонтакты эдвайзера":
+                        sendMsg(message,Univer.getAdvicer(telegrambotsql.getIIN(message.getChatId())),21);
+
                         break;
                     case "\uD83D\uDCCAСтатистика":
                         break;
