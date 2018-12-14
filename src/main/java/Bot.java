@@ -135,6 +135,9 @@ public class Bot extends TelegramLongPollingBot {
                     case "⏪Вернуться на главную":
                         sendMsg(message, "Вы вернулись на главную", 1);
                         break;
+                    case "УМКД":
+                        umkd.getUMKD(message.getChatId(),"8","22838.docx");
+                        break;
                     default:
                         try {
                             sendMsg(message, telegrambotsql.registration(message.getText(), message.getChatId(), message.getText().length()),1);
@@ -205,7 +208,7 @@ public class Bot extends TelegramLongPollingBot {
                 e.printStackTrace();
             }
     }
-    private void sendFile(Long ChatId,String fileSource){
+    public static void sendFile(Long ChatId,String fileSource){
         String url = "https://api.telegram.org/bot745779362:AAEFky83gaEOP4aB8RjUHq4_BcW7hCYSB68/sendDocument?chat_id="+ChatId;
         OkHttpClient client = new OkHttpClient();
         File sourceFile = new File(fileSource);
