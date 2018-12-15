@@ -200,8 +200,6 @@ public class Univer {
         String semestr = "";
         Calendar c = new GregorianCalendar();
         String date2 = new SimpleDateFormat("yyyyMMdd").format(c.getTime());
-        System.out.println(c.getTime());
-        System.out.println(date2);
         c.add(Calendar.DAY_OF_YEAR, -7);
         String date1 = new SimpleDateFormat("yyyyMMdd").format(c.getTime());
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
@@ -547,7 +545,7 @@ public class Univer {
                     "  JOIN [atu_univer].[dbo].[univer_subject] ON [univer_subject].subject_id = [univer_educ_plan_pos].subject_id" +
                     "  JOIN univer_students ON univer_students.students_id = [univer_group_student].student_id" +
                     "  JOIN [atu_univer].[dbo].[univer_teacher_file] ON [univer_teacher_file].subject_id = [univer_educ_plan_pos].subject_id" +
-                    "  where [univer_students].[students_identify_code] LIKE '" + IIN + "' and [educ_plan_pos_semestr] = '"+semestr+"'";
+                    "  where [univer_students].[students_identify_code] LIKE '" + IIN + "' and [educ_plan_pos_semestr] = '"+semestr+"' ORDER BY [subject_name_ru]";
             ResultSet rs1 = stmt.executeQuery(SQL);
             int rowCount = getRowCount(rs1);
             int colCount = rs1.getMetaData().getColumnCount();
@@ -568,7 +566,7 @@ public class Univer {
     }
     public static String[][] getTeachers(String IIN, String SubjectId) throws IOException, ClassNotFoundException, SQLException {
         String SQL = "";
-        String semestr = getSemestr(IIN)
+        String semestr = getSemestr(IIN);
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             SQL = "SELECT DISTINCT" +
                     "       CONCAT([personal_sname] , ' '" +
@@ -584,8 +582,8 @@ public class Univer {
                     "  JOIN [atu_univer].[dbo].[univer_teacher_file] ON [univer_teacher_file].teacher_id = [univer_group].teacher_id" +
                     "  JOIN [univer_teacher] ON [univer_teacher].teacher_id = [univer_teacher_file].teacher_id" +
                     "  JOIN [univer_personal] ON [univer_personal].personal_id = [univer_teacher].personal_id" +
-                    "  where where [univer_students].[students_identify_code] LIKE '" + IIN + "' and [educ_plan_pos_semestr] = '"+semestr+"' and  [univer_teacher_file].subject_id = [univer_educ_plan_pos].subject_id" +
-                    "  and [univer_educ_plan_pos].subject_id = '"+SubjectId+"' ";
+                    "  where [univer_students].[students_identify_code] LIKE '" + IIN + "' and [educ_plan_pos_semestr] = '"+semestr+"' and  [univer_teacher_file].subject_id = [univer_educ_plan_pos].subject_id" +
+                    "  and [univer_educ_plan_pos].subject_id = '"+SubjectId+"' ORDER BY [univer_group].teacher_id";
             ResultSet rs1 = stmt.executeQuery(SQL);
             int rowCount = getRowCount(rs1);
             int colCount = rs1.getMetaData().getColumnCount();
@@ -609,6 +607,7 @@ public class Univer {
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             SQL = "SELECT [teacher_file_title]" +
                     "      ,[teacher_file_name]" +
+                    "       ,[teacher_id]"+
                     "  FROM [atu_univer].[dbo].[univer_teacher_file] where [teacher_id] = '"+TeacherId+"' and [subject_id] = '"+SubjectId+"' ";
             ResultSet rs1 = stmt.executeQuery(SQL);
             int rowCount = getRowCount(rs1);

@@ -169,10 +169,13 @@ public class Bot extends TelegramLongPollingBot {
                 String Subject = callbackQuery.getData().substring(10);
                 sendMsg(callbackQuery.getMessage(),Subject,161);
             } else if (callbackQuery.getData().indexOf("TeachId:") >= 0){
-                int sIn = callbackQuery.getData().indexOf("SubjId");
-                String TeacherId = callbackQuery.getData().substring(10, sIn);
-                String SubjectId = callbackQuery.getData().substring(sIn+6);
-                umkd.getUMKD(callbackQuery.getMessage().getChatId(),TeacherId, SubjectId);
+                sendMsg(callbackQuery.getMessage(),callbackQuery.getData(),162);
+            } else if (callbackQuery.getData().indexOf("File:") >= 0){
+                int sIn = callbackQuery.getData().indexOf("Teach:");
+                String file = callbackQuery.getData().substring(5, sIn);
+                String TeacherId = callbackQuery.getData().substring(sIn+6);
+                answerCallbackQuery(callbackQuery.getId(), "Пожалуйста подождите, идет загрузка!");
+                umkd.getUMKD(callbackQuery.getMessage().getChatId(), TeacherId, file);
             }else {
                 answerCallbackQuery(callbackQuery.getId(), Quiz.saveQuiz(callbackQuery.getMessage(), callbackQuery.getData()));
                 sendMsg(callbackQuery.getMessage(), "Спасибо за ответ!\nНам очень важен ваше мнение.", 1);
@@ -214,8 +217,14 @@ public class Bot extends TelegramLongPollingBot {
                 } else if (button == 16){
                     setInline.setSubject(sendMessage,Univer.getSubject(telegrambotsql.getIIN(message.getChatId())));
                 } else if (button == 161){
-                    setInline.setTeacher(sendMessage,Univer.getTeachers(telegrambotsql.getIIN(message.getChatId()),text), text);
+                    setInline.setTeacher(sendMessage,Univer.getTeachers(telegrambotsql.getIIN(message.getChatId()),text));
                     sendMessage.setText("Выберите преподавателя");
+                } else if (button == 162){
+                    int sIn = text.indexOf("SubjId:");
+                    String TeacherId = text.substring(8, sIn);
+                    String SubjectId = text.substring(sIn+7);
+                    setInline.setFiles(sendMessage,Univer.getFiles(TeacherId,SubjectId));
+                    sendMessage.setText("Выберите документ");
                 }
                 execute(sendMessage);
 

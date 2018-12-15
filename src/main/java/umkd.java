@@ -5,26 +5,12 @@ import jcifs.smb.SmbFileInputStream;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
-import java.sql.SQLException;
 
 public class umkd {
-    public static void getUMKD(Long ChatId, String TeacherId, String SubjectId) {
+    public static void getUMKD(Long ChatId, String TeacherId, String fileName) {
         InputStream in = null;
         OutputStream out = null;
-        System.out.println(TeacherId);
-        String url = "smb://185.97.115.134/umkd/" + TeacherId + "/";
-        try {
-            String[][] Record = Univer.getFiles(TeacherId,SubjectId);
-            int rowCount = Record.length;
-            String[] files = new String[rowCount];
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        String url = "smb://185.97.115.134/umkd/" + TeacherId + "/"+fileName;
         NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(null, "Администратор", "Univer2018#");
         SmbFile dir = null;
         try {
@@ -33,12 +19,10 @@ public class umkd {
             e.printStackTrace();
         }
         try {
-            for (SmbFile f : dir.listFiles()) {
-                String DocName = f.getName();
-                System.out.println(f.getName());
+                String DocName = fileName;
                 File child = new File(DocName);
-                f.connect();
-                in = new BufferedInputStream(new SmbFileInputStream(f));
+                dir.connect();
+                in = new BufferedInputStream(new SmbFileInputStream(dir));
                 out = new BufferedOutputStream(new FileOutputStream(child));
                 byte[] buffer = new byte[4096];
                 int len = 0; //Read length
@@ -57,7 +41,6 @@ public class umkd {
                     e.printStackTrace();
                 }
                 Bot.sendFile(ChatId, DocName);
-            }
         } catch (SmbException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
