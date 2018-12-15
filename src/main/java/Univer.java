@@ -605,7 +605,7 @@ public class Univer {
     public static String[][] getFiles(String TeacherId, String SubjectId) throws IOException, ClassNotFoundException, SQLException {
         String SQL = "";
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
-            SQL = "SELECT [teacher_file_title]" +
+            SQL = " SELECT [teacher_file_title]" +
                     "      ,[teacher_file_name]" +
                     "       ,[teacher_id]"+
                     "  FROM [atu_univer].[dbo].[univer_teacher_file] where [teacher_id] = '"+TeacherId+"' and [subject_id] = '"+SubjectId+"' ";
