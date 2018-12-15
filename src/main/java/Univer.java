@@ -1,3 +1,5 @@
+import com.vdurmont.emoji.EmojiParser;
+
 import java.io.IOException;
 import java.sql.*;
 import java.text.SimpleDateFormat;
@@ -189,7 +191,6 @@ public class Univer {
     }
 
     public static String getStartDate(String IIN) throws IOException, ClassNotFoundException, SQLException {
-        System.out.println("gvjhgjkghkj");
         String SQL = "";
         Calendar c = new GregorianCalendar();
         String date2 = new SimpleDateFormat("yyyyMMdd").format(c.getTime());
@@ -215,6 +216,24 @@ public class Univer {
                     countName = rs.getString("start");
                 }
             }
+        }
+        return countName;
+    }
+
+    public  static String getSemestr(String IIN){
+        countName = "";
+        String SQL = "";
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
+            SQL = " SELECT top 1" +
+                    "   [univer_progress].[n_seme]" +
+                    "  FROM [atu_univer].[dbo].[univer_progress]" +
+                    "  JOIN  [atu_univer].[dbo].[univer_students] ON [univer_students].[students_id] =[univer_progress].[student_id]" +
+                    " WHERE [univer_students].[students_identify_code] LIKE '" + IIN + "' and [univer_progress].[status] = 1" +
+                    " ORDER BY [n_seme] desc";
+            ResultSet rs = stmt.executeQuery(SQL);
+            countName = rs.getString("n_seme");
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return countName;
     }
@@ -279,7 +298,7 @@ public class Univer {
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             SQL = " SELECT CONCAT ([univer_students].[students_sname],' ',[univer_students].[students_name],' ',[univer_students].[students_father_name]) as fio" +
                     "   ,[univer_faculty].[faculty_name_ru]" +
-                    "  ,[univer_speciality].[speciality_name_ru]" +
+                    "   ,[univer_speciality].[speciality_name_ru]" +
                     "   ,[univer_students].[students_curce_number]" +
                     "  FROM [atu_univer].[dbo].[univer_progress]" +
                     "  JOIN  [atu_univer].[dbo].[univer_students] ON [univer_students].[students_id] =[univer_progress].[student_id]" +
@@ -288,20 +307,47 @@ public class Univer {
                     "  JOIN [atu_univer].[dbo].[univer_mark_type] ON [univer_mark_type].[mark_type_id] = [univer_progress].mark_type_id" +
                     " WHERE [univer_students].[students_identify_code] LIKE '" + IIN + "' and [univer_progress].[status] = 1";
 
-            SQL1 = " SELECT [univer_progress].[subject_name_ru]" +
+            SQL1 = " ;with tableforresult as " +
+                    " (SELECT [univer_progress].[subject_name_ru]" +
                     "      ,[univer_progress].[progress_credit]" +
-                    " ,ROUND(((0.6*(([univer_progress].[progress_result_rk1] + [univer_progress].[progress_result_rk2])/2))+ (([univer_progress].[progress_result])*0.4)),0) as resultekz" +
+                    "      ,max(case" +
+                    "       when [controll_type_id] >= 2 or [controll_type_id]<= 35 or [controll_type_id] = 50  then [univer_progress].[progress_result]" +
+                    "       else [univer_progress].[progress_result_rk1] end ) RK1" +
+                    "       ,max(case\n" +
+                    "       when [controll_type_id] >= 2 or [controll_type_id]<= 35 or [controll_type_id] = 50  then [univer_progress].[progress_result]" +
+                    "       when [controll_type_id] = 48 or [controll_type_id] = 49 then [progress_result_rk1]" +
+                    "       else [univer_progress].[progress_result_rk2] end ) RK2" +
                     "      ,[univer_mark_type].[mark_type_symbol]" +
-                    " ,[univer_mark_type].[mark_type_gpa]" +
+                    "      ,[univer_mark_type].[mark_type_gpa]" +
                     "      ,[univer_progress].[n_seme]" +
                     "      ,[univer_progress].[academ_year]" +
+                    "      ,[univer_progress].[progress_result]" +
+                    "      ,[univer_progress].[progress_result_rk2]" +
+                    "      ,[univer_progress].[progress_result_rk1]" +
                     "  FROM [atu_univer].[dbo].[univer_progress]" +
                     "  JOIN  [atu_univer].[dbo].[univer_students] ON [univer_students].[students_id] =[univer_progress].[student_id]" +
                     "  JOIN [atu_univer].[dbo].[univer_faculty] ON [univer_faculty].[faculty_id] = [univer_students].faculty_id" +
                     "  JOIN [atu_univer].[dbo].[univer_speciality] ON [univer_speciality].[speciality_id] = [univer_students].[speciality_id]" +
                     "  JOIN [atu_univer].[dbo].[univer_mark_type] ON [univer_mark_type].[mark_type_id] = [univer_progress].mark_type_id" +
-                    " WHERE [univer_students].[students_identify_code] LIKE '" + IIN + "' and [univer_progress].[status] = 1" +
-                    " ORDER BY [univer_progress].[academ_year]";
+                    "  WHERE [univer_students].[students_identify_code] LIKE '"+IIN+"' and [univer_progress].[status] = 1" +
+                    "  GROUP BY [univer_progress].[subject_name_ru]" +
+                    "      ,[univer_progress].[progress_credit]" +
+                    "      ,[univer_mark_type].[mark_type_symbol]" +
+                    "      ,[univer_mark_type].[mark_type_gpa]" +
+                    "      ,[univer_progress].[n_seme]" +
+                    "      ,[univer_progress].[academ_year]" +
+                    "      ,[progress_result_rk1]" +
+                    "      ,[univer_progress].[progress_result_rk2]" +
+                    "      ,[univer_progress].[progress_result])" +
+                    "      SELECT tableforresult.[subject_name_ru]" +
+                    "      ,tableforresult.[progress_credit]" +
+                    "      ,ROUND(((0.6*((tableforresult.RK1 + tableforresult.RK2)/2))+ ((tableforresult.[progress_result])*0.4)),0) as resultekz" +
+                    "      ,tableforresult.[mark_type_symbol]" +
+                    "      ,tableforresult.[mark_type_gpa]" +
+                    "      ,tableforresult.[n_seme]" +
+                    "      ,tableforresult.[academ_year]" +
+                    "      FROM tableforresult" +
+                    "      ORDER BY tableforresult.[academ_year]";
             ResultSet rs = stmt.executeQuery(SQL1);
             int rowCount = getRowCount(rs);
             int colCount = rs.getMetaData().getColumnCount();
@@ -471,13 +517,63 @@ public class Univer {
                     "   where [univer_students].[students_identify_code] LIKE '" + IIN + "' and [univer_students].[student_edu_status_id] = 1";
             ResultSet rs = stmt.executeQuery(SQL);
             while (rs.next()){
-                    countName = countName +" "+ rs.getString("fio");
+                    countName = countName +" "+ rs.getString("fio") + "\n"+EmojiParser.parseToUnicode(":e-mail: ") + rs.getString("personal_email")
+                            + EmojiParser.parseToUnicode("\n:telephone_receiver: ") + rs.getString("personal_mobile_phone")
+                    +  EmojiParser.parseToUnicode("\n:phone: ")+ rs.getString("personal_home_phone");
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return  countName;
     }
+
+    public static String[][] getUmkd(String IIN) throws IOException, ClassNotFoundException, SQLException {
+        String SQL = "";
+        String dataStart = getStartDate(IIN);
+        String[][] result1 = new String[1][1];
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
+            SQL = "SELECT DISTINCT [univer_teacher_file].teacher_id" +
+                    "      ,[teacher_file_title]" +
+                    "      ,[teacher_file_name]" +
+                    "  ,CONCAT([personal_sname] , ' '" +
+                    "      ,[personal_name], ' '" +
+                    "      ,[personal_father_name]) as fio" +
+                    "  ,[subject_name_ru]" +
+                    "  ,[univer_teacher_file].subject_id" +
+                    "  FROM [atu_univer].[dbo].[univer_teacher_file]" +
+                    "  JOIN [univer_group] ON [univer_group].teacher_id = [univer_teacher_file].teacher_id" +
+                    "  JOIN [univer_educ_plan_pos] ON [univer_educ_plan_pos].educ_plan_pos_id = [univer_group].educ_plan_pos_id" +
+                    "  JOIN [univer_group_student] ON [univer_group_student].group_id = [univer_group].group_id" +
+                    "  JOIN univer_students ON univer_students.students_id = [univer_group_student].student_id" +
+                    "  JOIN [univer_teacher] ON [univer_teacher].teacher_id = [univer_teacher_file].teacher_id" +
+                    "  JOIN [univer_personal] ON [univer_personal].personal_id = [univer_teacher].personal_id" +
+                    "  JOIN [univer_subject] ON [univer_subject].subject_id = [univer_teacher_file].subject_id" +
+                    "  where univer_students.students_id = 12363 and [univer_teacher_file].subject_id = [univer_educ_plan_pos].subject_id" +
+                    "  and [educ_plan_pos_semestr] = 5" +
+                    "  ORDER BY [subject_name_ru]";
+            ResultSet rs1 = stmt.executeQuery(SQL);
+            int rowCount = getRowCount(rs1);
+            int colCount = rs1.getMetaData().getColumnCount();
+            rs1.close();
+            String[][] result = new String[rowCount][colCount];
+            ResultSet rs2 = stmt.executeQuery(SQL);
+            int j = 0;
+            while (rs2.next()) {
+                for (int i = 0; i < colCount; i++) {
+                    result[j][i] = rs2.getString(i + 1);
+                }
+                j++;
+            }
+
+            return result;
+
+        }
+    }
+
+
+
+
+
 
 
 
