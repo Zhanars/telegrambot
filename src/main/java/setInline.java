@@ -17,4 +17,42 @@ public class setInline {
         markupKeyboard.setKeyboard(buttons);
         sendMessage.setReplyMarkup(markupKeyboard);
     }
+    public static void setSubject(SendMessage sendMessage, String[][] Record) {
+        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
+        int colCount = 5;
+        int rowCount = Record.length;
+        String subjId="";
+        for (int i=1; i < rowCount; i++){
+            if (!Record[i][colCount].equals(subjId)) {
+                List<InlineKeyboardButton> button = new ArrayList<>();
+                subjId = Record[i][colCount];
+                button.add(new InlineKeyboardButton().setText(Record[i][4]).setCallbackData("SubjectId:"+subjId));
+                buttons.add(button);
+            }
+        }
+
+        InlineKeyboardMarkup markupKeyboard = new InlineKeyboardMarkup();
+        markupKeyboard.setKeyboard(buttons);
+        sendMessage.setReplyMarkup(markupKeyboard);
+    }
+    public static void setTeacher(SendMessage sendMessage, String[][] Record, String Subject) {
+        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
+        int colCount = 5;
+        int rowCount = Record.length;
+        String teacherId="";
+        for (int i=1; i < rowCount; i++){
+            if (Record[i][4].equals(Subject)) {
+                if (!Record[i][0].equals(teacherId)) {
+                    List<InlineKeyboardButton> button = new ArrayList<>();
+                    teacherId = Record[i][0];
+                    button.add(new InlineKeyboardButton().setText(Record[i][3]).setCallbackData("TeacherId:" + teacherId));
+                    buttons.add(button);
+                }
+            }
+        }
+
+        InlineKeyboardMarkup markupKeyboard = new InlineKeyboardMarkup();
+        markupKeyboard.setKeyboard(buttons);
+        sendMessage.setReplyMarkup(markupKeyboard);
+    }
 }

@@ -225,13 +225,15 @@ public class Univer {
         String SQL = "";
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             SQL = " SELECT top 1" +
-                    "   [univer_progress].[n_seme]" +
+                    "   [univer_progress].[n_seme] as n_seme" +
                     "  FROM [atu_univer].[dbo].[univer_progress]" +
                     "  JOIN  [atu_univer].[dbo].[univer_students] ON [univer_students].[students_id] =[univer_progress].[student_id]" +
                     " WHERE [univer_students].[students_identify_code] LIKE '" + IIN + "' and [univer_progress].[status] = 1" +
                     " ORDER BY [n_seme] desc";
             ResultSet rs = stmt.executeQuery(SQL);
-            countName = rs.getString("n_seme");
+            while (rs.next()) {
+                countName = rs.getString("n_seme");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
