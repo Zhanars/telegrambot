@@ -469,7 +469,7 @@ public class Univer {
                     "  JOIN [atu_univer].[dbo].[univer_group_student] ON [univer_group_student].group_id = [univer_group].group_id" +
                     "  JOIN [atu_univer].[dbo].[univer_students] ON [univer_students].[students_id] = [univer_group_student].[student_id]" +
                     "  JOIN [atu_univer].[dbo].[univer_control] ON [univer_control].control_id = [univer_academ_calendar_pos].control_id" +
-                    "  where[univer_students].[students_identify_code] LIKE '" + IIN + "' and [univer_students].[student_edu_status_id] = 1  " +
+                    "  where [univer_students].[students_identify_code] LIKE '" + IIN + "' and [univer_students].[student_edu_status_id] = 1  " +
                     " and [acpos_date_start] >= '"+dataStart+"' and [univer_academ_calendar_pos].acpos_module = 0" +
                     "  GROUP BY " +
                     "       [acpos_semester]" +
@@ -529,8 +529,7 @@ public class Univer {
 
     public static String[][] getUmkd(String IIN) throws IOException, ClassNotFoundException, SQLException {
         String SQL = "";
-        String dataStart = getStartDate(IIN);
-        String[][] result1 = new String[1][1];
+        String semestr = getSemestr(IIN);
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             SQL = "SELECT DISTINCT [univer_teacher_file].teacher_id" +
                     "      ,[teacher_file_title]" +
@@ -548,8 +547,8 @@ public class Univer {
                     "  JOIN [univer_teacher] ON [univer_teacher].teacher_id = [univer_teacher_file].teacher_id" +
                     "  JOIN [univer_personal] ON [univer_personal].personal_id = [univer_teacher].personal_id" +
                     "  JOIN [univer_subject] ON [univer_subject].subject_id = [univer_teacher_file].subject_id" +
-                    "  where univer_students.students_id = 12363 and [univer_teacher_file].subject_id = [univer_educ_plan_pos].subject_id" +
-                    "  and [educ_plan_pos_semestr] = 5" +
+                    "  where [univer_students].[students_identify_code] LIKE '" + IIN + "' and [univer_teacher_file].subject_id = [univer_educ_plan_pos].subject_id" +
+                    "  and [educ_plan_pos_semestr] = '"+semestr+"'" +
                     "  ORDER BY [subject_name_ru]";
             ResultSet rs1 = stmt.executeQuery(SQL);
             int rowCount = getRowCount(rs1);
