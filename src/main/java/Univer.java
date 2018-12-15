@@ -90,6 +90,7 @@ public class Univer {
 
     public static String getAttendance(String IIN, String date3) throws IOException, ClassNotFoundException, SQLException {
         String SQL = "";
+        String semestr = getSemestr(IIN);
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             SQL = " ;with cte_tbl as" +
                     " (SELECT  [univer_subject].[subject_name_ru],[univer_subject].[subject_id],[univer_educ_type].[educ_type_name_ru] ," +
@@ -115,7 +116,7 @@ public class Univer {
                     " JOIN  [atu_univer].[dbo].[univer_subject] ON [univer_subject].[subject_id] = [univer_educ_plan_pos].[subject_id]" +
                     " JOIN [atu_univer].[dbo].[univer_sheet_result] ON [univer_sheet_result].[student_id] = [univer_students].[students_id]" +
                     " WHERE [univer_students].[students_identify_code] LIKE '" + IIN + "' and [univer_students].[student_edu_status_id] = 1 " +
-                    " and [univer_academ_calendar_pos].[acpos_semester] = [univer_educ_plan_pos].[educ_plan_pos_semestr]" +
+                    " and [univer_academ_calendar_pos].[acpos_semester] = '"+semestr+"' " +
                     " and  [univer_academ_calendar_pos].[acpos_module] = [univer_educ_plan_pos].[acpos_module] " +
                     " and [univer_attendance].[ball]>= 0 and [univer_attendance].[att_date] >= '" + date3 + "'" +
                     " and [univer_sheet_result].[subject_id] =  [univer_subject].[subject_id]" +
@@ -159,6 +160,7 @@ public class Univer {
                 boolean bool=true;
                 while (rs1.next()) {
                     if (Integer.parseInt(rs1.getString("r4")) == 55 && bool) {
+
                         bool = false;
                         for(String SumAttendecerk : Attendencerk){
                             countName = SumAttendecerk + "\n";
@@ -190,8 +192,12 @@ public class Univer {
         return countName;
     }
 
+
+
+
     public static String getStartDate(String IIN) throws IOException, ClassNotFoundException, SQLException {
         String SQL = "";
+        String semestr = "";
         Calendar c = new GregorianCalendar();
         String date2 = new SimpleDateFormat("yyyyMMdd").format(c.getTime());
         System.out.println(c.getTime());
@@ -207,7 +213,7 @@ public class Univer {
                     " JOIN  [atu_univer].[dbo].[univer_educ_type] ON [univer_educ_type].[educ_type_id] = [univer_group].[educ_type_id]" +
                     " JOIN  [atu_univer].[dbo].[univer_academ_calendar_pos] ON [univer_academ_calendar_pos].[educ_plan_id] = [univer_educ_plan_pos].[educ_plan_id]" +
                     " JOIN  [atu_univer].[dbo].[univer_subject] ON [univer_subject].[subject_id] = [univer_educ_plan_pos].[subject_id]" +
-                    " WHERE [univer_students].[students_identify_code] LIKE '" + IIN + "' and [univer_students].[student_edu_status_id] = 1 and [univer_academ_calendar_pos].[acpos_semester] = [univer_educ_plan_pos].[educ_plan_pos_semestr]" +
+                    " WHERE [univer_students].[students_identify_code] LIKE '" + IIN + "' and [univer_students].[student_edu_status_id] = 1 and [univer_academ_calendar_pos].[acpos_semester] = '"+semestr+"'" +
                     " and  [univer_academ_calendar_pos].[acpos_module] = [univer_educ_plan_pos].[acpos_module] and [univer_attendance].[ball]>= 0 and [univer_academ_calendar_pos].control_id = 49" +
                     " and [univer_attendance].[att_date] > '" + date1 + "'";
             ResultSet rs = stmt.executeQuery(SQL);
@@ -313,10 +319,10 @@ public class Univer {
                     " (SELECT [univer_progress].[subject_name_ru]" +
                     "      ,[univer_progress].[progress_credit]" +
                     "      ,max(case" +
-                    "       when [controll_type_id] >= 2 or [controll_type_id]<= 35 or [controll_type_id] = 50  then [univer_progress].[progress_result]" +
+                    "       when [controll_type_id] >= 2 and [controll_type_id]<= 35 or [controll_type_id] = 50  then [univer_progress].[progress_result]" +
                     "       else [univer_progress].[progress_result_rk1] end ) RK1" +
                     "       ,max(case\n" +
-                    "       when [controll_type_id] >= 2 or [controll_type_id]<= 35 or [controll_type_id] = 50  then [univer_progress].[progress_result]" +
+                    "       when [controll_type_id] >= 2 and [controll_type_id]<= 35 or [controll_type_id] = 50  then [univer_progress].[progress_result]" +
                     "       when [controll_type_id] = 48 or [controll_type_id] = 49 then [progress_result_rk1]" +
                     "       else [univer_progress].[progress_result_rk2] end ) RK2" +
                     "      ,[univer_mark_type].[mark_type_symbol]" +
@@ -533,7 +539,15 @@ public class Univer {
         String SQL = "";
         String semestr = getSemestr(IIN);
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
-            SQL = "";
+            SQL = "SELECT DISTINCT [subject_name_ru]" +
+                    "   ,[univer_educ_plan_pos].subject_id" +
+                    "  FROM [atu_univer].[dbo].[univer_group]" +
+                    "  JOIN [atu_univer].[dbo].[univer_group_student] ON [univer_group_student].group_id = [univer_group].group_id" +
+                    "  JOIN [atu_univer].[dbo].[univer_educ_plan_pos] ON [univer_educ_plan_pos].educ_plan_pos_id = [univer_group].educ_plan_pos_id" +
+                    "  JOIN [atu_univer].[dbo].[univer_subject] ON [univer_subject].subject_id = [univer_educ_plan_pos].subject_id" +
+                    "  JOIN univer_students ON univer_students.students_id = [univer_group_student].student_id" +
+                    "  JOIN [atu_univer].[dbo].[univer_teacher_file] ON [univer_teacher_file].subject_id = [univer_educ_plan_pos].subject_id" +
+                    "  where [univer_students].[students_identify_code] LIKE '" + IIN + "' and [educ_plan_pos_semestr] = '"+semestr+"'";
             ResultSet rs1 = stmt.executeQuery(SQL);
             int rowCount = getRowCount(rs1);
             int colCount = rs1.getMetaData().getColumnCount();
@@ -554,8 +568,24 @@ public class Univer {
     }
     public static String[][] getTeachers(String IIN, String SubjectId) throws IOException, ClassNotFoundException, SQLException {
         String SQL = "";
+        String semestr = getSemestr(IIN)
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
-            SQL = "";
+            SQL = "SELECT DISTINCT" +
+                    "       CONCAT([personal_sname] , ' '" +
+                    "      ,[personal_name], ' '" +
+                    "      ,[personal_father_name]) as fio" +
+                    "      , [univer_group].teacher_id" +
+                    "      ,[univer_educ_plan_pos].subject_id" +
+                    "  FROM [atu_univer].[dbo].[univer_group]" +
+                    "  JOIN [atu_univer].[dbo].[univer_group_student] ON [univer_group_student].group_id = [univer_group].group_id" +
+                    "  JOIN [atu_univer].[dbo].[univer_educ_plan_pos] ON [univer_educ_plan_pos].educ_plan_pos_id = [univer_group].educ_plan_pos_id" +
+                    "  JOIN [atu_univer].[dbo].[univer_subject] ON [univer_subject].subject_id = [univer_educ_plan_pos].subject_id" +
+                    "  JOIN univer_students ON univer_students.students_id = [univer_group_student].student_id" +
+                    "  JOIN [atu_univer].[dbo].[univer_teacher_file] ON [univer_teacher_file].teacher_id = [univer_group].teacher_id" +
+                    "  JOIN [univer_teacher] ON [univer_teacher].teacher_id = [univer_teacher_file].teacher_id" +
+                    "  JOIN [univer_personal] ON [univer_personal].personal_id = [univer_teacher].personal_id" +
+                    "  where where [univer_students].[students_identify_code] LIKE '" + IIN + "' and [educ_plan_pos_semestr] = '"+semestr+"' and  [univer_teacher_file].subject_id = [univer_educ_plan_pos].subject_id" +
+                    "  and [univer_educ_plan_pos].subject_id = '"+SubjectId+"' ";
             ResultSet rs1 = stmt.executeQuery(SQL);
             int rowCount = getRowCount(rs1);
             int colCount = rs1.getMetaData().getColumnCount();
@@ -577,7 +607,9 @@ public class Univer {
     public static String[][] getFiles(String TeacherId, String SubjectId) throws IOException, ClassNotFoundException, SQLException {
         String SQL = "";
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
-            SQL = "";
+            SQL = "SELECT [teacher_file_title]" +
+                    "      ,[teacher_file_name]" +
+                    "  FROM [atu_univer].[dbo].[univer_teacher_file] where [teacher_id] = '"+TeacherId+"' and [subject_id] = '"+SubjectId+"' ";
             ResultSet rs1 = stmt.executeQuery(SQL);
             int rowCount = getRowCount(rs1);
             int colCount = rs1.getMetaData().getColumnCount();
