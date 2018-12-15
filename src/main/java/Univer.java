@@ -529,29 +529,11 @@ public class Univer {
         return  countName;
     }
 
-    public static String[][] getUmkd(String IIN) throws IOException, ClassNotFoundException, SQLException {
+    public static String[][] getSubject(String IIN) throws IOException, ClassNotFoundException, SQLException {
         String SQL = "";
         String semestr = getSemestr(IIN);
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
-            SQL = "SELECT DISTINCT [univer_teacher_file].teacher_id" +
-                    "      ,[teacher_file_title]" +
-                    "      ,[teacher_file_name]" +
-                    "  ,CONCAT([personal_sname] , ' '" +
-                    "      ,[personal_name], ' '" +
-                    "      ,[personal_father_name]) as fio" +
-                    "  ,[subject_name_ru]" +
-                    "  ,[univer_teacher_file].subject_id" +
-                    "  FROM [atu_univer].[dbo].[univer_teacher_file]" +
-                    "  JOIN [univer_group] ON [univer_group].teacher_id = [univer_teacher_file].teacher_id" +
-                    "  JOIN [univer_educ_plan_pos] ON [univer_educ_plan_pos].educ_plan_pos_id = [univer_group].educ_plan_pos_id" +
-                    "  JOIN [univer_group_student] ON [univer_group_student].group_id = [univer_group].group_id" +
-                    "  JOIN univer_students ON univer_students.students_id = [univer_group_student].student_id" +
-                    "  JOIN [univer_teacher] ON [univer_teacher].teacher_id = [univer_teacher_file].teacher_id" +
-                    "  JOIN [univer_personal] ON [univer_personal].personal_id = [univer_teacher].personal_id" +
-                    "  JOIN [univer_subject] ON [univer_subject].subject_id = [univer_teacher_file].subject_id" +
-                    "  where [univer_students].[students_identify_code] LIKE '" + IIN + "' and [univer_teacher_file].subject_id = [univer_educ_plan_pos].subject_id" +
-                    "  and [educ_plan_pos_semestr] = '"+semestr+"'" +
-                    "  ORDER BY [subject_name_ru]";
+            SQL = "";
             ResultSet rs1 = stmt.executeQuery(SQL);
             int rowCount = getRowCount(rs1);
             int colCount = rs1.getMetaData().getColumnCount();
@@ -570,17 +552,50 @@ public class Univer {
 
         }
     }
+    public static String[][] getTeachers(String IIN, String SubjectId) throws IOException, ClassNotFoundException, SQLException {
+        String SQL = "";
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
+            SQL = "";
+            ResultSet rs1 = stmt.executeQuery(SQL);
+            int rowCount = getRowCount(rs1);
+            int colCount = rs1.getMetaData().getColumnCount();
+            rs1.close();
+            String[][] result = new String[rowCount][colCount];
+            ResultSet rs2 = stmt.executeQuery(SQL);
+            int j = 0;
+            while (rs2.next()) {
+                for (int i = 0; i < colCount; i++) {
+                    result[j][i] = rs2.getString(i + 1);
+                }
+                j++;
+            }
 
+            return result;
 
+        }
+    }
+    public static String[][] getFiles(String TeacherId, String SubjectId) throws IOException, ClassNotFoundException, SQLException {
+        String SQL = "";
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
+            SQL = "";
+            ResultSet rs1 = stmt.executeQuery(SQL);
+            int rowCount = getRowCount(rs1);
+            int colCount = rs1.getMetaData().getColumnCount();
+            rs1.close();
+            String[][] result = new String[rowCount][colCount];
+            ResultSet rs2 = stmt.executeQuery(SQL);
+            int j = 0;
+            while (rs2.next()) {
+                for (int i = 0; i < colCount; i++) {
+                    result[j][i] = rs2.getString(i + 1);
+                }
+                j++;
+            }
 
+            return result;
 
-
-
-
-
-
-
-
+        }
+    }
 
     public static Double getGPA(String IIN){
         int creditSum = 0;

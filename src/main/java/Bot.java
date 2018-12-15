@@ -166,8 +166,14 @@ public class Bot extends TelegramLongPollingBot {
             }
         } else if (update.hasCallbackQuery()) {
             if (callbackQuery.getData().indexOf("SubjectId:") >= 0){
-                sendMsg(message,callbackQuery.getMessage().getText(),161);
-            } else {
+                String Subject = callbackQuery.getData().substring(10);
+                sendMsg(callbackQuery.getMessage(),Subject,161);
+            } else if (callbackQuery.getData().indexOf("TeachId:") >= 0){
+                int sIn = callbackQuery.getData().indexOf("SubjId");
+                String TeacherId = callbackQuery.getData().substring(10, sIn);
+                String SubjectId = callbackQuery.getData().substring(sIn+6);
+                umkd.getUMKD(callbackQuery.getMessage().getChatId(),TeacherId, SubjectId);
+            }else {
                 answerCallbackQuery(callbackQuery.getId(), Quiz.saveQuiz(callbackQuery.getMessage(), callbackQuery.getData()));
                 sendMsg(callbackQuery.getMessage(), "Спасибо за ответ!\nНам очень важен ваше мнение.", 1);
             }
@@ -206,9 +212,10 @@ public class Bot extends TelegramLongPollingBot {
                 } else if (button == 41){
                     setInline.setInline(sendMessage);
                 } else if (button == 16){
-                    setInline.setSubject(sendMessage,Univer.getUmkd(telegrambotsql.getIIN(message.getChatId())));
+                    setInline.setSubject(sendMessage,Univer.getSubject(telegrambotsql.getIIN(message.getChatId())));
                 } else if (button == 161){
-                    setInline.setTeacher(sendMessage,Univer.getUmkd(telegrambotsql.getIIN(message.getChatId())), text);
+                    setInline.setTeacher(sendMessage,Univer.getTeachers(telegrambotsql.getIIN(message.getChatId()),text), text);
+                    sendMessage.setText("Выберите преподавателя");
                 }
                 execute(sendMessage);
 
