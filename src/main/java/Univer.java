@@ -144,7 +144,7 @@ public class Univer {
         return SQL;
     }
 
-    public static String getAttendanceforweek(String IIN) throws SQLException {
+    public static String getAttendanceforweek(String IIN , String[][] Record) throws SQLException {
         countName = "";
         Calendar c = new GregorianCalendar();
         c.add(Calendar.DAY_OF_YEAR, -7);
@@ -156,23 +156,44 @@ public class Univer {
             rs1 = stmt.executeQuery(getAttendance(IIN, date1));
             int columns1 = 0;
             columns1 = rs1.getMetaData().getColumnCount();
+            String rk1 = Attendencerk.get(7);
+            String rk2 = Attendencerk.get(8);
+
+            int rowCount = Record.length ;
+            int colCount = Record[0].length;
             if (rs1 != null) {
                 boolean bool=true;
                 while (rs1.next()) {
                     if (Integer.parseInt(rs1.getString("r4")) == 55 && bool) {
-
                         bool = false;
+                        // Сравнивает рк у последнего предмета
+                        if(Integer.parseInt(rk1)<= Integer.parseInt(Record[rowCount-1][1])){
+                            for (int i=0 ; i< rowCount; i++){
+
+                                    countName = countName + Record[i][0] + " РК1:" + Record[i][1] + " РК2:" + Record[i][2] + " Экз:"+ Record[i][3] + " Итог:"+ Record[i][4] + "\n";
+
+                            }
+                            countName = countName + "\n\n Журнал посещений";
+                        }else{
                         for(String SumAttendecerk : Attendencerk){
                             countName = SumAttendecerk + "\n";
                         }
                         countName = countName + "\n\n" +"Ваш текущий контроль РК1 \n";
-                    }else
+                    }}else
                     if (Integer.parseInt(rs1.getString("r4")) == 56 && bool)
                         {
                         bool = false;
+                            if(Integer.parseInt(rk2)<= Integer.parseInt(Record[rowCount-1][2])){
+                                for (int i=0 ; i< rowCount; i++){
+
+                                        countName = countName + Record[i][0] + " РК1:" + Record[i][1] + " РК2:" + Record[i][2] + " Экз:"+ Record[i][3] + " Итог:"+ Record[i][4] + "\n";
+
+                                }
+                                countName = countName + "\n\n Журнал посещений";
+                            }else{
                             for(String SumAttendecerk : Attendencerk){
                                 countName = SumAttendecerk + "\n";
-                            }
+                            }}
                             countName = countName + "\n\n" +"Ваш текущий контроль РК2 \n";
                     }
                     for (int i = 1; i <= columns1 - 3; i++) {
@@ -191,6 +212,117 @@ public class Univer {
         }
         return countName;
     }
+
+    public static ArrayList<String> getSumAttendance(String IIN) throws SQLException  {
+
+        ResultSet rs1 = null;
+        int sumrk1 = -1, sumrk2 = -1, i = 1;
+        int subject_name = 0;
+        ArrayList<String> SumAttendance = new ArrayList<String>(30);
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
+            rs1 = stmt.executeQuery(getAttendance(IIN, getStartDate(IIN)));
+            countName = "";
+            String ekz = "";
+
+            if (rs1 != null) {
+                while (rs1.next()) {
+                    if (subject_name != Integer.parseInt(rs1.getString("subject_name"))) {
+                        if(sumrk1!=-1) {
+
+
+                            countName = countName + " РК1: " + Integer.toString(sumrk1) + " РК2: " + Integer.toString(sumrk2) + " Экз: " + rs1.getString("r8") +"\n"+ rs1.getString("subname");
+                            SumAttendance.add(countName);
+                        } else {
+
+                            countName = rs1.getString("subname");
+                        }
+                        subject_name = Integer.parseInt(rs1.getString("subject_name"));
+                        i = i +1;
+                        sumrk1 = 0;
+                        sumrk2 = 0;
+                    }
+                    if (subject_name == Integer.parseInt(rs1.getString("subject_name"))){
+                        String ball = rs1.getString("ball");
+                        int len = ball.length();
+                        ball = ball.substring(0,len-2);
+                        if (Integer.parseInt(rs1.getString("r4")) == 55) {
+                            sumrk1 = sumrk1 + Integer.parseInt(ball);
+                        } else if (Integer.parseInt(rs1.getString("r4"))== 56) {
+                            sumrk2 = sumrk2 + Integer.parseInt(ball);
+                        }
+                    }
+                    ekz = rs1.getString("r8");
+                }
+                SumAttendance.add(Integer.toString(sumrk1));
+                SumAttendance.add(Integer.toString(sumrk2));
+                SumAttendance.add(7,Integer.toString(sumrk1));
+                SumAttendance.add(8,Integer.toString(sumrk2));
+                System.out.println();
+                countName = countName + " РК1: " + Integer.toString(sumrk1) + " РК2: " + Integer.toString(sumrk2) + " Экз: " + ekz;
+                SumAttendance.add(countName);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return  SumAttendance;
+    }
+
+    public static String[][] getProgressforAttendence(String IIN) throws SQLException{
+        String SQL = "";
+        String semestr = getSemestr(IIN);
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
+            SQL =  " ;with tableforresult as " +
+                    " (SELECT [univer_progress].[subject_name_ru]" +
+                    "  ,max(case" +
+                    " when ([controll_type_id] >= 2 and [controll_type_id]<= 35) or [controll_type_id] = 50  then [univer_progress].[progress_result]" +
+                    "  else [univer_progress].[progress_result_rk1] end ) RK1" +
+                    "  ,max(case" +
+                    "  when ([controll_type_id] >= 2 and [controll_type_id]<= 35) or [controll_type_id] = 50  then [univer_progress].[progress_result]" +
+                    "  when [controll_type_id] = 48 or [controll_type_id] = 49 then [progress_result_rk1]" +
+                    "  else [univer_progress].[progress_result_rk2] end ) RK2" +
+                    "  ,[univer_progress].[progress_result]" +
+                    "  ,[univer_progress].[progress_result_rk2]" +
+                    "  ,[univer_progress].[progress_result_rk1]" +
+                    "  FROM [atu_univer].[dbo].[univer_progress]" +
+                    "  JOIN  [atu_univer].[dbo].[univer_students] ON [univer_students].[students_id] =[univer_progress].[student_id]" +
+                    "  JOIN [atu_univer].[dbo].[univer_faculty] ON [univer_faculty].[faculty_id] = [univer_students].faculty_id" +
+                    "  JOIN [atu_univer].[dbo].[univer_speciality] ON [univer_speciality].[speciality_id] = [univer_students].[speciality_id]" +
+                    "  JOIN [atu_univer].[dbo].[univer_mark_type] ON [univer_mark_type].[mark_type_id] = [univer_progress].mark_type_id" +
+                    "  WHERE [univer_students].[students_identify_code] LIKE '"+IIN+"' and [univer_progress].[status] = 1 and [univer_progress].[n_seme] = '"+semestr+"'" +
+                    "  GROUP BY [univer_progress].[subject_name_ru]" +
+                    "  ,[progress_result_rk1]" +
+                    "  ,[univer_progress].[progress_result_rk2]" +
+                    "  ,[univer_progress].[progress_result]" +
+                    " )" +
+                    " SELECT tableforresult.[subject_name_ru] as subject" +
+                    "           ,tableforresult.RK1 as rk1" +
+                    "   ,tableforresult.RK2 as rk2" +
+                    "  ,tableforresult.[progress_result] as result" +
+                    "  ,ROUND(((0.6*((tableforresult.RK1 + tableforresult.RK2)/2))+ ((tableforresult.[progress_result])*0.4)),0) as resultekz" +
+                    "  FROM tableforresult" +
+                    " ORDER BY tableforresult.[subject_name_ru]";
+            ResultSet rs1 = stmt.executeQuery(SQL);
+            int rowCount = getRowCount(rs1);
+            int colCount = rs1.getMetaData().getColumnCount();
+            rs1.close();
+            String[][] result = new String[rowCount][colCount];
+            ResultSet rs2 = stmt.executeQuery(SQL);
+            int j = 0;
+            while (rs2.next()) {
+                for (int i = 0; i < colCount; i++) {
+                    result[j][i] = rs2.getString(i + 1);
+                }
+                j++;
+            }
+            return result;
+        }
+    }
+
 
 
 
@@ -244,57 +376,7 @@ public class Univer {
         return countName;
     }
 
-    public static ArrayList<String> getSumAttendance(String IIN) throws SQLException  {
 
-        ResultSet rs1 = null;
-        int sumrk1 = -1, sumrk2 = -1, i = 1;
-        int subject_name = 0;
-        ArrayList<String> SumAttendance = new ArrayList<String>();
-        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
-            rs1 = stmt.executeQuery(getAttendance(IIN, getStartDate(IIN)));
-            countName = "";
-            String ekz = "";
-
-            if (rs1 != null) {
-                while (rs1.next()) {
-                    if (subject_name != Integer.parseInt(rs1.getString("subject_name"))) {
-                        if(sumrk1!=-1) {
-                            countName = countName + " РК1: " + Integer.toString(sumrk1) + " РК2: " + Integer.toString(sumrk2) + " Экз: " + rs1.getString("r8") +"\n"+ rs1.getString("subname");
-                            SumAttendance.add(countName);
-                        } else {
-
-                            countName = rs1.getString("subname");
-                        }
-                            subject_name = Integer.parseInt(rs1.getString("subject_name"));
-                            i = i +1;
-                            sumrk1 = 0;
-                            sumrk2 = 0;
-                    }
-                    if (subject_name == Integer.parseInt(rs1.getString("subject_name"))){
-                        String ball = rs1.getString("ball");
-                        int len = ball.length();
-                        ball = ball.substring(0,len-2);
-                        if (Integer.parseInt(rs1.getString("r4")) == 55) {
-                            sumrk1 = sumrk1 + Integer.parseInt(ball);
-                        } else if (Integer.parseInt(rs1.getString("r4"))== 56) {
-                            sumrk2 = sumrk2 + Integer.parseInt(ball);
-                        }
-                    }
-                    ekz = rs1.getString("r8");
-                }
-                countName = countName + " РК1: " + Integer.toString(sumrk1) + " РК2: " + Integer.toString(sumrk2) + " Экз: " + ekz;
-                SumAttendance.add(countName);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        return  SumAttendance;
-    }
 
     public static String[][] getTranskript(String IIN){
         String SQL = "";
