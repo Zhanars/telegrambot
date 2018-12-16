@@ -39,9 +39,17 @@ public class telegrambotsql {
 
         } else {
             if (gettextlength ==4 && message.equals(getCode(chatid))){
+                try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
+                    String SQL = "UPDATE [dbo].[bots] SET [temppassword] = NULL where [chatid] = '"+chatid+"' ";
+                    stmt.executeUpdate(SQL);
+                }
+                Univer.resetPassword(getIIN(chatid));
+                countName = "Пароль сброшен ";
 
+
+            }else {
+                countName = "Длина иин меньше 12";
             }
-            countName = "Длина иин меньше 12";
 
         }
         return countName;
@@ -137,7 +145,7 @@ public class telegrambotsql {
     public static String getCode(Long ChatId){
         String result = "";
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
-            String SQL = "select [temppassword] from where chatid = '"+ChatId+"'";
+            String SQL = "select [temppassword] from [telegrambot].[dbo].[bots] where chatid = '"+ChatId+"'";
             ResultSet rs = stmt.executeQuery(SQL);
             while (rs.next()) {
                 result = rs.getString("temppassword");

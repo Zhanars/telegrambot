@@ -546,6 +546,7 @@ public class Univer {
         String SQL = "";
         String dataStart = getStartDate(IIN);
         String[][] result1 = new String[1][1];
+        System.out.println(dataStart);
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             SQL = " SELECT [univer_control].[control_name_ru]" +
                     "       ,[acpos_semester]" +
@@ -566,6 +567,7 @@ public class Univer {
                     "      ,[acpos_date_end]" +
                     "ORDER BY [acpos_semester], [acpos_date_start]";
             ResultSet rs1 = stmt.executeQuery(SQL);
+
             int rowCount = getRowCount(rs1);
             int colCount = rs1.getMetaData().getColumnCount();
             rs1.close();
@@ -709,6 +711,40 @@ public class Univer {
 
         }
     }
+
+    public static String resetPassword(String IIN){
+        countName = "";
+        String SQL = "";
+        String SQL1 = "";
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
+        SQL = " SELECT [univer_users].[user_id] as Userst" +
+                "  FROM [atu_univer].[dbo].[univer_users]" +
+                "  JOIN univer_students ON univer_students.[user_id] = [univer_users].[user_id]" +
+                " where [univer_students].[students_identify_code] LIKE '" + IIN + "' ";
+        ResultSet rs = stmt.executeQuery(SQL);
+        while (rs.next()){
+            countName = rs.getString("Userst");
+        }
+        rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
+
+            SQL1 = " UPDATE [atu_univer].[dbo].[univer_users] SET user_password = 'A9CA322AC0D07067D41A65860B2FFE41B5E70B1A5450FF7F16B8A26DB72099CD49F549DFBF7F269A909852920E98995BDE11CE1A8D7CD65F51C4674ADA296096'" +
+                    "where user_id = '"+countName+"'";
+            ResultSet rs1 = stmt.executeQuery(SQL1);
+            rs1.close();
+            countName = "Пароль сброшен";
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return countName;
+    }
+
+
 
     public static Double getGPA(String IIN){
         int creditSum = 0;
