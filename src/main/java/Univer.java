@@ -755,4 +755,23 @@ public class Univer {
         }
         return count;
     }
+    public static String getEmail(String IIN){
+        String result = "";
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
+            String SQL = "SELECT [students_email]" +
+                    "  FROM [atu_univer].[dbo].[univer_students] where [univer_students].[students_identify_code] LIKE '"+IIN+"'";
+            ResultSet rs = stmt.executeQuery(SQL);
+            if (rs != null) {
+                while (rs.next()) {
+                    result = rs.getString("students_email");
+                }
+            } else {
+                result = "";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+
+    }
 }

@@ -53,7 +53,7 @@ public class ReplyButtons {
             keyboardFourthRow.add(new KeyboardButton("УМКД"));
             keyboardFourthRow.add(new KeyboardButton("Календарь"));
             keyboardFifthRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":telephone_receiver:Контакты эдвайзера")));
-            keyboardFifthRow.add(new KeyboardButton("Сброс пароля"));
+            keyboardFifthRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":key:")+"Сброс пароля"));
             keyboardSixthRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":rewind:Вернуться на главную")));
         }else{
 

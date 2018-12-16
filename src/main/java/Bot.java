@@ -63,6 +63,19 @@ public class Bot extends TelegramLongPollingBot {
                         pdfMaker.createUniverTranskriptPdf(telegrambotsql.getfromBotsName(message.getChatId()),"Транскрипт", Univer.getTranskript(telegrambotsql.getIIN(message.getChatId())));
                         sendFile(message.getChatId(),telegrambotsql.getfromBotsName(message.getChatId())+".pdf");
                         break;
+                    case "\uD83D\uDD11Сброс пароля":
+                        String email = Univer.getEmail(telegrambotsql.getIIN(message.getChatId()));
+                        if (!email.equals("")){
+                            telegrambotsql.sendCodeEmail(email, message.getChatId());
+                            int ind1 = email.indexOf("_");
+                            if (ind1 >= 0) {
+                                email = email.substring(0,ind1)+"-"+email.substring(ind1+1);
+                            }
+                            sendMsg(message,"Bведите код подтверждения отправленную на почту "+email+". Email можно изменить в системе универ.", 11);
+                        } else {
+                            sendMsg(message,"Заполните поле Email в системе универ!", 11);
+                        }
+                        break;
                     case "Расписание":
                         break;
                     case "Расписание экзаменов":
@@ -201,7 +214,6 @@ public class Bot extends TelegramLongPollingBot {
         sendMessage.enableMarkdown(true);
         sendMessage.setChatId(message.getChatId());
         sendMessage.setReplyToMessageId(message.getMessageId());
-        sendMessage.setParseMode("Markdown");
         sendMessage.setText(text);
             try {
                 if (button == 1){

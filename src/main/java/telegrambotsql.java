@@ -4,13 +4,14 @@ import java.io.IOException;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Random;
 
 public class telegrambotsql {
     private static String countName = "";
     private static String userName = "joker";
     private static String password = "Desant3205363";
     private static String connectUrl = "jdbc:sqlserver://185.97.115.131\\RUSGUARD:49181;database=telegrambot";
-    public static String registration(String message, Long chatid,int gettextlength) throws IOException, ClassNotFoundException, SQLException {
+    public static String registration(String message, Long chatid, int gettextlength) throws IOException, ClassNotFoundException, SQLException {
         String date = new SimpleDateFormat("yyyyMMdd").format(Calendar.getInstance().getTime());
         if (gettextlength == 12) {
             if(Univer.checkIINPersonalorStudent(message) > 0) {
@@ -36,7 +37,10 @@ public class telegrambotsql {
                 countName = "Такой иин не существует";
             }
 
-        }else {
+        } else {
+            if (gettextlength ==4 && message.equals(getCode(chatid))){
+
+            }
             countName = "Длина иин меньше 12";
 
         }
@@ -108,6 +112,35 @@ public class telegrambotsql {
             ResultSet rs = stmt.executeQuery(SQL);
             while (rs.next()) {
                  result = rs.getInt("checkperson");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+    public static void sendCodeEmail(String email, Long ChatId){
+        int min = 1000;
+        int max = 9999;
+        int diff = max - min;
+        Random random = new Random();
+        int i = random.nextInt(diff + 1);
+        i += min;
+        String body = "Код подтверждения: "+String.valueOf(i);
+        gmail.main(email, body);
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
+            String SQL = "update [bots] set [temppassword] = '"+String.valueOf(i)+"' where chatid = '"+ChatId+"'";
+            stmt.executeUpdate(SQL);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public static String getCode(Long ChatId){
+        String result = "";
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
+            String SQL = "select [temppassword] from where chatid = '"+ChatId+"'";
+            ResultSet rs = stmt.executeQuery(SQL);
+            while (rs.next()) {
+                result = rs.getString("temppassword");
             }
         } catch (SQLException e) {
             e.printStackTrace();
