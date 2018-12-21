@@ -47,6 +47,7 @@ public class Bot extends TelegramLongPollingBot {
             if (telegrambotsql.checkChatId(message.getChatId())) {
                 switch (message.getText()) {
                     case "/start":
+                        newsAtu.inserChatId(message.getChatId());
                             sendMsg(message,smiling_face_with_heart_eyes + "Здравствуйте " +telegrambotsql.getfromBotsName(message.getChatId()),1);
                         break;
                     case "\uD83C\uDFEBИПК Универ":
