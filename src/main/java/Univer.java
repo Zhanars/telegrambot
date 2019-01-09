@@ -1,4 +1,5 @@
 import com.vdurmont.emoji.EmojiParser;
+import firstmenu.Configuration;
 
 import java.io.IOException;
 import java.sql.*;
@@ -9,15 +10,10 @@ import java.util.GregorianCalendar;
 
 public class Univer {
     private static String countName = "";
-    private static String userName = "sa";
-    private static String password = "Desant3205363";
-    private static String connectUrl = "jdbc:sqlserver://185.97.115.134\\MSSQLSERVER;database=atu_univer";
-
-
-
+    private static String userName = Configuration.getUniverUsername();
+    private static String password = Configuration.getPass();
+    private static String connectUrl = Configuration.getUniverHost();
     public static String IIN(String message) throws IOException, ClassNotFoundException, SQLException {
-
-
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             countName = "";
             String SQL = "SELECT [students_sname], [students_name] FROM [atu_univer].[dbo].[univer_students] WHERE [students_identify_code] LIKE '%" + message + "%' and [student_edu_status_id] = 1";

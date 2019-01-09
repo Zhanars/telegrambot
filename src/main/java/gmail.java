@@ -1,3 +1,5 @@
+import firstmenu.Configuration;
+
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -8,8 +10,8 @@ import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
 public class gmail {
-    private static String USER_NAME = "atu.demo.bot@gmail.com";  // GMail user name (just the part before "@gmail.com")
-    private static String PASSWORD = "Desant3205363"; // GMail password
+    private static String USER_NAME = Configuration.getGmailLogin();  // GMail user name (just the part before "@gmail.com")
+    private static String PASSWORD = Configuration.getPass(); // GMail password
 
     public static void main(String RECIPIENT, String text) {
         String from = USER_NAME;

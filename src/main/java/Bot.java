@@ -1,5 +1,6 @@
 import com.itextpdf.text.DocumentException;
 import com.vdurmont.emoji.EmojiParser;
+import firstmenu.Configuration;
 import okhttp3.*;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -252,7 +253,7 @@ public class Bot extends TelegramLongPollingBot {
             }
     }
     public static void sendFile(Long ChatId,String fileSource){
-        String url = "https://api.telegram.org/bot745779362:AAEFky83gaEOP4aB8RjUHq4_BcW7hCYSB68/sendDocument?chat_id="+ChatId;
+        String url = "https://api.telegram.org/bot"+Configuration.getBottoken()+"/sendDocument?chat_id="+ChatId;
         OkHttpClient client = new OkHttpClient();
         File sourceFile = new File(fileSource);
         RequestBody requestBody = new MultipartBody.Builder()
@@ -281,10 +282,10 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     public String getBotUsername() {
-        return "Atudemo_bot";
+        return Configuration.getBotName();
     }
 
     public String getBotToken() {
-        return "745779362:AAEFky83gaEOP4aB8RjUHq4_BcW7hCYSB68";
+        return Configuration.getBottoken();
     }
 }

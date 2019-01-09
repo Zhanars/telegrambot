@@ -1,3 +1,4 @@
+import firstmenu.Configuration;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.io.IOException;
@@ -8,9 +9,9 @@ import java.util.Random;
 
 public class telegrambotsql {
     private static String countName = "";
-    private static String userName = "joker";
-    private static String password = "Desant3205363";
-    private static String connectUrl = "jdbc:sqlserver://185.97.115.131\\RUSGUARD:49181;database=telegrambot";
+    private static String userName = Configuration.getTelegramUsername();
+    private static String password = Configuration.getPass();
+    private static String connectUrl = Configuration.getTelegramBotHost();
     public static String registration(String message, Long chatid, int gettextlength) throws IOException, ClassNotFoundException, SQLException {
         String date = new SimpleDateFormat("yyyyMMdd").format(Calendar.getInstance().getTime());
         if (gettextlength == 12) {

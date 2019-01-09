@@ -1,4 +1,5 @@
 import com.google.common.html.HtmlEscapers;
+import firstmenu.Configuration;
 
 import java.io.IOException;
 import java.sql.*;
@@ -10,9 +11,9 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class RusGuard {
-    private static String userName = "joker";
-    private static String password = "Desant3205363";
-    private static String connectUrl = "jdbc:sqlserver://185.97.115.131\\RUSGUARD:49181;database=RusGuardDB";
+    private static String userName = Configuration.getTelegramUsername();
+    private static String password = Configuration.getPass();
+    private static String connectUrl = Configuration.getRusGuardHost();
 
 
     public static String getCount(String message) throws IOException, ClassNotFoundException, SQLException {
