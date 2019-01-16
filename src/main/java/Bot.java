@@ -58,7 +58,15 @@ public class Bot extends TelegramLongPollingBot {
                             break;
                         case "\uD83D\uDCAFТекущие оценки":
                             try {
-                                sendMsg(message, Univer.getAttendanceforweek(telegrambotsql.getIIN(message.getChatId()), Univer.getProgressforAttendence(telegrambotsql.getIIN(message.getChatId()))), 11);
+                                if(!Univer.getAttendanceforweek(telegrambotsql.getIIN(message.getChatId()), Univer.getProgressforAttendence(telegrambotsql.getIIN(message.getChatId()))).equals("")) {
+                                    sendMsg(message, Univer.getAttendanceforweek(telegrambotsql.getIIN(message.getChatId()), Univer.getProgressforAttendence(telegrambotsql.getIIN(message.getChatId()))), 11);
+                                }
+                                else
+                                {
+                                    pdfMaker.AttendenceCatch(telegrambotsql.getfromBotsName(message.getChatId()),"Оценки за семестр", Univer.getProgressforAttendence(telegrambotsql.getIIN(message.getChatId())),Univer.getSemestr(telegrambotsql.getIIN(message.getChatId())));
+                                    sendFile(message.getChatId(),telegrambotsql.getfromBotsName(message.getChatId())+".pdf");
+
+                                }
                             } catch (SQLException e) {
                                 e.printStackTrace();
                             }
