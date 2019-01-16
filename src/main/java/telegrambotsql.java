@@ -28,6 +28,7 @@ public class telegrambotsql {
                         String SQL = "INSERT INTO [dbo].[bots] ([IIN], [chatid], [Createdate], [firstName],[lastName], [checkperson]) VALUES ('" + message + "',  '" + chatid + "' , '" + date + "', '"+Univer.getStOrPersonName(message)+"' , '"+Univer.checkIINPersonalorStudent(message)+"' ) ";
                         stmt.executeUpdate(SQL);
                         countName = "ИИН подтвержден, теперь вы можете работать с ботом. Для изменения ИИНа введите в новый иин";
+                        newsAtu.inserChatId(chatid);
                     }
                 }else{
                     countName = "ИИН используется";
