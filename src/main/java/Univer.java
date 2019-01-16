@@ -142,6 +142,7 @@ public class Univer {
 
     public static String getAttendanceforweek(String IIN , String[][] Record) throws SQLException {
         countName = "";
+
         Calendar c = new GregorianCalendar();
         c.add(Calendar.DAY_OF_YEAR, -7);
         String date1 = new SimpleDateFormat("yyyyMMdd").format(c.getTime());
@@ -150,18 +151,21 @@ public class Univer {
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             Attendencerk.addAll(getSumAttendance(IIN));
             rs1 = stmt.executeQuery(getAttendance(IIN, date1));
+            countName = "";
             int columns1 = 0;
             columns1 = rs1.getMetaData().getColumnCount();
             String rk1 = Attendencerk.get(7);
             String rk2 = Attendencerk.get(8);
-
             int rowCount = Record.length ;
             int colCount = Record[0].length;
             if (rs1 != null) {
+
                 boolean bool=true;
                 while (rs1.next()) {
+
                     if (Integer.parseInt(rs1.getString("r4")) == 55 && bool) {
                         bool = false;
+
                         // Сравнивает рк у последнего предмета
                         if(Integer.parseInt(rk1)<= Integer.parseInt(Record[rowCount-1][1])){
                             for (int i=0 ; i< rowCount; i++){
@@ -178,6 +182,7 @@ public class Univer {
                     }}else
                     if (Integer.parseInt(rs1.getString("r4")) == 56 && bool)
                         {
+
                         bool = false;
                             if(Integer.parseInt(rk2)<= Integer.parseInt(Record[rowCount-1][2])){
                                 for (int i=0 ; i< rowCount; i++){
@@ -196,16 +201,22 @@ public class Univer {
                         countName = countName + rs1.getString(i) + "  ";
                     }
                     countName = countName + "\n";
+
                 }
             } else {
                 countName = "123456";
+
             }
 
         } catch (IOException e) {
+
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
+
             e.printStackTrace();
         }
+
+
         return countName;
     }
 
@@ -299,16 +310,21 @@ public class Univer {
                     "           ,tableforresult.RK1 as rk1" +
                     "   ,tableforresult.RK2 as rk2" +
                     "  ,tableforresult.[progress_result] as result" +
-                    "  ,ROUND(((0.6*((tableforresult.RK1 + tableforresult.RK2)/2))+ ((tableforresult.[progress_result])*0.4)),0) as resultekz" +
+                    "  ,ROUND((0.3*tableforresult.RK1 + 0.3*tableforresult.RK2+0.4*tableforresult.[progress_result]),0) as resultekz" +
                     "  FROM tableforresult" +
                     " ORDER BY tableforresult.[subject_name_ru]";
             ResultSet rs1 = stmt.executeQuery(SQL);
             int rowCount = getRowCount(rs1);
             int colCount = rs1.getMetaData().getColumnCount();
             rs1.close();
-            String[][] result = new String[rowCount][colCount];
+            String[][] result = new String[rowCount+1][colCount];
             ResultSet rs2 = stmt.executeQuery(SQL);
-            int j = 0;
+            result[0][0] = "Дисциплина";
+            result[0][1] = "РК1";
+            result[0][2] = "РК2";
+            result[0][3] = "Экз";
+            result[0][4] = "Итог";
+            int j = 1;
             while (rs2.next()) {
                 for (int i = 0; i < colCount; i++) {
                     result[j][i] = rs2.getString(i + 1);

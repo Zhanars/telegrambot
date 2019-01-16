@@ -286,6 +286,49 @@ public  class pdfMaker {
 
     }
 
+    public static void AttendenceCatch(String Username, String Tablename, String[][] Record,String Semestr) {
+
+        Document document1 = new Document();
+        try {
+            PdfWriter.getInstance(document1, new FileOutputStream(Username+".pdf"));
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        document1.open();
+        BaseFont bf = null;
+        try {
+            bf = BaseFont.createFont(FONT, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Font f1 = new Font(bf);
+        Font th = new Font(bf,12,Font.BOLD, BaseColor.DARK_GRAY);
+        try {
+            document1.add(new Paragraph(Tablename+" "+Username, f1));
+            document1.add(new Paragraph("Текущий семестр: " + Semestr + "\n",f1));
+            document1.add(new Paragraph("========================================================================\n\n"));
+            int colCount = Record[0].length;
+            int rowCount = Record.length;
+            PdfPTable table = new PdfPTable(colCount);
+            table.setHeaderRows(1);
+            for (int i=0; i < rowCount; i++){
+                for (int j=0; j < colCount; j++) {
+                    table.addCell(new Paragraph(Record[i][j], f1));
+                }
+            }
+            document1.add(table);
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        }
+        document1.close();
+
+    }
+
 
 
 
