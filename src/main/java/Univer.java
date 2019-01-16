@@ -555,7 +555,7 @@ public class Univer {
                     "  JOIN [atu_univer].[dbo].[univer_students] ON [univer_students].[students_id] = [univer_group_student].[student_id]" +
                     "  JOIN [atu_univer].[dbo].[univer_control] ON [univer_control].control_id = [univer_academ_calendar_pos].control_id" +
                     "  where [univer_students].[students_identify_code] LIKE '" + IIN + "' and [univer_students].[student_edu_status_id] = 1  " +
-                    " and [acpos_date_start] >= '"+dataStart+"' and [univer_academ_calendar_pos].acpos_module = 0" +
+                    " and acpos_semester >= '"+getSemestr(IIN)+"' and [univer_academ_calendar_pos].acpos_module = 0" +
                     "  GROUP BY " +
                     "       [acpos_semester]" +
                     "      ,[univer_control].[control_name_ru]" +

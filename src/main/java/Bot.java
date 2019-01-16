@@ -58,6 +58,8 @@ public class Bot extends TelegramLongPollingBot {
                         try {
                             sendMsg(message, Univer.getAttendanceforweek(telegrambotsql.getIIN(message.getChatId()),Univer.getProgressforAttendence(telegrambotsql.getIIN(message.getChatId()))),11);
                         } catch (SQLException e) {
+
+
                             e.printStackTrace();
                         }
                         break;
