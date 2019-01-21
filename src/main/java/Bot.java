@@ -114,6 +114,7 @@ public class Bot extends TelegramLongPollingBot {
 
                             break;
                         case "\uD83D\uDCDEКонтакты":
+                            sendMsg(message, "\uD83D\uDCDE: +7(727) 293-52-95, 221-88-08,\n 317-00-53, 293-52-96 \n \uD83C\uDFE0: 050012, г. Алматы, ул. Толе би 100 \n ✉️: rector@atu.kz", 11);
                             break;
                         case "\uD83D\uDCDEКонтакты эдвайзера":
                             sendMsg(message, Univer.getAdvicer(telegrambotsql.getIIN(message.getChatId())), 11);
