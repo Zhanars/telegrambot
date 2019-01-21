@@ -103,4 +103,39 @@ public class ReplyButtons {
         keyboardRowList.add(keyboardFirstRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
     }
+
+    public static void zeroButtons(SendMessage sendMessage) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        sendMessage.setReplyMarkup(replyKeyboardMarkup);
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(true);
+        List<KeyboardRow> keyboardRowList = new ArrayList<KeyboardRow>();
+        KeyboardRow keyboardFirstRow = new KeyboardRow();
+        KeyboardRow keyboardSecondRow = new KeyboardRow();
+        KeyboardRow keyboardThirdRow = new KeyboardRow();
+        keyboardSecondRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":newspaper:Для абитуриентов")));
+        keyboardSecondRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":telephone_receiver:Контакты")));
+        keyboardRowList.add(keyboardFirstRow);
+        keyboardRowList.add(keyboardSecondRow);
+        keyboardRowList.add(keyboardThirdRow);
+        replyKeyboardMarkup.setKeyboard(keyboardRowList);
+    }
+    public static void abiturientButtons(SendMessage sendMessage) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        sendMessage.setReplyMarkup(replyKeyboardMarkup);
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(true);
+        List<KeyboardRow> keyboardRowList = new ArrayList<KeyboardRow>();
+        KeyboardRow keyboardFirstRow = new KeyboardRow();
+        KeyboardRow keyboardSecondRow = new KeyboardRow();
+        KeyboardRow keyboardThirdRow = new KeyboardRow();
+        keyboardSecondRow.add(new KeyboardButton("📰Буклет"));
+        keyboardSecondRow.add(new KeyboardButton("\uD83C\uDFACВидео"));
+        keyboardRowList.add(keyboardFirstRow);
+        keyboardRowList.add(keyboardSecondRow);
+        keyboardRowList.add(keyboardThirdRow);
+        replyKeyboardMarkup.setKeyboard(keyboardRowList);
+    }
 }

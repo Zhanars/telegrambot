@@ -5,7 +5,9 @@ import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
+import org.telegram.telegrambots.meta.api.methods.send.SendLocation;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendVideo;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -38,143 +40,67 @@ public class Bot extends TelegramLongPollingBot {
         CallbackQuery callbackQuery = update.getCallbackQuery();
         System.out.println(message);
         if (message != null && message.hasText()) {
-            if (message.getText().equals("\uD83D\uDCF0Для абитуриентов")) {
-                sendMsg(message, "Выберите что Вас интересует \n /\uD83D\uDCF0Буклет \n /\uD83C\uDFACВидео",1);
-            } else {
-                if (telegrambotsql.checkChatId(message.getChatId())) {
-                    switch (message.getText()) {
-                        case "/start":
-                            sendMsg(message, smiling_face_with_heart_eyes + "Здравствуйте " + telegrambotsql.getfromBotsName(message.getChatId()), 1);
-                            break;
-                        case "\uD83C\uDFEBИПК Универ":
-                            sendMsg(message, "ИПК Универ", 11);
-                            break;
-                        case "\uD83D\uDCAFТекущие оценки":
-                            try {
-                                if(!Univer.getAttendanceforweek(telegrambotsql.getIIN(message.getChatId()), Univer.getProgressforAttendence(telegrambotsql.getIIN(message.getChatId()))).equals("")) {
-                                    sendMsg(message, Univer.getAttendanceforweek(telegrambotsql.getIIN(message.getChatId()), Univer.getProgressforAttendence(telegrambotsql.getIIN(message.getChatId()))), 11);
-                                }
-                                else
-                                {
-                                    sendMsg(message, "Подготовка файла, подождите", 11);
-                                    pdfMaker.AttendenceCatch(telegrambotsql.getfromBotsName(message.getChatId()),"Оценки за семестр", Univer.getProgressforAttendence(telegrambotsql.getIIN(message.getChatId())),Univer.getSemestr(telegrambotsql.getIIN(message.getChatId())));
-                                    sendFile(message.getChatId(),telegrambotsql.getfromBotsName(message.getChatId())+".pdf");
-
-                                }
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            }
-                            break;
-                        case "Транскрипт":
-                            sendMsg(message, "Подготовка файла, подождите", 11);
-                            pdfMaker.createUniverTranskriptPdf(telegrambotsql.getfromBotsName(message.getChatId()), "Транскрипт", Univer.getTranskript(telegrambotsql.getIIN(message.getChatId())));
-                            sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf");
-                            break;
-                        case "\uD83D\uDD11Сброс пароля":
-                            String email = Univer.getEmail(telegrambotsql.getIIN(message.getChatId()));
-                            if (!email.equals("")) {
-                                telegrambotsql.sendCodeEmail(email, message.getChatId());
-                                int ind1 = email.indexOf("_");
-                                if (ind1 >= 0) {
-                                    email = email.substring(0, ind1) + "-" + email.substring(ind1 + 1);
-                                }
-                                sendMsg(message, "Bведите код подтверждения отправленную на почту " + email + ". Email можно изменить в системе универ.", 11);
-                            } else {
-                                sendMsg(message, "Заполните поле Email в системе универ!", 11);
-                            }
-                            break;
-                        case "Расписание":
-                            break;
-                        case "Расписание экзаменов":
-                            sendMsg(message, "Подготовка файла, подождите", 11);
-                            pdfMaker.createUniverExamSchudelePdf(telegrambotsql.getfromBotsName(message.getChatId()), "Расписание экзаменов", Univer.getExamSchedule(telegrambotsql.getIIN(message.getChatId())));
-                            sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf");
-                            break;
-                        case "Файлы преподователя":
-                            break;
-                        case "Опросы":
-                            if (!Quiz.hasAnswerQuiz(message.getChatId(), "Вам нравится наш бот?")) {
-                                sendMsg(message, "Вам нравится наш бот?", 41);
-                            } else {
-                                sendMsg(message, "Вы уже прошли опрос", 1);
-                            }
-                            break;
-                        case "Календарь":
-                            try {
-                                sendMsg(message, "Подготовка файла, подождите", 11);
-                                pdfMaker.createNewPdf(telegrambotsql.getfromBotsName(message.getChatId()), "Академический календарь", Univer.getAcademcal(telegrambotsql.getIIN(message.getChatId())));
-                                sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf");
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            } catch (ClassNotFoundException e) {
-                                e.printStackTrace();
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            }
-
-                            break;
-                        case "\uD83D\uDCDEКонтакты":
-                            sendMsg(message, "\uD83D\uDCDE: +7(727) 293-52-95, 221-88-08,\n 317-00-53, 293-52-96 \n \uD83C\uDFE0: 050012, г. Алматы, ул. Толе би 100 \n ✉️: rector@atu.kz", 11);
-                            break;
-                        case "\uD83D\uDCDEКонтакты эдвайзера":
-                            sendMsg(message, Univer.getAdvicer(telegrambotsql.getIIN(message.getChatId())), 11);
-                            break;
-                        case "\uD83D\uDCCAСтатистика":
-                            break;
-                        case "✉Блог ректора":
-                            break;
-                        case "Новости с универа":
-                            break;
-                        case "\uD83D\uDCC5Выписка на месяц":
-                            try {
-                                sendMsg(message, "Подготовка файла, подождите", 21);
-                                pdfMaker.createGuardPdf(telegrambotsql.getfromBotsName(message.getChatId()), "Контроль прохода", RusGuard.getReportForMonth(telegrambotsql.getIIN(message.getChatId()), 0), 0);
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            }
-                            sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf");
-                            break;
-                        case "\uD83D\uDCC5Выписка на прошлый месяц":
-                            try {
-                                sendMsg(message, "Подготовка файла, подождите", 21);
-                                pdfMaker.createGuardPdf(telegrambotsql.getfromBotsName(message.getChatId()), "Контроль прохода", RusGuard.getReportForMonth(telegrambotsql.getIIN(message.getChatId()), -1), -1);
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            }
-                            sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf");
-                            break;
-                        case "\uD83D\uDD63Контроль доступа":
-                            try {
-                                sendMsg(message, RusGuard.getCount(telegrambotsql.getIIN(message.getChatId())), 21);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            } catch (ClassNotFoundException e) {
-                                e.printStackTrace();
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            }
-                            break;
-                        case "⏪Вернуться на главную":
-                            sendMsg(message, "Вы вернулись на главную", 1);
-                            break;
-                        case "УМКД":
-                            sendMsg(message, "Выберите предмет", 16);
-                            break;
-                        default:
-                            try {
-                                sendMsg(message, telegrambotsql.registration(message.getText(), message.getChatId(), message.getText().length()), 1);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            } catch (ClassNotFoundException e) {
-                                e.printStackTrace();
-                            }
-                    }
-                } else {
-                    if (message.getText().length() == 12 && Univer.checkIINPersonalorStudent(message.getText()) > 0) {
+            if (telegrambotsql.checkChatId(message.getChatId())) {
+                switch (message.getText()) {
+                    case "/start":
+                        sendMsg(message, smiling_face_with_heart_eyes + "Здравствуйте " + telegrambotsql.getfromBotsName(message.getChatId()), 1);
+                        break;
+                    case "\uD83C\uDFEBИПК Универ":
+                        sendMsg(message, "ИПК Универ", 11);
+                        break;
+                    case "\uD83D\uDCAFТекущие оценки":
                         try {
-                            sendMsg(message, telegrambotsql.registration(message.getText(), message.getChatId(), message.getText().length()), 1);
+                            if (!Univer.getAttendanceforweek(telegrambotsql.getIIN(message.getChatId()), Univer.getProgressforAttendence(telegrambotsql.getIIN(message.getChatId()))).equals("")) {
+                                sendMsg(message, Univer.getAttendanceforweek(telegrambotsql.getIIN(message.getChatId()), Univer.getProgressforAttendence(telegrambotsql.getIIN(message.getChatId()))), 11);
+                            } else {
+                                sendMsg(message, "Подготовка файла, подождите", 11);
+                                pdfMaker.AttendenceCatch(telegrambotsql.getfromBotsName(message.getChatId()), "Оценки за семестр", Univer.getProgressforAttendence(telegrambotsql.getIIN(message.getChatId())), Univer.getSemestr(telegrambotsql.getIIN(message.getChatId())));
+                                sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf");
+
+                            }
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case "Транскрипт":
+                        sendMsg(message, "Подготовка файла, подождите", 11);
+                        pdfMaker.createUniverTranskriptPdf(telegrambotsql.getfromBotsName(message.getChatId()), "Транскрипт", Univer.getTranskript(telegrambotsql.getIIN(message.getChatId())));
+                        sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf");
+                        break;
+                    case "\uD83D\uDD11Сброс пароля":
+                        String email = Univer.getEmail(telegrambotsql.getIIN(message.getChatId()));
+                        if (!email.equals("")) {
+                            telegrambotsql.sendCodeEmail(email, message.getChatId());
+                            int ind1 = email.indexOf("_");
+                            if (ind1 >= 0) {
+                                email = email.substring(0, ind1) + "-" + email.substring(ind1 + 1);
+                            }
+                            sendMsg(message, "Bведите код подтверждения отправленную на почту " + email + ". Email можно изменить в системе универ.", 11);
+                        } else {
+                            sendMsg(message, "Заполните поле Email в системе универ!", 11);
+                        }
+                        break;
+                    case "Расписание":
+                        break;
+                    case "Расписание экзаменов":
+                        sendMsg(message, "Подготовка файла, подождите", 11);
+                        pdfMaker.createUniverExamSchudelePdf(telegrambotsql.getfromBotsName(message.getChatId()), "Расписание экзаменов", Univer.getExamSchedule(telegrambotsql.getIIN(message.getChatId())));
+                        sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf");
+                        break;
+                    case "Файлы преподователя":
+                        break;
+                    case "Опросы":
+                        if (!Quiz.hasAnswerQuiz(message.getChatId(), "Вам нравится наш бот?")) {
+                            sendMsg(message, "Вам нравится наш бот?", 41);
+                        } else {
+                            sendMsg(message, "Вы уже прошли опрос", 1);
+                        }
+                        break;
+                    case "Календарь":
+                        try {
+                            sendMsg(message, "Подготовка файла, подождите", 11);
+                            pdfMaker.createNewPdf(telegrambotsql.getfromBotsName(message.getChatId()), "Академический календарь", Univer.getAcademcal(telegrambotsql.getIIN(message.getChatId())));
+                            sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf");
                         } catch (IOException e) {
                             e.printStackTrace();
                         } catch (ClassNotFoundException e) {
@@ -182,24 +108,145 @@ public class Bot extends TelegramLongPollingBot {
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
-                    } else {
-                        sendMsg(message, EmojiParser.parseToUnicode(":lock:Здравствуйте! Для работы с ботом введите иин!"), 0);
+
+                        break;
+
+                    case "\uD83D\uDCDEКонтакты эдвайзера":
+                        sendMsg(message, Univer.getAdvicer(telegrambotsql.getIIN(message.getChatId())), 11);
+                        break;
+                    case "\uD83D\uDCCAСтатистика":
+                        break;
+                    case "\uD83D\uDCF0Для абитуриентов":
+                        sendMsg(message, "Выберите что Вас интересует \n /\uD83D\uDCF0Буклет \n /\uD83C\uDFACВидео ", 1);
+                        break;
+                    case "\uD83D\uDCDEКонтакты":
+                        sendMsg(message, "\uD83D\uDCDE: +7(727) 293-52-95, 221-88-08,\n 317-00-53, 293-52-96 \n \uD83C\uDFE0: 050012, г. Алматы, ул. Толе би 100 \n ✉️: rector@atu.kz", 1);
+                        SendLocation sendLocation = new SendLocation();
+                        sendLocation.setChatId(message.getChatId());
+                        sendLocation.setLatitude((float) 43.252442);
+                        sendLocation.setLongitude((float) 76.926615);
+                        try {
+                            execute(sendLocation);
+                        } catch (TelegramApiException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case "✉Блог ректора":
+                        break;
+                    case "Новости с универа":
+                        break;
+                    case "\uD83D\uDCC5Выписка на месяц":
+                        try {
+                            sendMsg(message, "Подготовка файла, подождите", 21);
+                            pdfMaker.createGuardPdf(telegrambotsql.getfromBotsName(message.getChatId()), "Контроль прохода", RusGuard.getReportForMonth(telegrambotsql.getIIN(message.getChatId()), 0), 0);
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                        sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf");
+                        break;
+                    case "\uD83D\uDCC5Выписка на прошлый месяц":
+                        try {
+                            sendMsg(message, "Подготовка файла, подождите", 21);
+                            pdfMaker.createGuardPdf(telegrambotsql.getfromBotsName(message.getChatId()), "Контроль прохода", RusGuard.getReportForMonth(telegrambotsql.getIIN(message.getChatId()), -1), -1);
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                        sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf");
+                        break;
+                    case "\uD83D\uDD63Контроль доступа":
+                        try {
+                            sendMsg(message, RusGuard.getCount(telegrambotsql.getIIN(message.getChatId())), 21);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case "⏪Вернуться на главную":
+                        sendMsg(message, "Вы вернулись на главную", 1);
+                        break;
+                    case "УМКД":
+                        sendMsg(message, "Выберите предмет", 16);
+                        break;
+                    case "\uD83D\uDCF0Буклет":
+                        sendFile(message.getChatId(), "1.pdf");
+                        break;
+                    case "\uD83C\uDFACВидео":
+                        SendVideo sendVideo = new SendVideo();
+                        sendVideo.setChatId(message.getChatId());
+                        sendVideo.setVideo("Kazakhstan.mp4");
+                        try {
+                            execute(sendVideo);
+                        } catch (TelegramApiException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    default:
+                        try {
+                            sendMsg(message, telegrambotsql.registration(message.getText(), message.getChatId(), message.getText().length()), 1);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                }
+            } else {
+                if (message.getText().equals("\uD83D\uDCF0Для абитуриентов")) {
+                    sendMsg(message, "Выберите что Вас интересует \n \uD83D\uDCF0Буклет \n \uD83C\uDFACВидео", 10);
+                } else if (message.getText().equals("\uD83D\uDCDEКонтакты")) {
+                    sendMsg(message, "\uD83D\uDCDE: +7(727) 293-52-95, 221-88-08,\n 317-00-53, 293-52-96 \n \uD83C\uDFE0: 050012, г. Алматы, ул. Толе би 100 \n ✉️: rector@atu.kz", 0);
+                    SendLocation sendLocation = new SendLocation();
+                    sendLocation.setChatId(message.getChatId());
+                    sendLocation.setLatitude((float) 43.252442);
+                    sendLocation.setLongitude((float) 76.926615);
+                    try {
+                        execute(sendLocation);
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
                     }
+                } else if (message.getText().equals("\uD83D\uDCF0Буклет")) {
+                    sendFile(message.getChatId(), "1.pdf");
+                } else if (message.getText().equals("\uD83C\uDFACВидео")) {
+                    SendVideo sendVideo = new SendVideo();
+                    sendVideo.setChatId(message.getChatId());
+                    sendVideo.setVideo("Kazakhstan.mp4");
+                    try {
+                        execute(sendVideo);
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+
+                } else if (message.getText().length() == 12 && Univer.checkIINPersonalorStudent(message.getText()) > 0) {
+                    try {
+                        sendMsg(message, telegrambotsql.registration(message.getText(), message.getChatId(), message.getText().length()), 1);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    sendMsg(message, EmojiParser.parseToUnicode(":lock:Здравствуйте! Для работы с ботом введите иин!"), 0);
                 }
             }
         } else if (update.hasCallbackQuery()) {
-            if (callbackQuery.getData().indexOf("SubjectId:") >= 0){
+            if (callbackQuery.getData().indexOf("SubjectId:") >= 0) {
                 String Subject = callbackQuery.getData().substring(10);
-                sendMsg(callbackQuery.getMessage(),Subject,161);
-            } else if (callbackQuery.getData().indexOf("TeachId:") >= 0){
-                sendMsg(callbackQuery.getMessage(),callbackQuery.getData(),162);
-            } else if (callbackQuery.getData().indexOf("File:") >= 0){
+                sendMsg(callbackQuery.getMessage(), Subject, 161);
+            } else if (callbackQuery.getData().indexOf("TeachId:") >= 0) {
+                sendMsg(callbackQuery.getMessage(), callbackQuery.getData(), 162);
+            } else if (callbackQuery.getData().indexOf("File:") >= 0) {
                 int sIn = callbackQuery.getData().indexOf("Teach:");
                 String file = callbackQuery.getData().substring(5, sIn);
-                String TeacherId = callbackQuery.getData().substring(sIn+6);
+                String TeacherId = callbackQuery.getData().substring(sIn + 6);
                 answerCallbackQuery(callbackQuery.getId(), "Пожалуйста подождите, идет загрузка!");
                 umkd.getUMKD(callbackQuery.getMessage().getChatId(), TeacherId, file);
-            }else {
+            } else {
                 answerCallbackQuery(callbackQuery.getId(), Quiz.saveQuiz(callbackQuery.getMessage(), callbackQuery.getData()));
                 sendMsg(callbackQuery.getMessage(), "Спасибо за ответ!\nНам очень важен ваше мнение.", 1);
             }
@@ -228,6 +275,10 @@ public class Bot extends TelegramLongPollingBot {
             try {
                 if (button == 1){
                     ReplyButtons.firstButtons(sendMessage);
+                } else if (button == 0){
+                    ReplyButtons.zeroButtons(sendMessage);
+                } else if (button == 10){
+                    ReplyButtons.abiturientButtons(sendMessage);
                 } else if (button == 11){
                     ReplyButtons.UniverButtons(sendMessage);
                 } else if (button == 21){
