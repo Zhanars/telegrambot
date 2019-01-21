@@ -1,5 +1,4 @@
 import firstmenu.Configuration;
-import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.io.IOException;
 import java.sql.*;

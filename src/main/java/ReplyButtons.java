@@ -46,7 +46,7 @@ public class ReplyButtons {
         KeyboardRow keyboardSixthRow = new KeyboardRow();
         if (telegrambotsql.getStatus(sendMessage.getChatId()) == 1){
             keyboardFirstRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":100:Текущие оценки")));
-            keyboardFirstRow.add(new KeyboardButton("Успеваемость"));
+            keyboardFirstRow.add(new KeyboardButton("Транскрипт"));
             keyboardSecondRow.add(new KeyboardButton("Задолжность по оплате"));
             keyboardThirdRow.add(new KeyboardButton("Расписание занятий"));
             keyboardThirdRow.add(new KeyboardButton("Расписание экзаменов"));

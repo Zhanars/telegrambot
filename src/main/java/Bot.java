@@ -1,4 +1,3 @@
-import com.itextpdf.text.DocumentException;
 import com.vdurmont.emoji.EmojiParser;
 import firstmenu.Configuration;
 import okhttp3.*;
@@ -13,15 +12,9 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
-import javax.swing.text.html.HTML;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.sql.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 
 public class Bot extends TelegramLongPollingBot {
@@ -63,6 +56,7 @@ public class Bot extends TelegramLongPollingBot {
                                 }
                                 else
                                 {
+                                    sendMsg(message, "Подготовка файла, подождите", 11);
                                     pdfMaker.AttendenceCatch(telegrambotsql.getfromBotsName(message.getChatId()),"Оценки за семестр", Univer.getProgressforAttendence(telegrambotsql.getIIN(message.getChatId())),Univer.getSemestr(telegrambotsql.getIIN(message.getChatId())));
                                     sendFile(message.getChatId(),telegrambotsql.getfromBotsName(message.getChatId())+".pdf");
 
@@ -71,7 +65,8 @@ public class Bot extends TelegramLongPollingBot {
                                 e.printStackTrace();
                             }
                             break;
-                        case "Успеваемость":
+                        case "Транскрипт":
+                            sendMsg(message, "Подготовка файла, подождите", 11);
                             pdfMaker.createUniverTranskriptPdf(telegrambotsql.getfromBotsName(message.getChatId()), "Транскрипт", Univer.getTranskript(telegrambotsql.getIIN(message.getChatId())));
                             sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf");
                             break;
@@ -91,6 +86,7 @@ public class Bot extends TelegramLongPollingBot {
                         case "Расписание":
                             break;
                         case "Расписание экзаменов":
+                            sendMsg(message, "Подготовка файла, подождите", 11);
                             pdfMaker.createUniverExamSchudelePdf(telegrambotsql.getfromBotsName(message.getChatId()), "Расписание экзаменов", Univer.getExamSchedule(telegrambotsql.getIIN(message.getChatId())));
                             sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf");
                             break;
@@ -105,6 +101,7 @@ public class Bot extends TelegramLongPollingBot {
                             break;
                         case "Календарь":
                             try {
+                                sendMsg(message, "Подготовка файла, подождите", 11);
                                 pdfMaker.createNewPdf(telegrambotsql.getfromBotsName(message.getChatId()), "Академический календарь", Univer.getAcademcal(telegrambotsql.getIIN(message.getChatId())));
                                 sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf");
                             } catch (IOException e) {
@@ -129,6 +126,7 @@ public class Bot extends TelegramLongPollingBot {
                             break;
                         case "\uD83D\uDCC5Выписка на месяц":
                             try {
+                                sendMsg(message, "Подготовка файла, подождите", 21);
                                 pdfMaker.createGuardPdf(telegrambotsql.getfromBotsName(message.getChatId()), "Контроль прохода", RusGuard.getReportForMonth(telegrambotsql.getIIN(message.getChatId()), 0), 0);
                             } catch (SQLException e) {
                                 e.printStackTrace();
@@ -137,6 +135,7 @@ public class Bot extends TelegramLongPollingBot {
                             break;
                         case "\uD83D\uDCC5Выписка на прошлый месяц":
                             try {
+                                sendMsg(message, "Подготовка файла, подождите", 21);
                                 pdfMaker.createGuardPdf(telegrambotsql.getfromBotsName(message.getChatId()), "Контроль прохода", RusGuard.getReportForMonth(telegrambotsql.getIIN(message.getChatId()), -1), -1);
                             } catch (SQLException e) {
                                 e.printStackTrace();

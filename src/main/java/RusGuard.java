@@ -1,13 +1,9 @@
-import com.google.common.html.HtmlEscapers;
 import firstmenu.Configuration;
 
 import java.io.IOException;
 import java.sql.*;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class RusGuard {
