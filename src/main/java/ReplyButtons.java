@@ -131,8 +131,9 @@ public class ReplyButtons {
         KeyboardRow keyboardFirstRow = new KeyboardRow();
         KeyboardRow keyboardSecondRow = new KeyboardRow();
         KeyboardRow keyboardThirdRow = new KeyboardRow();
-        keyboardSecondRow.add(new KeyboardButton("📰Буклет"));
-        keyboardSecondRow.add(new KeyboardButton("\uD83C\uDFACВидео"));
+        keyboardFirstRow.add(new KeyboardButton("📰Буклет"));
+        keyboardFirstRow.add(new KeyboardButton("\uD83C\uDFACВидео"));
+        keyboardSecondRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":rewind:Вернуться на главную")));
         keyboardRowList.add(keyboardFirstRow);
         keyboardRowList.add(keyboardSecondRow);
         keyboardRowList.add(keyboardThirdRow);

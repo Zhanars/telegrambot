@@ -14,8 +14,13 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.*;
 
 
@@ -210,16 +215,20 @@ public class Bot extends TelegramLongPollingBot {
                     }
                 } else if (message.getText().equals("\uD83D\uDCF0Буклет")) {
                     sendFile(message.getChatId(), "1.pdf");
+                } else if (message.getText().equals("⏪Вернуться на главную")){
+                    sendMsg(message, "Вы вернулись на главную", 0);
                 } else if (message.getText().equals("\uD83C\uDFACВидео")) {
+                    sendMsg(message,"Файл подготовливается, подождите", 10);
                     SendVideo sendVideo = new SendVideo();
                     sendVideo.setChatId(message.getChatId());
-                    sendVideo.setVideo("Kazakhstan.mp4");
+                    File file = new File("Kazakhstan.mp4");
+                    sendVideo.setVideo(file);
+                    sendVideo.setCaption("ATUKazakhstan");
                     try {
                         execute(sendVideo);
                     } catch (TelegramApiException e) {
                         e.printStackTrace();
                     }
-
                 } else if (message.getText().length() == 12 && Univer.checkIINPersonalorStudent(message.getText()) > 0) {
                     try {
                         sendMsg(message, telegrambotsql.registration(message.getText(), message.getChatId(), message.getText().length()), 1);
@@ -311,8 +320,13 @@ public class Bot extends TelegramLongPollingBot {
                 e.printStackTrace();
             }
     }
-    public static void sendFile(Long ChatId,String fileSource){
-        String url = "https://api.telegram.org/bot"+Configuration.getBottoken()+"/sendDocument?chat_id="+ChatId;
+    public static void sendFile(Long ChatId,String fileSource) {
+        String url = "https://api.telegram.org/bot" + Configuration.getBottoken() + "/";
+        if (!fileSource.equals("Kazakhstan.mp4")) {
+            url += "sendDocument?chat_id=" + ChatId;
+        } else {
+            url += "sendVideo?chat_id=" + ChatId;
+        }
         OkHttpClient client = new OkHttpClient();
         File sourceFile = new File(fileSource);
         RequestBody requestBody = new MultipartBody.Builder()
@@ -326,6 +340,7 @@ public class Bot extends TelegramLongPollingBot {
                 .build();
 
         Response response = null;
+        System.out.println(requestBody);
         try {
             response = client.newCall(request).execute();
         } catch (IOException e) {
@@ -337,7 +352,8 @@ public class Bot extends TelegramLongPollingBot {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        new File(fileSource).delete();
+        if (!fileSource.equals("1.pdf") && !fileSource.equals("Kazakhstan.mp4"))
+            new File(fileSource).delete();
     }
 
     public String getBotUsername() {
