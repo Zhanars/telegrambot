@@ -156,5 +156,87 @@ public class telegrambotsql {
         }
         return result;
     }
+    public static String getStaticForCourse(String IIN){
+        String result = "";
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
+            String SQL = "select * from [telegrambot].[dbo].[statistics] where [IIN] = '" + IIN + "'";
+            ResultSet rs = stmt.executeQuery(SQL);
+            while (rs.next()) {
+                result = rs.getString("gpa");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        return result;
+    }
+    public static void manageStatistics() {
+        String SQL = "";
+        try (Connection conn = DriverManager.getConnection(Configuration.getUniverHost(), Configuration.getUniverUsername(), password);
+             Statement stmt = conn.createStatement();
+             Connection conn1 = DriverManager.getConnection(connectUrl, userName, password);
+             Statement stmt1 = conn1.createStatement();) {
+            String createTable = "IF OBJECT_ID ('telegrambot.dbo.statistics', 'U') IS NOT NULL DROP TABLE [telegrambot].[dbo].[statistics]; " +
+                    "CREATE TABLE [telegrambot].[dbo].[statistics] (" +
+                    "Id int PRIMARY KEY NOT NULL," +
+                    "IIN varchar(50)," +
+                    "fio varchar(100)," +
+                    "faculty_name_ru varchar(100)," +
+                    "faculty_id INT," +
+                    "speciality_name_ru varchar(100)," +
+                    "speciality_id INT," +
+                    "curce INT," +
+                    "gpa REAL);";
+            stmt1.executeUpdate(createTable);
+            SQL = "SELECT CONCAT (st.[students_sname],' ',st.[students_name],' ',st.[students_father_name]) as fio " +
+                    ",st.students_identify_code " +
+                    ",fc.faculty_full_name_ru " +
+                    ",fc.faculty_id " +
+                    ",sp.speciality_name_ru " +
+                    ",sp.speciality_id " +
+                    ",st.students_curce_number" +
+                    ",[dbo].[getGPAForStudent](st.students_id,0,0) as gpa " +
+                    "from [atu_univer].[dbo].[univer_students] st " +
+                    "JOIN [atu_univer].[dbo].[univer_faculty] fc ON fc.[faculty_id] = st.faculty_id " +
+                    "join [atu_univer].[dbo].[univer_speciality] sp ON sp.[speciality_id] = st.[speciality_id] " +
+                    "join univer_group_student gs on gs.student_id = st.students_id " +
+                    "where st.student_edu_status_id = 1 " +
+                    "group by " +
+                    "st.[students_sname]" +
+                    ",st.[students_name]" +
+                    ",st.[students_father_name]" +
+                    ",st.students_identify_code" +
+                    ",fc.faculty_full_name_ru" +
+                    ",sp.speciality_name_ru" +
+                    ",st.students_curce_number" +
+                    ",st.students_id" +
+                    ",fc.faculty_id" +
+                    ",sp.speciality_id";
+            ResultSet rs = stmt.executeQuery(SQL);
+            int i = 1;
+            while (rs.next()) {
+                String insertSQL = "INSERT INTO [statistics] VALUES  (" +
+                        i + ", '" +
+                        rs.getString("students_identify_code") + "', '"+
+                        rs.getString("fio") + "', '"+
+                        rs.getString("faculty_full_name_ru") + "', '"+
+                        rs.getString("faculty_id") + "', '"+
+                        rs.getString("speciality_name_ru") + "', '"+
+                        rs.getString("speciality_id") + "', "+
+                        rs.getString("students_curce_number") + ", "+
+                        rs.getString("gpa") + ")";
+                stmt1.executeUpdate(insertSQL);
+                i++;
+            }
+            System.out.println(i);
+            stmt1.close();
+            stmt.close();
+            conn.close();
+            conn1.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

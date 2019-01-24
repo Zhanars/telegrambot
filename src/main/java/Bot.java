@@ -120,6 +120,8 @@ public class Bot extends TelegramLongPollingBot {
                         sendMsg(message, Univer.getAdvicer(telegrambotsql.getIIN(message.getChatId())), 11);
                         break;
                     case "\uD83D\uDCCAСтатистика":
+                        telegrambotsql.manageStatistics();
+                        sendMsg(message,"finish",1);
                         break;
                     case "\uD83D\uDCF0Для абитуриентов":
                         sendMsg(message, "Выберите что Вас интересует", 10);
