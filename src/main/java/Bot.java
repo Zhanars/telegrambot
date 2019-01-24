@@ -122,10 +122,10 @@ public class Bot extends TelegramLongPollingBot {
                     case "\uD83D\uDCCAСтатистика":
                         break;
                     case "\uD83D\uDCF0Для абитуриентов":
-                        sendMsg(message, "Выберите что Вас интересует \n /\uD83D\uDCF0Буклет \n /\uD83C\uDFACВидео ", 1);
+                        sendMsg(message, "Выберите что Вас интересует", 10);
                         break;
                     case "\uD83D\uDCDEКонтакты":
-                        sendMsg(message, "\uD83D\uDCDE: +7(727) 293-52-95, 221-88-08,\n 317-00-53, 293-52-96 \n \uD83C\uDFE0: 050012, г. Алматы, ул. Толе би 100 \n ✉️: rector@atu.kz", 1);
+                        sendMsg(message, "*АЛМАТИНСКИЙ ТЕХНОЛОГИЧЕСКИЙ УНИВЕРСИТЕТ* \n \uD83D\uDCDE: +7(727) 293-52-95, 221-88-08,\n 317-00-53, 293-52-96 \n \uD83C\uDFE0: 050012, г. Алматы, ул. Толе би 100 \n ✉️: rector@atu.kz", 1);
                         SendLocation sendLocation = new SendLocation();
                         sendLocation.setChatId(message.getChatId());
                         sendLocation.setLatitude((float) 43.252442);
@@ -179,9 +179,12 @@ public class Bot extends TelegramLongPollingBot {
                         sendFile(message.getChatId(), "1.pdf");
                         break;
                     case "\uD83C\uDFACВидео":
+                        sendMsg(message,"Файл подготовливается, подождите", 10);
                         SendVideo sendVideo = new SendVideo();
                         sendVideo.setChatId(message.getChatId());
-                        sendVideo.setVideo("Kazakhstan.mp4");
+                        File file = new File("Kazakhstan.mp4");
+                        sendVideo.setVideo(file);
+                        sendVideo.setCaption("ATUKazakhstan");
                         try {
                             execute(sendVideo);
                         } catch (TelegramApiException e) {
@@ -201,9 +204,9 @@ public class Bot extends TelegramLongPollingBot {
                 }
             } else {
                 if (message.getText().equals("\uD83D\uDCF0Для абитуриентов")) {
-                    sendMsg(message, "Выберите что Вас интересует \n \uD83D\uDCF0Буклет \n \uD83C\uDFACВидео", 10);
+                    sendMsg(message, "Выберите что Вас интересует", 10);
                 } else if (message.getText().equals("\uD83D\uDCDEКонтакты")) {
-                    sendMsg(message, "\uD83D\uDCDE: +7(727) 293-52-95, 221-88-08,\n 317-00-53, 293-52-96 \n \uD83C\uDFE0: 050012, г. Алматы, ул. Толе би 100 \n ✉️: rector@atu.kz", 0);
+                    sendMsg(message, "*АЛМАТИНСКИЙ ТЕХНОЛОГИЧЕСКИЙ УНИВЕРСИТЕТ* \n \uD83D\uDCDE: +7(727) 293-52-95, 221-88-08,\n 317-00-53, 293-52-96 \n \uD83C\uDFE0: 050012, г. Алматы, ул. Толе би 100 \n ✉️: rector@atu.kz", 0);
                     SendLocation sendLocation = new SendLocation();
                     sendLocation.setChatId(message.getChatId());
                     sendLocation.setLatitude((float) 43.252442);
@@ -279,7 +282,7 @@ public class Bot extends TelegramLongPollingBot {
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
         sendMessage.setChatId(message.getChatId());
-        sendMessage.setReplyToMessageId(message.getMessageId());
+        //sendMessage.setReplyToMessageId(message.getMessageId());
         sendMessage.setText(text);
             try {
                 if (button == 1){
