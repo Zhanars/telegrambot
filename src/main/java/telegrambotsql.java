@@ -156,21 +156,6 @@ public class telegrambotsql {
         }
         return result;
     }
-    public static String getStaticForCourse(String IIN){
-        String result = "";
-        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
-            String SQL = "select * from [telegrambot].[dbo].[statistics] where [IIN] = '" + IIN + "'";
-            ResultSet rs = stmt.executeQuery(SQL);
-            while (rs.next()) {
-                result = rs.getString("gpa");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-
-        return result;
-    }
     public static void manageStatistics() {
         String SQL = "";
         try (Connection conn = DriverManager.getConnection(Configuration.getUniverHost(), Configuration.getUniverUsername(), password);
@@ -228,6 +213,7 @@ public class telegrambotsql {
                         rs.getString("gpa") + ")";
                 stmt1.executeUpdate(insertSQL);
                 i++;
+                System.out.println(i);
             }
             System.out.println(i);
             stmt1.close();
@@ -237,6 +223,111 @@ public class telegrambotsql {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+    public static String getRatingforCourse(String IIN){
+        String SQL = "", res = "";
+        int result = 0;
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password);
+             Statement stmt = conn.createStatement()) {
+            SQL = "SELECT IIN FROM [dbo].[statistics] where curce = '" + getCourse(IIN) + "' ORDER BY gpa desc";
+            ResultSet rs = stmt.executeQuery(SQL);
+            while (rs.next()){
+                result++;
+                if (IIN.equals(rs.getString("IIN"))) {
+                    res = "Вы на " + result + " месте, из ";
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        res = res + result;
+        return res;
+    }
+    public static String getRatingforFacultet(String IIN){
+        String SQL = "", res = "";
+        int result = 0;
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password);
+             Statement stmt = conn.createStatement()) {
+            SQL = "SELECT IIN FROM [dbo].[statistics] where faculty_id = '" + getFacultetId(IIN) + "' AND curce = '" + getCourse(IIN) + "' ORDER BY gpa desc";
+            ResultSet rs = stmt.executeQuery(SQL);
+            while (rs.next()){
+                result++;
+                if (IIN.equals(rs.getString("IIN"))) {
+                    res = "Вы на " + result + " месте, из ";
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        res = res + result;
+        return res;
+    }
+    public static String getRatingforSpecial(String IIN){
+        String SQL = "", res="";
+        int result = 0;
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password);
+             Statement stmt = conn.createStatement()) {
+            SQL = "SELECT [IIN] FROM [dbo].[statistics] where speciality_id = '" + getSpecialId(IIN) + "' AND curce = '" + getCourse(IIN) + "' ORDER BY gpa desc";
+            ResultSet rs = stmt.executeQuery(SQL);
+            while (rs.next()){
+                result++;
+                if (IIN.equals(rs.getString("IIN"))) {
+                    res = "Вы на " + result + " месте, из ";
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        res = res + result;
+        return res;
+    }
+    public static int getCourse(String IIN){
+        String SQL = "";
+        int result = 0;
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password);
+             Statement stmt = conn.createStatement()) {
+            SQL = "SELECT TOP 1 * FROM [statistics] WHERE [IIN] LIKE '" + IIN +"'";
+            ResultSet rs = stmt.executeQuery(SQL);
+            while (rs.next()){
+                result = Integer.parseInt(rs.getString("curce"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+    public static int getFacultetId(String IIN){
+        String SQL = "";
+        int facultetid = 0;
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password);
+             Statement stmt = conn.createStatement()) {
+            SQL = "SELECT TOP 1 * FROM [statistics] WHERE [IIN] LIKE '" + IIN +"'";
+            ResultSet rs = stmt.executeQuery(SQL);
+            while (rs.next()){
+                facultetid = Integer.parseInt(rs.getString("faculty_id"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return facultetid;
+    }
+    public static int getSpecialId(String IIN){
+        String SQL = "";
+        int result = 0;
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password);
+             Statement stmt = conn.createStatement()) {
+            SQL = "SELECT TOP 1 * FROM [statistics] WHERE [IIN] LIKE '" + IIN +"'";
+            ResultSet rs = stmt.executeQuery(SQL);
+            while (rs.next()){
+                result = Integer.parseInt(rs.getString("speciality_id"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
 }

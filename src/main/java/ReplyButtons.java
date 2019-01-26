@@ -22,7 +22,7 @@ public class ReplyButtons {
         keyboardFirstRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":school:ИПК Универ")));
         keyboardFirstRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":clock830:Контроль доступа")));
         keyboardFirstRow.add(new KeyboardButton( "Опросы"));
-        keyboardSecondRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":bar_chart:Статистика")));
+        keyboardSecondRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":bar_chart:Рейтинг")));
         keyboardSecondRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":newspaper:Для абитуриентов")));
         keyboardSecondRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":telephone_receiver:Контакты")));
         keyboardThirdRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":email:Блог ректора")));
@@ -137,6 +137,27 @@ public class ReplyButtons {
         keyboardRowList.add(keyboardFirstRow);
         keyboardRowList.add(keyboardSecondRow);
         keyboardRowList.add(keyboardThirdRow);
+        replyKeyboardMarkup.setKeyboard(keyboardRowList);
+    }
+    public static void ratingButtons(SendMessage sendMessage) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        sendMessage.setReplyMarkup(replyKeyboardMarkup);
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(true);
+        List<KeyboardRow> keyboardRowList = new ArrayList<KeyboardRow>();
+        KeyboardRow keyboardFirstRow = new KeyboardRow();
+        KeyboardRow keyboardSecondRow = new KeyboardRow();
+        KeyboardRow keyboardThirdRow = new KeyboardRow();
+        KeyboardRow keyboardFourthRow = new KeyboardRow();
+        keyboardFirstRow.add(new KeyboardButton("По курсу"));
+        keyboardSecondRow.add(new KeyboardButton("По факультету"));
+        keyboardThirdRow.add(new KeyboardButton("По специальности"));
+        keyboardFourthRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":rewind:Вернуться на главную")));
+        keyboardRowList.add(keyboardFirstRow);
+        keyboardRowList.add(keyboardSecondRow);
+        keyboardRowList.add(keyboardThirdRow);
+        keyboardRowList.add(keyboardFourthRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
     }
 }

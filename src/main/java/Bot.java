@@ -119,9 +119,18 @@ public class Bot extends TelegramLongPollingBot {
                     case "\uD83D\uDCDEКонтакты эдвайзера":
                         sendMsg(message, Univer.getAdvicer(telegrambotsql.getIIN(message.getChatId())), 11);
                         break;
-                    case "\uD83D\uDCCAСтатистика":
-                        telegrambotsql.manageStatistics();
-                        sendMsg(message,"finish",1);
+                    case "\uD83D\uDCCAРейтинг":
+                       // telegrambotsql.manageStatistics();
+                        sendMsg(message,"Какой рейтинг Вас интересует?",4);
+                        break;
+                    case "По курсу":
+                        sendMsg(message,telegrambotsql.getRatingforCourse(telegrambotsql.getIIN(message.getChatId())),4);
+                        break;
+                    case "По факультету":
+                        sendMsg(message,telegrambotsql.getRatingforFacultet(telegrambotsql.getIIN(message.getChatId())),4);
+                        break;
+                    case "По специальности":
+                        sendMsg(message,telegrambotsql.getRatingforSpecial(telegrambotsql.getIIN(message.getChatId())),4);
                         break;
                     case "\uD83D\uDCF0Для абитуриентов":
                         sendMsg(message, "Выберите что Вас интересует", 10);
@@ -299,6 +308,8 @@ public class Bot extends TelegramLongPollingBot {
                     ReplyButtons.SKUDButtons(sendMessage);
                 } else if (button == 31){
                     ReplyButtons.CodeButtons(sendMessage);
+                } else if (button == 4){
+                    ReplyButtons.ratingButtons(sendMessage);
                 } else if (button == 41){
                     setInline.setInline(sendMessage);
                 } else if (button == 16){
