@@ -265,7 +265,7 @@ public class Univer {
                 SumAttendance.add(Integer.toString(sumrk2));
                 SumAttendance.add(7,Integer.toString(sumrk1));
                 SumAttendance.add(8,Integer.toString(sumrk2));
-                System.out.println();
+
                 countName = countName + " РК1: " + Integer.toString(sumrk1) + " РК2: " + Integer.toString(sumrk2) + " Экз: " + ekz;
                 SumAttendance.add(countName);
             }
@@ -524,7 +524,6 @@ public class Univer {
             rs = stmt.executeQuery(SQL);
             while (rs.next()){
                 schid[i] = Integer.parseInt(rs.getString("schedule_time_id"));
-                System.out.println(Integer.parseInt(rs.getString("schedule_time_id")));
                 result[i][0] =rs.getString("timesch");
                 i++;
             }
@@ -543,7 +542,10 @@ public class Univer {
                     row++;
                 }
                 if (row > maxrow) maxrow = row;
-                result[row][Integer.parseInt(rs1.getString("schedule_week_day"))] = rs1.getString("subject_name_ru");
+                result[row][Integer.parseInt(rs1.getString("schedule_week_day"))] = rs1.getString("subject_name_ru") + "( "
+                        + rs1.getString("educ_type_name_ru") + ")\n"
+                        + rs1.getString("fio") + "\n"
+                        + rs1.getString("auditoria");
             }
             result[0][0] = Integer.toString(maxrow);
           return  result;
@@ -631,7 +633,7 @@ public class Univer {
         String SQL = "";
         String dataStart = getStartDate(IIN);
         String[][] result1 = new String[1][1];
-        System.out.println(dataStart);
+
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             SQL = " SELECT [univer_control].[control_name_ru]" +
                     "       ,[acpos_semester]" +
@@ -891,18 +893,16 @@ public class Univer {
             }
             if (today.after(startDate) && today.before(endDate)){
                 i += 1;
-                System.out.println(startDate.getTime());
-                System.out.println(endDate.getTime());
+
             }
             startDate.set(today.get(Calendar.YEAR), 0,21);
             endDate.set(today.get(Calendar.YEAR), 5,1);
             if (today.after(startDate) && today.before(endDate)){
                 i += 2;
-                System.out.println(startDate.getTime());
-                System.out.println(endDate.getTime());
+
             }
 
-            System.out.println(i);
+
             countName = Integer.toString(i);
         } catch (SQLException e) {
             e.printStackTrace();

@@ -1,9 +1,11 @@
 import com.itextpdf.text.*;
+import com.itextpdf.text.Font;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
+import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -307,6 +309,7 @@ public  class pdfMaker {
             e.printStackTrace();
         }
         Font f1 = new Font(bf);
+        Font f2 = new Font(bf,11,Font.NORMAL,new BaseColor(69,75,149));
         Font th = new Font(bf,12,Font.BOLD, BaseColor.DARK_GRAY);
         try {
             document1.add(new Paragraph(Tablename+" "+Username, f1));
@@ -325,14 +328,30 @@ public  class pdfMaker {
                         if(j==0){
                             PdfPCell cell = new PdfPCell(new Paragraph(Record[i][0], f1));
                             cell.setRotation(90);
+                            cell.setBackgroundColor(new BaseColor(224,231,239));
                             table.addCell(cell);
                             table.setLockedWidth(false);
                         }else
-                        table.addCell(new Paragraph(Record[i][j], f1));
-                    }
+                            if(i==0){
+                                PdfPCell cell = new PdfPCell(new Paragraph(Record[0][j], f1));
+                                cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+                                cell.setVerticalAlignment(Element.ALIGN_CENTER);
+                                cell.setBackgroundColor(new BaseColor(224,231,239));
+                                table.addCell(cell);
 
+                            }else {
+                            if(Record[i][j]==null) {
+                                table.addCell(new Paragraph("", f2));
+                            }else {
+                                PdfPCell cell = new PdfPCell(new Paragraph(Record[i][j], f2));
+                                cell.setBackgroundColor(new BaseColor(218, 233, 251));
+                                table.addCell(cell);
+                            }
+                            }
+                    }
                 }
             }
+            table.setWidthPercentage(100);
             float[] columnWidths = {5f, 19f, 19f,19f,19f,19f};
             table.setWidths(columnWidths);
             document1.add(table);
@@ -340,7 +359,6 @@ public  class pdfMaker {
             e.printStackTrace();
         }
         document1.close();
-
     }
 
     public static void AttendenceCatch(String Username, String Tablename, String[][] Record,String Semestr) {
