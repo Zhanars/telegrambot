@@ -469,6 +469,7 @@ public class Univer {
     public  static  String[][] getSchedule(String IIN){
         String SQL = "";
         String SQL1 = "";
+        String semestr = getSemestr(IIN);
 
         String[][] result1 = new String[1][1];
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
@@ -512,7 +513,7 @@ public class Univer {
                     "  left join univer_schedule_time_type stt on stt.schedule_time_type_id = scht.schedule_time_type_id" +
                     "  left join univer_audience a on a.audience_id = sc.audience_id" +
                     "   left join univer_building b on b.building_id = a.building_id" +
-                    "    where s.students_id = 12363 and eps.educ_plan_pos_semestr = 6  ";
+                    "    where s.[students_identify_code] LIKE '" + IIN + "' and eps.educ_plan_pos_semestr = '"+semestr+"'  ";
             ResultSet rs = stmt.executeQuery(SQL);
             int rowCount = getRowCount(rs)+1;
             int colCount = 6;
@@ -535,13 +536,16 @@ public class Univer {
             result[0][4] = "Чт";
             result[0][5] = "Пт";
             ResultSet rs1 = stmt.executeQuery(SQL1);
+            int maxrow=0;
             while (rs1.next()) {
                 int row = 1;
                 while (schid[row] != Integer.parseInt(rs1.getString("schedule_time_id"))){
                     row++;
                 }
+                if (row > maxrow) maxrow = row;
                 result[row][Integer.parseInt(rs1.getString("schedule_week_day"))] = rs1.getString("subject_name_ru");
             }
+            result[0][0] = Integer.toString(maxrow);
           return  result;
 
 
@@ -866,7 +870,7 @@ public class Univer {
                     "   [students_curce_number] as curse" +
                     "  FROM [atu_univer].[dbo].[univer_students]" +
                     " WHERE [univer_students].[students_identify_code] LIKE '" + IIN + "' " +
-                    " ORDER BY [n_seme] desc";
+                    " ORDER BY curse desc";
             ResultSet rs = stmt.executeQuery(SQL);
             while (rs.next()) {
                 countName = rs.getString("curse");

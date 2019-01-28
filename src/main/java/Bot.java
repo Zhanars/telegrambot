@@ -86,8 +86,9 @@ public class Bot extends TelegramLongPollingBot {
                         }
                         break;
                     case "Расписание занятий":
-                        Univer.getSchedule(telegrambotsql.getIIN(message.getChatId()));
-                        sendMsg(message,"rasp",11);
+                        sendMsg(message, "Подготовка файла, подождите", 11);
+                        pdfMaker.Schedulepdf(telegrambotsql.getfromBotsName(message.getChatId()), "Расписание", Univer.getSchedule(telegrambotsql.getIIN(message.getChatId())), Univer.getSemestr(telegrambotsql.getIIN(message.getChatId())));
+                        sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf");
                         break;
                     case "Расписание экзаменов":
                         sendMsg(message, "Подготовка файла, подождите", 11);
