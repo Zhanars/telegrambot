@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -368,25 +369,7 @@ public class Univer {
         return countName;
     }
 
-    public  static String getSemestr(String IIN){
-        countName = "";
-        String SQL = "";
-        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
-            SQL = " SELECT top 1" +
-                    "   [univer_progress].[n_seme] as n_seme" +
-                    "  FROM [atu_univer].[dbo].[univer_progress]" +
-                    "  JOIN  [atu_univer].[dbo].[univer_students] ON [univer_students].[students_id] =[univer_progress].[student_id]" +
-                    " WHERE [univer_students].[students_identify_code] LIKE '" + IIN + "' and [univer_progress].[status] = 1" +
-                    " ORDER BY [n_seme] desc";
-            ResultSet rs = stmt.executeQuery(SQL);
-            while (rs.next()) {
-                countName = rs.getString("n_seme");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return countName;
-    }
+
 
 
 
@@ -480,6 +463,92 @@ public class Univer {
         } catch (SQLException e) {
             e.printStackTrace();
             return  result1;
+        }
+    }
+
+    public  static  String[][] getSchedule(String IIN){
+        String SQL = "";
+        String SQL1 = "";
+
+        String[][] result1 = new String[1][1];
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
+            SQL = "SELECT  [schedule_time_id]" +
+                    "      ,Concat([schedule_time_begin],'-'" +
+                    "      ,[schedule_time_end]) as timesch" +
+                    "  FROM [atu_univer].[dbo].[univer_schedule_time]" +
+                    "  where [schedule_time_type_id] = 1 and [status] =1" +
+                    "  order by timesch";
+
+            SQL1 = "SELECT subj.subject_name_ru" +
+                    "      ,et.educ_type_name_ru" +
+                    "  ,substring(Concat(per.personal_sname, ' ' " +
+                    "  ,per.personal_name, ' '" +
+                    "  ,per.personal_father_name), 1, charindex(' ', Concat(per.personal_sname, ' ' " +
+                    "  ,per.personal_name, ' '" +
+                    "  ,per.personal_father_name)))" +
+                    " +substring(Concat(per.personal_sname, ' ' " +
+                    "  ,per.personal_name, ' '" +
+                    "  ,per.personal_father_name), charindex(' ', Concat(per.personal_sname, ' ' " +
+                    "  ,per.personal_name, ' '" +
+                    "  ,per.personal_father_name))+1,1)+'.'" +
+                    "  +substring(Concat(per.personal_sname, ' ' ,per.personal_name, ' ',per.personal_father_name), charindex(' ', Concat(per.personal_sname, ' ' " +
+                    "  ,per.personal_name, ' '" +
+                    "   ,per.personal_father_name), charindex(' ', Concat(per.personal_sname, ' ' " +
+                    "   ,per.personal_name, ' '" +
+                    "   ,per.personal_father_name))+1)+1,1)+'.' as fio" +
+                    "  ,Concat(b.building_name_ru,' ',a.audience_number_ru) as auditoria" +
+                    "      ,scht.schedule_time_id" +
+                    "      ,[schedule_week_day]" +
+                    "  FROM [atu_univer].[dbo].[univer_schedule] sc" +
+                    "  join [univer_group]  g on g.group_id = sc.group_id" +
+                    "  join [univer_educ_plan_pos] eps on eps.educ_plan_pos_id = g.educ_plan_pos_id" +
+                    "  join univer_group_student gs on gs.group_id = g.group_id" +
+                    "  join univer_educ_type et on et.educ_type_id = g.educ_type_id" +
+                    "  join univer_subject subj on subj.subject_id = eps.subject_id" +
+                    "  left join univer_teacher tc on tc.teacher_id = g.teacher_id" +
+                    "  left join univer_personal per on per.personal_id = tc.personal_id" +
+                    "  join univer_students  s on s.students_id = gs.student_id" +
+                    "  left  join univer_schedule_time scht on scht.schedule_time_id = sc.schedule_time_id" +
+                    "  left join univer_schedule_time_type stt on stt.schedule_time_type_id = scht.schedule_time_type_id" +
+                    "  left join univer_audience a on a.audience_id = sc.audience_id" +
+                    "   left join univer_building b on b.building_id = a.building_id" +
+                    "    where s.students_id = 12363 and eps.educ_plan_pos_semestr = 6  ";
+            ResultSet rs = stmt.executeQuery(SQL);
+            int rowCount = getRowCount(rs)+1;
+            int colCount = 6;
+            int[] schid = new int[rowCount] ;
+            String[][] result = new String[rowCount][colCount];
+            int i = 1;
+            rs.close();
+            rs = stmt.executeQuery(SQL);
+            while (rs.next()){
+                schid[i] = Integer.parseInt(rs.getString("schedule_time_id"));
+                System.out.println(Integer.parseInt(rs.getString("schedule_time_id")));
+                result[i][0] =rs.getString("timesch");
+                i++;
+            }
+            rs.close();
+            result[0][0] = "";
+            result[0][1] = "Пн";
+            result[0][2] = "Вт";
+            result[0][3] = "Ср";
+            result[0][4] = "Чт";
+            result[0][5] = "Пт";
+            ResultSet rs1 = stmt.executeQuery(SQL1);
+            while (rs1.next()) {
+                int row = 1;
+                while (schid[row] != Integer.parseInt(rs1.getString("schedule_time_id"))){
+                    row++;
+                }
+                result[row][Integer.parseInt(rs1.getString("schedule_week_day"))] = rs1.getString("subject_name_ru");
+            }
+          return  result;
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return  result1;
+
         }
     }
 
@@ -787,6 +856,57 @@ public class Univer {
         return result;
 
     }
+
+    public  static String getSemestr(String IIN){
+
+        countName = "";
+        String SQL = "";
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
+            SQL = " SELECT top 1" +
+                    "   [students_curce_number] as curse" +
+                    "  FROM [atu_univer].[dbo].[univer_students]" +
+                    " WHERE [univer_students].[students_identify_code] LIKE '" + IIN + "' " +
+                    " ORDER BY [n_seme] desc";
+            ResultSet rs = stmt.executeQuery(SQL);
+            while (rs.next()) {
+                countName = rs.getString("curse");
+            }
+
+            int kurs = Integer.parseInt(countName);
+            int i = 2 * (kurs - 1);
+            Calendar today = new GregorianCalendar();
+            Calendar startDate = new GregorianCalendar();
+            Calendar endDate = new GregorianCalendar();
+            endDate.set(today.get(Calendar.YEAR), 0,20);
+            if (today.before(endDate)) {
+                startDate.set(today.get(Calendar.YEAR)-1, 7, 28);
+                endDate.set(today.get(Calendar.YEAR), 0, 20);
+            } else {
+                startDate.set(today.get(Calendar.YEAR), 7, 28);
+                endDate.set(today.get(Calendar.YEAR) + 1, 0, 20);
+            }
+            if (today.after(startDate) && today.before(endDate)){
+                i += 1;
+                System.out.println(startDate.getTime());
+                System.out.println(endDate.getTime());
+            }
+            startDate.set(today.get(Calendar.YEAR), 0,21);
+            endDate.set(today.get(Calendar.YEAR), 5,1);
+            if (today.after(startDate) && today.before(endDate)){
+                i += 2;
+                System.out.println(startDate.getTime());
+                System.out.println(endDate.getTime());
+            }
+
+            System.out.println(i);
+            countName = Integer.toString(i);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return countName;
+    }
+
     private static int getRowCount(ResultSet resultSet) {
         int count = 0;
         if (resultSet == null) {

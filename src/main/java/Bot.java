@@ -85,7 +85,9 @@ public class Bot extends TelegramLongPollingBot {
                             sendMsg(message, "Заполните поле Email в системе универ!", 11);
                         }
                         break;
-                    case "Расписание":
+                    case "Расписание занятий":
+                        Univer.getSchedule(telegrambotsql.getIIN(message.getChatId()));
+                        sendMsg(message,"rasp",11);
                         break;
                     case "Расписание экзаменов":
                         sendMsg(message, "Подготовка файла, подождите", 11);
