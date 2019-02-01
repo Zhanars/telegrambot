@@ -26,6 +26,7 @@ public class ReplyButtons {
         keyboardSecondRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":newspaper:Для абитуриентов")));
         keyboardSecondRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":telephone_receiver:Контакты")));
         keyboardThirdRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":email:Блог ректора")));
+        keyboardThirdRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":man_student: :woman_student:Список вакансий")));
         keyboardRowList.add(keyboardFirstRow);
         keyboardRowList.add(keyboardSecondRow);
         keyboardRowList.add(keyboardThirdRow);
