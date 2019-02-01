@@ -55,6 +55,7 @@ public class Bot extends TelegramLongPollingBot {
                         break;
                     case "\uD83D\uDCAFТекущие оценки":
                         try {
+                            System.out.println(Univer.getAttendanceforweek(telegrambotsql.getIIN(message.getChatId()), Univer.getProgressforAttendence(telegrambotsql.getIIN(message.getChatId()))));
                             if (!Univer.getAttendanceforweek(telegrambotsql.getIIN(message.getChatId()), Univer.getProgressforAttendence(telegrambotsql.getIIN(message.getChatId()))).equals("")) {
                                 sendMsg(message, Univer.getAttendanceforweek(telegrambotsql.getIIN(message.getChatId()), Univer.getProgressforAttendence(telegrambotsql.getIIN(message.getChatId()))), 11);
                             } else {
@@ -67,7 +68,7 @@ public class Bot extends TelegramLongPollingBot {
                             e.printStackTrace();
                         }
                         break;
-                    case "Транскрипт":
+                    case "\uD83D\uDD16Транскрипт":
                         sendMsg(message, "Подготовка файла, подождите", 11);
                         pdfMaker.createUniverTranskriptPdf(telegrambotsql.getfromBotsName(message.getChatId()), "Транскрипт", Univer.getTranskript(telegrambotsql.getIIN(message.getChatId())));
                         sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf");
@@ -85,26 +86,26 @@ public class Bot extends TelegramLongPollingBot {
                             sendMsg(message, "Заполните поле Email в системе универ!", 11);
                         }
                         break;
-                    case "Расписание занятий":
+                    case "\uD83D\uDDFAРасписание занятий":
                         sendMsg(message, "Подготовка файла, подождите", 11);
                         pdfMaker.Schedulepdf(telegrambotsql.getfromBotsName(message.getChatId()), "Расписание", Univer.getSchedule(telegrambotsql.getIIN(message.getChatId())), Univer.getSemestr(telegrambotsql.getIIN(message.getChatId())));
                         sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf");
                         break;
-                    case "Расписание экзаменов":
+                    case "\uD83D\uDDFAРасписание экзаменов":
                         sendMsg(message, "Подготовка файла, подождите", 11);
                         pdfMaker.createUniverExamSchudelePdf(telegrambotsql.getfromBotsName(message.getChatId()), "Расписание экзаменов", Univer.getExamSchedule(telegrambotsql.getIIN(message.getChatId())));
                         sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf");
                         break;
                     case "Файлы преподователя":
                         break;
-                    case "Опросы":
+                    case "\uD83D\uDCCBОпросы":
                         if (!Quiz.hasAnswerQuiz(message.getChatId(), "Вам нравится наш бот?")) {
                             sendMsg(message, "Вам нравится наш бот?", 41);
                         } else {
                             sendMsg(message, "Вы уже прошли опрос", 1);
                         }
                         break;
-                    case "Календарь":
+                    case "\uD83D\uDDD3Календарь":
                         try {
                             sendMsg(message, "Подготовка файла, подождите", 11);
                             pdfMaker.createNewPdf(telegrambotsql.getfromBotsName(message.getChatId()), "Академический календарь", Univer.getAcademcal(telegrambotsql.getIIN(message.getChatId())));
@@ -186,7 +187,7 @@ public class Bot extends TelegramLongPollingBot {
                     case "⏪Вернуться на главную":
                         sendMsg(message, "Вы вернулись на главную", 1);
                         break;
-                    case "УМКД":
+                    case "\uD83D\uDCC1УМКД":
                         sendMsg(message, "Выберите предмет", 16);
                         break;
                     case "\uD83D\uDCF0Буклет":

@@ -105,19 +105,17 @@ public class Univer {
                     " max(case" +
                     " when [univer_sheet_result].[result] is null then 0 else [univer_sheet_result].[result] end) r6" +
                     " FROM [atu_univer].[dbo].[univer_attendance]" +
-                    " JOIN  [atu_univer].[dbo].[univer_students] ON [univer_students].[students_id] =[univer_attendance].[student_id]" +
-                    " JOIN  [atu_univer].[dbo].[univer_group] ON [univer_group].[group_id] = [univer_attendance].[group_id]" +
-                    " JOIN  [atu_univer].[dbo].[univer_educ_plan_pos] ON [univer_educ_plan_pos].[educ_plan_pos_id] = [univer_group].[educ_plan_pos_id]" +
-                    " JOIN  [atu_univer].[dbo].[univer_educ_type] ON [univer_educ_type].[educ_type_id] = [univer_group].[educ_type_id]" +
-                    " JOIN  [atu_univer].[dbo].[univer_academ_calendar_pos] ON [univer_academ_calendar_pos].[educ_plan_id] = [univer_educ_plan_pos].[educ_plan_id]" +
-                    " JOIN  [atu_univer].[dbo].[univer_subject] ON [univer_subject].[subject_id] = [univer_educ_plan_pos].[subject_id]" +
-                    " JOIN [atu_univer].[dbo].[univer_sheet_result] ON [univer_sheet_result].[student_id] = [univer_students].[students_id]" +
+                    " left JOIN  [atu_univer].[dbo].[univer_students] ON [univer_students].[students_id] =[univer_attendance].[student_id]" +
+                    " left JOIN  [atu_univer].[dbo].[univer_group] ON [univer_group].[group_id] = [univer_attendance].[group_id]" +
+                    " left JOIN  [atu_univer].[dbo].[univer_educ_plan_pos] ON [univer_educ_plan_pos].[educ_plan_pos_id] = [univer_group].[educ_plan_pos_id]" +
+                    " left JOIN  [atu_univer].[dbo].[univer_educ_type] ON [univer_educ_type].[educ_type_id] = [univer_group].[educ_type_id]" +
+                    " left JOIN  [atu_univer].[dbo].[univer_academ_calendar_pos] ON [univer_academ_calendar_pos].[educ_plan_id] = [univer_educ_plan_pos].[educ_plan_id]" +
+                    " left JOIN  [atu_univer].[dbo].[univer_subject] ON [univer_subject].[subject_id] = [univer_educ_plan_pos].[subject_id]" +
+                    " left JOIN [atu_univer].[dbo].[univer_sheet_result] ON [univer_sheet_result].[student_id] = [univer_students].[students_id]" +
                     " WHERE [univer_students].[students_identify_code] LIKE '" + IIN + "' and [univer_students].[student_edu_status_id] = 1 " +
                     " and [univer_academ_calendar_pos].[acpos_semester] = '"+semestr+"' " +
                     " and  [univer_academ_calendar_pos].[acpos_module] = [univer_educ_plan_pos].[acpos_module] " +
-                    " and [univer_attendance].[ball]>= 0 and [univer_attendance].[att_date] >= '" + date3 + "'" +
-                    " and [univer_sheet_result].[subject_id] =  [univer_subject].[subject_id]" +
-                    " and [univer_academ_calendar_pos].[acpos_semester] = [univer_sheet_result].[n_seme]" +
+                    " and [univer_attendance].[ball]> 0 and [univer_attendance].[att_date] >= '" + date3 + "'" +
                     " GROUP BY [univer_subject].[subject_name_ru],[univer_subject].[subject_id],[univer_educ_type].[educ_type_name_ru] " +
                     " ,[univer_attendance].[att_date],[univer_attendance].[ball], [univer_sheet_result].[date_keep],[univer_sheet_result].[result]" +
                     ")" +
@@ -153,10 +151,11 @@ public class Univer {
             Attendencerk.addAll(getSumAttendance(IIN));
             rs1 = stmt.executeQuery(getAttendance(IIN, date1));
             countName = "";
+            String countName1 = "";
             int columns1 = 0;
             columns1 = rs1.getMetaData().getColumnCount();
-            String rk1 = Attendencerk.get(7);
-            String rk2 = Attendencerk.get(8);
+            String rk1 = Attendencerk.get(Attendencerk.size()-3);
+            String rk2 = Attendencerk.get(Attendencerk.size()-2);
             int rowCount = Record.length ;
             int colCount = Record[0].length;
             if (rs1 != null) {
@@ -166,23 +165,30 @@ public class Univer {
 
                     if (Integer.parseInt(rs1.getString("r4")) == 55 && bool) {
                         bool = false;
+                        System.out.println(Record[rowCount-1][1]);
 
                         // Сравнивает рк у последнего предмета
-                        if(Integer.parseInt(rk1)<= Integer.parseInt(Record[rowCount-1][1])){
-                            for (int i=0 ; i< rowCount; i++){
+                        if(Record[rowCount-1][1] != "РК1") {
+                            if (Integer.parseInt(rk1) <= Integer.parseInt(Record[rowCount - 1][1])) {
+                                for (int i = 0; i < rowCount; i++) {
 
-                                    countName = countName + Record[i][0] + " РК1:" + Record[i][1] + " РК2:" + Record[i][2] + " Экз:"+ Record[i][3] + " Итог:"+ Record[i][4] + "\n";
+                                    countName = countName + Record[i][0] + " РК1:" + Record[i][1] + " РК2:" + Record[i][2] + " Экз:" + Record[i][3] + " Итог:" + Record[i][4] + "\n";
 
+                                }
+                                countName = countName + "\n Журнал посещений";
                             }
-                            countName = countName + "\n\n Журнал посещений";
                         }else{
+                            countName1 = "Сумма баллов по дисциплинам: \n";
                         for(String SumAttendecerk : Attendencerk){
-                            countName = SumAttendecerk + "\n";
+
+                            countName = countName1 + SumAttendecerk + "\n";
+
                         }
-                        countName = countName + "\n\n" +"Ваш текущий контроль РК1 \n";
+                        countName = countName + "\n" +"Ваш текущий контроль РК1 \n";
                     }}else
                     if (Integer.parseInt(rs1.getString("r4")) == 56 && bool)
                         {
+
 
                         bool = false;
                             if(Integer.parseInt(rk2)<= Integer.parseInt(Record[rowCount-1][2])){
@@ -191,16 +197,19 @@ public class Univer {
                                         countName = countName + Record[i][0] + " РК1:" + Record[i][1] + " РК2:" + Record[i][2] + " Экз:"+ Record[i][3] + " Итог:"+ Record[i][4] + "\n";
 
                                 }
-                                countName = countName + "\n\n Журнал посещений";
+                                countName = countName + "\n Журнал посещений";
                             }else{
+                                countName1 = "Сумма баллов по дисциплинам \n";
                             for(String SumAttendecerk : Attendencerk){
-                                countName = SumAttendecerk + "\n";
+                                countName =countName1+ SumAttendecerk + "\n";
+
                             }}
-                            countName = countName + "\n\n" +"Ваш текущий контроль РК2 \n";
+                            countName = countName + "\n" +"Ваш текущий контроль РК2 \n";
                     }
-                    for (int i = 1; i <= columns1 - 3; i++) {
-                        countName = countName + rs1.getString(i) + "  ";
-                    }
+
+                        countName = countName + " Дисциплина: " + rs1.getString("subname") + " (" + rs1.getString("educ_type_name_ru")+" ). Дата: " +
+                        rs1.getString("qwer") + ". Балл: "  + rs1.getString("ball") ;
+
                     countName = countName + "\n";
 
                 }
@@ -226,7 +235,7 @@ public class Univer {
         ResultSet rs1 = null;
         int sumrk1 = -1, sumrk2 = -1, i = 1;
         int subject_name = 0;
-        ArrayList<String> SumAttendance = new ArrayList<String>(30);
+        ArrayList<String> SumAttendance = new ArrayList<String>();
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             rs1 = stmt.executeQuery(getAttendance(IIN, getStartDate(IIN)));
             countName = "";
@@ -263,11 +272,10 @@ public class Univer {
                 }
                 SumAttendance.add(Integer.toString(sumrk1));
                 SumAttendance.add(Integer.toString(sumrk2));
-                SumAttendance.add(7,Integer.toString(sumrk1));
-                SumAttendance.add(8,Integer.toString(sumrk2));
-
                 countName = countName + " РК1: " + Integer.toString(sumrk1) + " РК2: " + Integer.toString(sumrk2) + " Экз: " + ekz;
                 SumAttendance.add(countName);
+
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -342,7 +350,7 @@ public class Univer {
 
     public static String getStartDate(String IIN) throws IOException, ClassNotFoundException, SQLException {
         String SQL = "";
-        String semestr = "";
+        String semestr = getSemestr(IIN);
         Calendar c = new GregorianCalendar();
         String date2 = new SimpleDateFormat("yyyyMMdd").format(c.getTime());
         c.add(Calendar.DAY_OF_YEAR, -7);

@@ -21,7 +21,7 @@ public class ReplyButtons {
         KeyboardRow keyboardThirdRow = new KeyboardRow();
         keyboardFirstRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":school:ИПК Универ")));
         keyboardFirstRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":clock830:Контроль доступа")));
-        keyboardFirstRow.add(new KeyboardButton( "Опросы"));
+        keyboardFirstRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":clipboard:Опросы")));
         keyboardSecondRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":bar_chart:Рейтинг")));
         keyboardSecondRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":newspaper:Для абитуриентов")));
         keyboardSecondRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":telephone_receiver:Контакты")));
@@ -46,12 +46,12 @@ public class ReplyButtons {
         KeyboardRow keyboardSixthRow = new KeyboardRow();
         if (telegrambotsql.getStatus(sendMessage.getChatId()) == 1){
             keyboardFirstRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":100:Текущие оценки")));
-            keyboardFirstRow.add(new KeyboardButton("Транскрипт"));
-            keyboardSecondRow.add(new KeyboardButton("Задолжность по оплате"));
-            keyboardThirdRow.add(new KeyboardButton("Расписание занятий"));
-            keyboardThirdRow.add(new KeyboardButton("Расписание экзаменов"));
-            keyboardFourthRow.add(new KeyboardButton("УМКД"));
-            keyboardFourthRow.add(new KeyboardButton("Календарь"));
+            keyboardFirstRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":bookmark:Транскрипт")));
+            keyboardSecondRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":moneybag:Задолжность по оплате")));
+            keyboardThirdRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":world_map:Расписание занятий")));
+            keyboardThirdRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":world_map:Расписание экзаменов")));
+            keyboardFourthRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":file_folder:УМКД")));
+            keyboardFourthRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":spiral_calendar_pad:Календарь")));
             keyboardFifthRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":telephone_receiver:Контакты эдвайзера")));
             keyboardFifthRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":key:")+"Сброс пароля"));
             keyboardSixthRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":rewind:Вернуться на главную")));
