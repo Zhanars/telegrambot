@@ -403,9 +403,4 @@ public  class pdfMaker {
         document1.close();
 
     }
-
-
-
-
-
 }
