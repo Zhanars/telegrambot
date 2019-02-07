@@ -48,7 +48,9 @@ public class Bot extends TelegramLongPollingBot {
             if (telegrambotsql.checkChatId(message.getChatId())) {
                 switch (message.getText()) {
                     case "/start":
+
                         sendMsg(message, smiling_face_with_heart_eyes + "Здравствуйте " + telegrambotsql.getfromBotsName(message.getChatId()), 1);
+
                         break;
                     case "\uD83C\uDFEBИПК Универ":
                         sendMsg(message, "ИПК Универ", 11);
@@ -221,7 +223,7 @@ public class Bot extends TelegramLongPollingBot {
                 if (message.getText().equals("\uD83D\uDCF0Для абитуриентов")) {
                     sendMsg(message, "Выберите что Вас интересует", 10);
                 } else if (message.getText().equals("\uD83D\uDCDEКонтакты")) {
-                    sendMsg(message, "*АЛМАТИНСКИЙ ТЕХНОЛОГИЧЕСКИЙ УНИВЕРСИТЕТ* \n \uD83D\uDCDE: +7(727) 293-52-95, 221-88-08,\n 317-00-53, 293-52-96 \n \uD83C\uDFE0: 050012, г. Алматы, ул. Толе би 100 \n ✉️: rector@atu.kz", 0);
+                    sendMsg(message, "*АЛМАТИНСКИЙ ТЕХНОЛОГИЧЕСКИЙ УНИВЕРСИТЕТ* \n \uD83D\uDCDE: +7(727) 293-52-95, 221-88-08,\n 317-00-53, 293-52-96 \n \uD83C\uDFE0: 050012, г. Алматы, ул. Толе би 100 \n ✉️: rector@atu.kz \n \uD83D\uDD79 https://www.instagram.com/atu_media/ ", 0);
                     SendLocation sendLocation = new SendLocation();
                     sendLocation.setChatId(message.getChatId());
                     sendLocation.setLatitude((float) 43.252442);

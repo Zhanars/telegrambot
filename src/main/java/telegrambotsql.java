@@ -172,32 +172,41 @@ public class telegrambotsql {
                     "speciality_name_ru varchar(100)," +
                     "speciality_id INT," +
                     "curce INT," +
-                    "gpa REAL);";
+                    "edu_levels_id INT," +
+                    "realgpa REAL," +
+                    "rz REAL" +
+                    "dateupdate DATETIME);";
             stmt1.executeUpdate(createTable);
-            SQL = "SELECT CONCAT (st.[students_sname],' ',st.[students_name],' ',st.[students_father_name]) as fio " +
-                    ",st.students_identify_code " +
-                    ",fc.faculty_full_name_ru " +
-                    ",fc.faculty_id " +
-                    ",sp.speciality_name_ru " +
-                    ",sp.speciality_id " +
-                    ",st.students_curce_number" +
-                    ",[dbo].[getGPAForStudent](st.students_id,0,0) as gpa " +
-                    "from [atu_univer].[dbo].[univer_students] st " +
-                    "JOIN [atu_univer].[dbo].[univer_faculty] fc ON fc.[faculty_id] = st.faculty_id " +
-                    "join [atu_univer].[dbo].[univer_speciality] sp ON sp.[speciality_id] = st.[speciality_id] " +
-                    "join univer_group_student gs on gs.student_id = st.students_id " +
-                    "where st.student_edu_status_id = 1 " +
-                    "group by " +
-                    "st.[students_sname]" +
-                    ",st.[students_name]" +
-                    ",st.[students_father_name]" +
-                    ",st.students_identify_code" +
-                    ",fc.faculty_full_name_ru" +
-                    ",sp.speciality_name_ru" +
-                    ",st.students_curce_number" +
-                    ",st.students_id" +
-                    ",fc.faculty_id" +
-                    ",sp.speciality_id";
+            SQL = " SELECT CONCAT (stu.[students_sname],' ',stu.[students_name],' ',stu.[students_father_name]) as fio " +
+                    "                   ,stu.students_identify_code " +
+                    "                   ,fc.faculty_full_name_ru " +
+                    "                   ,fc.faculty_id " +
+                    "                   ,sp.speciality_name_ru " +
+                    "                   ,sp.speciality_id " +
+                    "                   ,stu.students_curce_number" +
+                    "                   ,stu.edu_levels_id" +
+                    "                   ,[dbo].[getGPAForStudent](stu.students_id,0,0) as gpa    " +
+                    "                   ,(SELECT sum(isnull([dbo].[getProgressFinalRez]([controll_type_id],[progress_result_rk1]" +
+                    "                   ,[progress_result_rk2],[progress_result]),0)*pr.progress_credit)/case when SUM(pr.progress_credit)>0 then SUM(pr.progress_credit) else 1 end " +
+                    "                    from [univer_progress] pr left join [univer_mark_type] mt on mt.mark_type_id=pr.mark_type_id, [univer_students] st with (nolock) " +
+                    "                    where st.students_id=pr.student_id and pr.status=1 and student_id=stu.students_id )  as rz " +
+                    "                   from [atu_univer].[dbo].[univer_students] stu " +
+                    "                   JOIN [atu_univer].[dbo].[univer_faculty] fc ON fc.[faculty_id] = stu.faculty_id " +
+                    "                   join [atu_univer].[dbo].[univer_speciality] sp ON sp.[speciality_id] = stu.[speciality_id] " +
+                    "                   join univer_group_student gs on gs.student_id = stu.students_id " +
+                    "                   where stu.student_edu_status_id = 1 " +
+                    "                   group by " +
+                    "                   stu.[students_sname]" +
+                    "                   ,stu.[students_name]" +
+                    "                   ,stu.[students_father_name]" +
+                    "                   ,stu.students_identify_code" +
+                    "                   ,fc.faculty_full_name_ru" +
+                    "                   ,sp.speciality_name_ru" +
+                    "                   ,stu.students_curce_number" +
+                    "                   ,stu.students_id" +
+                    "                   ,fc.faculty_id" +
+                    "                   ,sp.speciality_id" +
+                    "                   ,stu.edu_levels_id";
             ResultSet rs = stmt.executeQuery(SQL);
             int i = 1;
             while (rs.next()) {
@@ -210,7 +219,9 @@ public class telegrambotsql {
                         rs.getString("speciality_name_ru") + "', '"+
                         rs.getString("speciality_id") + "', "+
                         rs.getString("students_curce_number") + ", "+
-                        rs.getString("gpa") + ")";
+                        rs.getString("edu_levels_id") + ", "+
+                        rs.getString("gpa") + ", "+
+                        rs.getString("rz") + ")";
                 stmt1.executeUpdate(insertSQL);
                 i++;
                 System.out.println(i);
@@ -225,63 +236,66 @@ public class telegrambotsql {
         }
     }
     public static String getRatingforCourse(String IIN){
-        String SQL = "", res = "";
+        String SQL = "", res = "" , gpa = "";
         int result = 0;
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password);
              Statement stmt = conn.createStatement()) {
-            SQL = "SELECT IIN FROM [dbo].[statistics] where curce = '" + getCourse(IIN) + "' ORDER BY gpa desc";
+            SQL = "SELECT IIN,round(realgpa,2) as gpa FROM [dbo].[statistics] where curce = '" + getCourse(IIN) + "' and edu_levels_id = '"+getEduLevel(IIN)+"' ORDER BY rz desc";
             ResultSet rs = stmt.executeQuery(SQL);
             while (rs.next()){
                 result++;
                 if (IIN.equals(rs.getString("IIN"))) {
                     res = "Вы на " + result + " месте, из ";
+                    gpa = rs.getString("gpa");
                 }
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        res = res + result;
+        res = res + result + ". Ваш gpa = " + gpa;
         return res;
     }
     public static String getRatingforFacultet(String IIN){
-        String SQL = "", res = "";
+        String SQL = "", res = "", gpa = "";
         int result = 0;
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password);
              Statement stmt = conn.createStatement()) {
-            SQL = "SELECT IIN FROM [dbo].[statistics] where faculty_id = '" + getFacultetId(IIN) + "' AND curce = '" + getCourse(IIN) + "' ORDER BY gpa desc";
+            SQL = "SELECT  IIN,round(realgpa,2) as gpa FROM [dbo].[statistics] where faculty_id = '" + getFacultetId(IIN) + "' AND curce = '" + getCourse(IIN) + "' and edu_levels_id = '"+getEduLevel(IIN)+"' ORDER BY rz desc";
             ResultSet rs = stmt.executeQuery(SQL);
             while (rs.next()){
                 result++;
                 if (IIN.equals(rs.getString("IIN"))) {
                     res = "Вы на " + result + " месте, из ";
+                    gpa = rs.getString("gpa");
                 }
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        res = res + result;
+        res = res + result + ". Ваш gpa = " + gpa;
         return res;
     }
     public static String getRatingforSpecial(String IIN){
-        String SQL = "", res="";
+        String SQL = "", res="", gpa = "";
         int result = 0;
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password);
              Statement stmt = conn.createStatement()) {
-            SQL = "SELECT [IIN] FROM [dbo].[statistics] where speciality_id = '" + getSpecialId(IIN) + "' AND curce = '" + getCourse(IIN) + "' ORDER BY gpa desc";
+            SQL = "SELECT IIN,round(realgpa,2) as gpa FROM [dbo].[statistics] where speciality_id = '" + getSpecialId(IIN) + "' AND curce = '" + getCourse(IIN) + "' and edu_levels_id = '"+getEduLevel(IIN)+"' ORDER BY rz desc";
             ResultSet rs = stmt.executeQuery(SQL);
             while (rs.next()){
                 result++;
                 if (IIN.equals(rs.getString("IIN"))) {
                     res = "Вы на " + result + " месте, из ";
+                    gpa = rs.getString("gpa");
                 }
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        res = res + result;
+        res = res + result + ". Ваш gpa = " + gpa;
         return res;
     }
     public static int getCourse(String IIN){
@@ -293,6 +307,21 @@ public class telegrambotsql {
             ResultSet rs = stmt.executeQuery(SQL);
             while (rs.next()){
                 result = Integer.parseInt(rs.getString("curce"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+    public static int getEduLevel(String IIN){
+        String SQL = "";
+        int result = 0;
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password);
+             Statement stmt = conn.createStatement()) {
+            SQL = "SELECT TOP 1 * FROM [statistics] WHERE [IIN] LIKE '" + IIN +"'";
+            ResultSet rs = stmt.executeQuery(SQL);
+            while (rs.next()){
+                result = Integer.parseInt(rs.getString("edu_levels_id"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
