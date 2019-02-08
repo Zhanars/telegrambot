@@ -53,4 +53,18 @@ public class setInline {
         markupKeyboard.setKeyboard(buttons);
         sendMessage.setReplyMarkup(markupKeyboard);
     }
+    public static void setAbiturient(SendMessage sendMessage){
+        String[][] record = api.getDocs();
+        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
+        int rowCount = record.length;
+        for (int i=0; i < rowCount; i++) {
+            List<InlineKeyboardButton> button = new ArrayList<>();
+            button.add(new InlineKeyboardButton().setText(record[i][1]).setUrl("http://telegram.atu.kz/" + record[i][3]));
+            //button.add(new InlineKeyboardButton().setText(record[i][1]).setUrl("https://ya.ru"));
+            buttons.add(button);
+        }
+        InlineKeyboardMarkup markupKeyboard = new InlineKeyboardMarkup();
+        markupKeyboard.setKeyboard(buttons);
+        sendMessage.setReplyMarkup(markupKeyboard);
+    }
 }

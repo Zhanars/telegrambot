@@ -333,7 +333,8 @@ public class Bot extends TelegramLongPollingBot {
                 else if (button == 0){
                     ReplyButtons.zeroButtons(sendMessage);
                 } else if (button == 10){
-                    ReplyButtons.abiturientButtons(sendMessage);
+                    setInline.setAbiturient(sendMessage);
+                    sendMessage.setText(api.forAbiturient());
                 } else if (button == 11){
                     ReplyButtons.UniverButtons(sendMessage);
                 } else if (button == 21){
