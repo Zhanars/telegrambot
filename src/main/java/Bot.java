@@ -53,7 +53,7 @@ public class Bot extends TelegramLongPollingBot {
 
                         break;
                     case "\uD83C\uDFEBИПК Универ":
-                        sendMsg(message, "ИПК Универ", 11);
+                        sendMsg(message, "Информационно-программный комплекс «Univer.atu.kz» (UNIVER) представляет собой систему администрирования и управления учебной деятельностью университета с полным циклом охвата учебного процесса.", 11);
                         break;
                     case "\uD83D\uDCAFТекущие оценки":
                         try {
