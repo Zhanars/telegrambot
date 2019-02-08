@@ -21,9 +21,9 @@ public class api {
             JSONArray getArray = object.getJSONArray("records");
             for (int i = 0; i < getArray.length(); i++) {
                 JSONObject obj = getArray.getJSONObject(i);
-                result += "Дата:" + (String) obj.get("created_date") + ", ";
-                result += "вакансия:" + (String) obj.get("name") + ", ";
-                result += "компания:" + (String) obj.get("company") + "\n";
+                result += "Дата: " + (String) obj.get("created_date") + ", ";
+                result += "вакансия: " + (String) obj.get("name") + ", ";
+                result += "компания: " + (String) obj.get("company") + "\n";
             }
         return result;
     }
