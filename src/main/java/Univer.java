@@ -954,4 +954,22 @@ public class Univer {
         return result;
 
     }
+    public static String getSpeciality(String IIN){
+        String SQL = "", result = "";
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password);
+             Statement stmt = conn.createStatement()) {
+            SQL = "SELECT sp.speciality_okpd" +
+                    "  FROM [atu_univer].[dbo].[univer_students] st" +
+                    "  left join univer_speciality sp on sp.speciality_id = st.speciality_id" +
+                    "  where students_identify_code = '" + IIN +"'";
+            ResultSet rs = stmt.executeQuery(SQL);
+            while (rs.next()){
+                result = rs.getString("speciality_okpd");
+            }
+            System.out.println(result);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }
