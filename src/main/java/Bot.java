@@ -217,7 +217,7 @@ public class Bot extends TelegramLongPollingBot {
                         break;
                     default:
                         try {
-                            sendMsg(message, telegrambotsql.registration(message.getText(), message.getChatId(), message.getText().length()), 1);
+                            sendMsg(message, telegrambotsql.registration(message.getText(), message.getChatId(), message.getText().length()), 201);
                         } catch (IOException e) {
                             e.printStackTrace();
                         } catch (SQLException e) {
