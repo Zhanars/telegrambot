@@ -132,6 +132,9 @@ public class Bot extends TelegramLongPollingBot {
                     case "По курсу":
                         sendMsg(message,telegrambotsql.getRatingforCourse(telegrambotsql.getIIN(message.getChatId())),4);
                         break;
+                    case "\uD83D\uDC68\u200D\uD83C\uDF93 \uD83D\uDC69\u200D\uD83C\uDF93Список вакансий":
+                        sendMsg(message,api.getVacancies("5B070300"),1);
+                        break;
                     case "По факультету":
                         sendMsg(message,telegrambotsql.getRatingforFacultet(telegrambotsql.getIIN(message.getChatId())),4);
                         break;
