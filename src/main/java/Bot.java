@@ -134,9 +134,8 @@ public class Bot extends TelegramLongPollingBot {
                         break;
                     case "\uD83D\uDC68\u200D\uD83C\uDF93 \uD83D\uDC69\u200D\uD83C\uDF93Список вакансий":
                         try {
-                            int count = api.getVacancies(message, Univer.getSpeciality(telegrambotsql.getIIN(message.getChatId()))).length;
-                            String[] result = api.getVacancies(message, Univer.getSpeciality(telegrambotsql.getIIN(message.getChatId())));
-                            for (int i = 0; i<count; i++){
+                            String[] result = api.getVacancies(Univer.getSpeciality(telegrambotsql.getIIN(message.getChatId())));
+                            for (int i = 0; i<result.length; i++){
                                 sendMsg(message,result[i],1);
                             }
                         } catch (IOException e) {
