@@ -134,7 +134,11 @@ public class Bot extends TelegramLongPollingBot {
                         break;
                     case "\uD83D\uDC68\u200D\uD83C\uDF93 \uD83D\uDC69\u200D\uD83C\uDF93Список вакансий":
                         try {
-                            sendMsg(message,api.getVacancies(Univer.getSpeciality(telegrambotsql.getIIN(message.getChatId()))),1);
+                            int count = api.getVacancies(message, Univer.getSpeciality(telegrambotsql.getIIN(message.getChatId()))).length;
+                            String[] result = api.getVacancies(message, Univer.getSpeciality(telegrambotsql.getIIN(message.getChatId())));
+                            for (int i = 0; i<count; i++){
+                                sendMsg(message,result[i],1);
+                            }
                         } catch (IOException e) {
                             e.printStackTrace();
                             sendMsg(message,"Пока вакансии нет",1);
@@ -315,7 +319,7 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 //otvet na soobshenie
-    private void sendMsg(Message message, String text, int button) {
+    public void sendMsg(Message message, String text, int button) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
         sendMessage.setChatId(message.getChatId());
