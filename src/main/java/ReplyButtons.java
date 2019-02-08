@@ -19,7 +19,7 @@ public class ReplyButtons {
         KeyboardRow keyboardFirstRow = new KeyboardRow();
         KeyboardRow keyboardSecondRow = new KeyboardRow();
         KeyboardRow keyboardThirdRow = new KeyboardRow();
-        keyboardFirstRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":school:ИПК Универ")).setRequestContact(true));
+        keyboardFirstRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":school:ИПК Универ")));
         keyboardFirstRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":clock830:Контроль доступа")));
         keyboardFirstRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":clipboard:Опросы")));
         keyboardSecondRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":bar_chart:Рейтинг")));
@@ -32,6 +32,19 @@ public class ReplyButtons {
         keyboardRowList.add(keyboardThirdRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
     }
+    public static void ContactButtons(SendMessage sendMessage) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        sendMessage.setReplyMarkup(replyKeyboardMarkup);
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(true);
+        List<KeyboardRow> keyboardRowList = new ArrayList<KeyboardRow>();
+        KeyboardRow keyboardFirstRow = new KeyboardRow();
+        keyboardFirstRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":telephone_receiver:Отправить номер телефона")).setRequestContact(true));
+        keyboardRowList.add(keyboardFirstRow);
+        replyKeyboardMarkup.setKeyboard(keyboardRowList);
+    }
+
     public static void UniverButtons(SendMessage sendMessage) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         sendMessage.setReplyMarkup(replyKeyboardMarkup);

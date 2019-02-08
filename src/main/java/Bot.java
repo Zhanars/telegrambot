@@ -259,7 +259,7 @@ public class Bot extends TelegramLongPollingBot {
                     }
                 } else if (message.getText().length() == 12 && Univer.checkIINPersonalorStudent(message.getText()) > 0) {
                     try {
-                        sendMsg(message, telegrambotsql.registration(message.getText(), message.getChatId(), message.getText().length()), 1);
+                        sendMsg(message, telegrambotsql.registration(message.getText(), message.getChatId(), message.getText().length()), 201);
                     } catch (IOException e) {
                         e.printStackTrace();
                     } catch (ClassNotFoundException e) {
@@ -267,7 +267,11 @@ public class Bot extends TelegramLongPollingBot {
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
-                } else {
+                } else if (message.hasContact() == true && (message.getContact().getFirstName() == message.getFrom().getFirstName()) && (message.getContact().getLastName() == message.getFrom().getLastName())) {
+
+
+                }
+                else {
                     sendMsg(message, EmojiParser.parseToUnicode(":lock:Здравствуйте! Для работы с ботом введите иин!"), 0);
                 }
             }
@@ -312,7 +316,10 @@ public class Bot extends TelegramLongPollingBot {
             try {
                 if (button == 1){
                     ReplyButtons.firstButtons(sendMessage);
-                } else if (button == 0){
+                }else if (button == 201){
+                    ReplyButtons.ContactButtons(sendMessage);
+                }
+                else if (button == 0){
                     ReplyButtons.zeroButtons(sendMessage);
                 } else if (button == 10){
                     ReplyButtons.abiturientButtons(sendMessage);
