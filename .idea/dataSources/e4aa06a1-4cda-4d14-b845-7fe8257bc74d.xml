@@ -34,7 +34,7 @@
     </database>
     <schema id="10" parent="2" name="dbo">
       <ObjectId>1</ObjectId>
-      <IntrospectionTimestamp>2018-12-02.00:03:52.340</IntrospectionTimestamp>
+      <IntrospectionTimestamp>2019-02-08.23:23:32.450</IntrospectionTimestamp>
       <Current>1</Current>
       <Visible>1</Visible>
     </schema>
@@ -74,70 +74,296 @@
     <schema id="22" parent="2" name="db_denydatawriter">
       <ObjectId>16393</ObjectId>
     </schema>
-    <table id="23" parent="10" name="ScreenLayout">
-      <ObjectId>309576141</ObjectId>
-      <CreatedTimestamp>2015-05-14.06:36:14.167</CreatedTimestamp>
-      <ModifiedTimestamp>2015-05-14.06:36:14.730</ModifiedTimestamp>
+    <table id="23" parent="10" name="attendeceFromUniver">
+      <ObjectId>1157579162</ObjectId>
+      <CreatedTimestamp>2018-12-27.06:49:58.430</CreatedTimestamp>
+      <ModifiedTimestamp>2019-01-25.07:21:58.040</ModifiedTimestamp>
     </table>
-    <column id="24" parent="23" name="_id">
+    <table id="24" parent="10" name="bots">
+      <ObjectId>309576141</ObjectId>
+      <CreatedTimestamp>2018-11-15.16:01:57.110</CreatedTimestamp>
+      <ModifiedTimestamp>2018-12-18.05:31:37.910</ModifiedTimestamp>
+    </table>
+    <table id="25" parent="10" name="news_atu">
+      <ObjectId>981578535</ObjectId>
+      <CreatedTimestamp>2018-12-24.05:01:50.687</CreatedTimestamp>
+      <ModifiedTimestamp>2019-01-25.07:21:58.037</ModifiedTimestamp>
+    </table>
+    <table id="26" parent="10" name="quizSample">
+      <ObjectId>565577053</ObjectId>
+      <CreatedTimestamp>2018-12-02.00:10:23.123</CreatedTimestamp>
+      <ModifiedTimestamp>2018-12-02.00:10:23.123</ModifiedTimestamp>
+    </table>
+    <table id="27" parent="10" name="statistics">
+      <ObjectId>2037582297</ObjectId>
+      <CreatedTimestamp>2019-02-08.05:27:31.790</CreatedTimestamp>
+      <ModifiedTimestamp>2019-02-08.05:27:31.790</ModifiedTimestamp>
+    </table>
+    <view id="28" parent="10" name="view_news">
+      <ObjectId>1205579333</ObjectId>
+      <CreatedTimestamp>2018-12-27.07:23:31.043</CreatedTimestamp>
+      <ModifiedTimestamp>2019-01-25.07:21:58.040</ModifiedTimestamp>
+    </view>
+    <routine id="29" parent="10" name="InserAttFromUniver">
+      <ObjectId>1189579276</ObjectId>
+      <CreatedTimestamp>2018-12-27.07:21:09.150</CreatedTimestamp>
+      <ModifiedTimestamp>2019-01-25.07:21:58.040</ModifiedTimestamp>
+      <RoutineKind>procedure</RoutineKind>
+      <RoutineType>proc</RoutineType>
+    </routine>
+    <routine id="30" parent="10" name="InserNewsFromUniver">
+      <ObjectId>1061578820</ObjectId>
+      <CreatedTimestamp>2018-12-26.05:48:46.363</CreatedTimestamp>
+      <ModifiedTimestamp>2019-01-25.07:21:58.037</ModifiedTimestamp>
+      <RoutineKind>procedure</RoutineKind>
+      <RoutineType>proc</RoutineType>
+    </routine>
+    <routine id="31" parent="10" name="udf_StripHTML">
+      <ObjectId>1013578649</ObjectId>
+      <CreatedTimestamp>2018-12-25.21:34:37.407</CreatedTimestamp>
+      <ModifiedTimestamp>2018-12-25.21:34:37.407</ModifiedTimestamp>
+      <RoutineKind>function</RoutineKind>
+      <RoutineType>scalar-fun</RoutineType>
+    </routine>
+    <column id="32" parent="23" name="id">
       <Position>1</Position>
-      <DefaultConstraintName>DF_ScreenLayout__id</DefaultConstraintName>
-      <DefaultExpression>newid()</DefaultExpression>
-      <DataType>uniqueidentifier|0s</DataType>
-      <NotNull>1</NotNull>
+      <DataType>int|0s</DataType>
     </column>
-    <column id="25" parent="23" name="WorkplaceModuleId">
+    <column id="33" parent="23" name="IIN">
       <Position>2</Position>
-      <DataType>uniqueidentifier|0s</DataType>
+      <DataType>nvarchar(50 char)|0s</DataType>
     </column>
-    <column id="26" parent="23" name="Name">
+    <column id="34" parent="23" name="subject">
       <Position>3</Position>
-      <DefaultConstraintName>DF_ScreenLayout_Name</DefaultConstraintName>
-      <DefaultExpression>N&apos;Экран&apos;</DefaultExpression>
-      <DataType>nvarchar(255 char)|0s</DataType>
-      <NotNull>1</NotNull>
+      <DataType>nvarchar(max)|0s</DataType>
     </column>
-    <column id="27" parent="23" name="AspectRatio">
+    <column id="35" parent="23" name="eductype">
       <Position>4</Position>
-      <DefaultConstraintName>DF_ScreenLayout_ScreenAspectRatio</DefaultConstraintName>
-      <DefaultExpression>0</DefaultExpression>
-      <DataType>tinyint|0s</DataType>
-      <NotNull>1</NotNull>
+      <DataType>nvarchar(max)|0s</DataType>
     </column>
-    <column id="28" parent="23" name="ScaleMode">
+    <column id="36" parent="23" name="attdate">
       <Position>5</Position>
-      <DefaultConstraintName>DF_ScreenLayout_ScreenScaleMode</DefaultConstraintName>
-      <DefaultExpression>1</DefaultExpression>
-      <DataType>tinyint|0s</DataType>
-      <NotNull>1</NotNull>
+      <DataType>datetime|0s</DataType>
     </column>
-    <column id="29" parent="23" name="ShowGrid">
+    <column id="37" parent="23" name="ball">
       <Position>6</Position>
-      <DefaultConstraintName>DF_ScreenLayout_ShowGrid</DefaultConstraintName>
-      <DefaultExpression>0</DefaultExpression>
-      <DataType>bit|0s</DataType>
-      <NotNull>1</NotNull>
+      <DataType>real|0s</DataType>
     </column>
-    <column id="30" parent="23" name="ShowName">
-      <Position>7</Position>
-      <DefaultConstraintName>DF_ScreenLayout_ShowName</DefaultConstraintName>
-      <DefaultExpression>1</DefaultExpression>
-      <DataType>bit|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <index id="31" parent="23" name="PK_ScreenLayout">
+    <trigger id="38" parent="23" name="atten">
+      <ObjectId>1317579732</ObjectId>
+      <CreatedTimestamp>2018-12-28.18:21:36.553</CreatedTimestamp>
+      <ModifiedTimestamp>2019-01-25.07:21:58.040</ModifiedTimestamp>
+      <Events>I</Events>
+      <Turn>after-stmt</Turn>
+    </trigger>
+    <column id="39" parent="24" name="Id">
       <Position>1</Position>
-      <ColNames>_id</ColNames>
+      <SequenceIdentity>1</SequenceIdentity>
+      <DataType>int|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="40" parent="24" name="IIN">
+      <Position>2</Position>
+      <DataType>nvarchar(50 char)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="41" parent="24" name="chatid">
+      <Position>3</Position>
+      <DataType>int|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="42" parent="24" name="Createdate">
+      <Position>4</Position>
+      <DataType>date|0s</DataType>
+    </column>
+    <column id="43" parent="24" name="firstName">
+      <Position>5</Position>
+      <DataType>nvarchar(50 char)|0s</DataType>
+    </column>
+    <column id="44" parent="24" name="lastName">
+      <Position>6</Position>
+      <DataType>nvarchar(50 char)|0s</DataType>
+    </column>
+    <column id="45" parent="24" name="checkperson">
+      <Position>7</Position>
+      <DataType>int|0s</DataType>
+    </column>
+    <column id="46" parent="24" name="temppassword">
+      <Position>8</Position>
+      <DataType>int|0s</DataType>
+    </column>
+    <index id="47" parent="24" name="PK_bots">
+      <Position>1</Position>
+      <ColNames>Id</ColNames>
       <Clustering>1</Clustering>
       <Unique>1</Unique>
     </index>
-    <key id="32" parent="23" name="PK_ScreenLayout">
+    <key id="48" parent="24" name="PK_bots">
       <ObjectId>325576198</ObjectId>
-      <CreatedTimestamp>2015-05-14.06:36:14.167</CreatedTimestamp>
-      <ModifiedTimestamp>2015-05-14.06:36:14.167</ModifiedTimestamp>
-      <ColNames>_id</ColNames>
-      <UnderlyingIndexName>PK_ScreenLayout</UnderlyingIndexName>
+      <CreatedTimestamp>2018-11-15.16:01:57.120</CreatedTimestamp>
+      <ModifiedTimestamp>2018-11-15.16:01:57.120</ModifiedTimestamp>
+      <ColNames>Id</ColNames>
+      <UnderlyingIndexName>PK_bots</UnderlyingIndexName>
       <Primary>1</Primary>
     </key>
+    <column id="49" parent="25" name="ID">
+      <Position>1</Position>
+      <SequenceIdentity>1</SequenceIdentity>
+      <DataType>int|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="50" parent="25" name="newsID">
+      <Position>2</Position>
+      <DataType>int|0s</DataType>
+    </column>
+    <column id="51" parent="25" name="newsTitleRu">
+      <Position>3</Position>
+      <DataType>nvarchar(max)|0s</DataType>
+    </column>
+    <column id="52" parent="25" name="newsBodyRu">
+      <Position>4</Position>
+      <DataType>nvarchar(max)|0s</DataType>
+    </column>
+    <column id="53" parent="25" name="FromBase">
+      <Position>5</Position>
+      <DataType>nvarchar(max)|0s</DataType>
+    </column>
+    <index id="54" parent="25" name="PK_news_atu">
+      <Position>1</Position>
+      <ColNames>ID</ColNames>
+      <Clustering>1</Clustering>
+      <Unique>1</Unique>
+    </index>
+    <key id="55" parent="25" name="PK_news_atu">
+      <ObjectId>997578592</ObjectId>
+      <CreatedTimestamp>2018-12-24.05:01:50.690</CreatedTimestamp>
+      <ModifiedTimestamp>2018-12-24.05:01:50.690</ModifiedTimestamp>
+      <ColNames>ID</ColNames>
+      <UnderlyingIndexName>PK_news_atu</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <trigger id="56" parent="25" name="newsInsert">
+      <ObjectId>1045578763</ObjectId>
+      <CreatedTimestamp>2018-12-26.05:43:25.487</CreatedTimestamp>
+      <ModifiedTimestamp>2019-01-25.07:21:58.037</ModifiedTimestamp>
+      <Events>I</Events>
+      <Turn>after-stmt</Turn>
+    </trigger>
+    <column id="57" parent="26" name="id">
+      <Position>1</Position>
+      <SequenceIdentity>1</SequenceIdentity>
+      <DataType>int|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="58" parent="26" name="question">
+      <Position>2</Position>
+      <DataType>varchar(255 char)|0s</DataType>
+    </column>
+    <column id="59" parent="26" name="ChatId">
+      <Position>3</Position>
+      <DataType>int|0s</DataType>
+    </column>
+    <column id="60" parent="26" name="answer">
+      <Position>4</Position>
+      <DataType>varchar(10 char)|0s</DataType>
+    </column>
+    <index id="61" parent="26" name="PK__quizSamp__3213E83FFA7E55AB">
+      <Position>1</Position>
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>id</ColNames>
+      <Clustering>1</Clustering>
+      <Unique>1</Unique>
+    </index>
+    <key id="62" parent="26" name="PK__quizSamp__3213E83FFA7E55AB">
+      <ObjectId>581577110</ObjectId>
+      <NameSurrogate>1</NameSurrogate>
+      <CreatedTimestamp>2018-12-02.00:10:23.127</CreatedTimestamp>
+      <ModifiedTimestamp>2018-12-02.00:10:23.127</ModifiedTimestamp>
+      <ColNames>id</ColNames>
+      <UnderlyingIndexName>PK__quizSamp__3213E83FFA7E55AB</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <column id="63" parent="27" name="Id">
+      <Position>1</Position>
+      <DataType>int|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="64" parent="27" name="IIN">
+      <Position>2</Position>
+      <DataType>varchar(50 char)|0s</DataType>
+    </column>
+    <column id="65" parent="27" name="fio">
+      <Position>3</Position>
+      <DataType>varchar(100 char)|0s</DataType>
+    </column>
+    <column id="66" parent="27" name="faculty_name_ru">
+      <Position>4</Position>
+      <DataType>varchar(100 char)|0s</DataType>
+    </column>
+    <column id="67" parent="27" name="faculty_id">
+      <Position>5</Position>
+      <DataType>int|0s</DataType>
+    </column>
+    <column id="68" parent="27" name="speciality_name_ru">
+      <Position>6</Position>
+      <DataType>varchar(100 char)|0s</DataType>
+    </column>
+    <column id="69" parent="27" name="speciality_id">
+      <Position>7</Position>
+      <DataType>int|0s</DataType>
+    </column>
+    <column id="70" parent="27" name="curce">
+      <Position>8</Position>
+      <DataType>int|0s</DataType>
+    </column>
+    <column id="71" parent="27" name="edu_levels_id">
+      <Position>9</Position>
+      <DataType>int|0s</DataType>
+    </column>
+    <column id="72" parent="27" name="realgpa">
+      <Position>10</Position>
+      <DataType>real|0s</DataType>
+    </column>
+    <column id="73" parent="27" name="rz">
+      <Position>11</Position>
+      <DataType>real|0s</DataType>
+    </column>
+    <index id="74" parent="27" name="PK__statisti__3214EC07D1298340">
+      <Position>1</Position>
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>Id</ColNames>
+      <Clustering>1</Clustering>
+      <Unique>1</Unique>
+    </index>
+    <key id="75" parent="27" name="PK__statisti__3214EC07D1298340">
+      <ObjectId>2053582354</ObjectId>
+      <NameSurrogate>1</NameSurrogate>
+      <CreatedTimestamp>2019-02-08.05:27:31.790</CreatedTimestamp>
+      <ModifiedTimestamp>2019-02-08.05:27:31.790</ModifiedTimestamp>
+      <ColNames>Id</ColNames>
+      <UnderlyingIndexName>PK__statisti__3214EC07D1298340</UnderlyingIndexName>
+      <Primary>1</Primary>
+    </key>
+    <column id="76" parent="28" name="news_id">
+      <Position>1</Position>
+      <DataType>int|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="77" parent="28" name="news_title_ru">
+      <Position>2</Position>
+      <DataType>nvarchar(500 char)|0s</DataType>
+    </column>
+    <column id="78" parent="28" name="news_body_ru">
+      <Position>3</Position>
+      <DataType>varchar(max)|0s</DataType>
+    </column>
+    <argument id="79" parent="31">
+      <ArgumentDirection>R</ArgumentDirection>
+      <DataType>varchar(max)|0s</DataType>
+    </argument>
+    <argument id="80" parent="31" name="@HTMLText">
+      <Position>1</Position>
+      <DataType>varchar(max)|0s</DataType>
+    </argument>
   </database-model>
 </dataSource>

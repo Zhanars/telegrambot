@@ -134,6 +134,7 @@ public class Bot extends TelegramLongPollingBot {
                         break;
                     case "\uD83D\uDC68\u200D\uD83C\uDF93 \uD83D\uDC69\u200D\uD83C\uDF93Список вакансий":
                         try {
+                            //sendMsg(message,api.getVacancies(telegrambotsql.getSpecialId(telegrambotsql.getIIN(message.getChatId()))),1);
                             sendMsg(message,api.getVacancies("5B070300"),1);
                         } catch (IOException e) {
                             sendMsg(message,"Пока вакансии нет",1);
