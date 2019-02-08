@@ -26,7 +26,7 @@ public class telegrambotsql {
                     try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
                         String SQL = "INSERT INTO [dbo].[bots] ([IIN], [chatid], [Createdate], [firstName],[lastName], [checkperson]) VALUES ('" + message + "',  '" + chatid + "' , '" + date + "', '"+Univer.getStOrPersonName(message)+"' , '"+Univer.checkIINPersonalorStudent(message)+"' ) ";
                         stmt.executeUpdate(SQL);
-                        countName = "ИИН подтвержден, теперь вы можете работать с ботом. Для изменения ИИНа введите в новый иин";
+                        countName = "ИИН подтвержден, Для взаимодействия с ботом необходимо отправить номер телефона. Это может использоваться для интеграции с другими сервисами";
                         newsAtu.inserChatId(chatid);
                     }
                 }else{
@@ -56,6 +56,21 @@ public class telegrambotsql {
         return countName;
 
     }
+
+    public static String ContactBot(Long chatid, String  lastName, String firstname, String Contact) throws IOException, ClassNotFoundException, SQLException {
+
+                try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
+                    String SQL = "UPDATE [dbo].[bots] SET  [firtsNameTelegram] = '"+firstname+"'" +
+                            "      ,[lastNameTelegram] = '"+lastName+"'" +
+                            "      ,[ContactTelegram] = '"+Contact+"' where [chatid] = '"+chatid+"' ";
+                    stmt.executeUpdate(SQL);
+                }
+                countName = "Вы успешно авторизовались. Для изменения ИИНа введите новый иин";
+
+        return countName;
+
+    }
+
 
 
 

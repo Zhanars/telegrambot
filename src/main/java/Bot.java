@@ -266,15 +266,23 @@ public class Bot extends TelegramLongPollingBot {
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
-                } else if (message.hasContact() == true && (message.getContact().getFirstName() == message.getFrom().getFirstName()) && (message.getContact().getLastName() == message.getFrom().getLastName())) {
-
-
                 }
                 else {
                     sendMsg(message, EmojiParser.parseToUnicode(":lock:Здравствуйте! Для работы с ботом введите иин!"), 0);
                 }
             }
-        } else if (update.hasCallbackQuery()) {
+        } else if (message.hasContact() && (message.getContact().getFirstName().equals(message.getFrom().getFirstName())) && (message.getContact().getLastName().equals(message.getFrom().getLastName()))) {
+            try {
+                sendMsg(message, telegrambotsql.ContactBot(message.getChatId(), message.getFrom().getLastName(), message.getFrom().getFirstName(), message.getContact().getPhoneNumber()), 1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        else if (update.hasCallbackQuery()) {
             if (callbackQuery.getData().indexOf("SubjectId:") >= 0) {
                 String Subject = callbackQuery.getData().substring(10);
                 sendMsg(callbackQuery.getMessage(), Subject, 161);
