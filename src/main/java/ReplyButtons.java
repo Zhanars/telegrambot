@@ -22,7 +22,7 @@ public class ReplyButtons {
         keyboardFirstRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":school:ИПК Универ")));
         keyboardFirstRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":clock830:Контроль доступа")));
         keyboardFirstRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":clipboard:Опросы")));
-        keyboardSecondRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":bar_chart:Рейтинг")));
+        keyboardSecondRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":bar_chart:Статистика")));
         keyboardSecondRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":newspaper:Для абитуриентов")));
         keyboardSecondRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":telephone_receiver:Контакты")));
         keyboardThirdRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":email:Блог ректора")));
