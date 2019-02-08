@@ -22,9 +22,9 @@ public class api {
             result += getArray.length() + " вакансии \n";
             for (int i = 0; i < getArray.length(); i++) {
                 JSONObject obj = getArray.getJSONObject(i);
-                result += (i + 1) + ") дата:" + (String) obj.get("created_date") + ", ";
-                result += "вакансия:" + (String) obj.get("name") + ", ";
-                result += "компания:" + (String) obj.get("company") + "\n";
+                result += (i + 1) + ") дата: " + (String) obj.get("created_date") + ", ";
+                result += "вакансия: " + (String) obj.get("name") + ", ";
+                result += "компания: " + (String) obj.get("company") + "\n";
             }
         return result;
     }
