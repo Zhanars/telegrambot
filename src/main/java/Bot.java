@@ -136,6 +136,7 @@ public class Bot extends TelegramLongPollingBot {
                         try {
                             sendMsg(message,api.getVacancies(Univer.getSpeciality(telegrambotsql.getIIN(message.getChatId()))),1);
                         } catch (IOException e) {
+                            e.printStackTrace();
                             sendMsg(message,"Пока вакансии нет",1);
                         }
                         break;

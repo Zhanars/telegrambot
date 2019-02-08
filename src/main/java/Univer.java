@@ -966,7 +966,6 @@ public class Univer {
             while (rs.next()){
                 result = rs.getString("speciality_okpd");
             }
-            System.out.println(result);
         } catch (SQLException e) {
             e.printStackTrace();
         }
