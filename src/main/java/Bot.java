@@ -164,7 +164,8 @@ public class Bot extends TelegramLongPollingBot {
                             e.printStackTrace();
                         }
                         break;
-                    case "✉Блог ректора":
+                    case "✉Обратная связь":
+                        sendMsg(message, "В форме вы можете оставить предложения, замечания, благодарности, нарушения и т.д. \n Напоминаю что все анонимно.", 71);
                         break;
                     case "Новости с универа":
                         break;
@@ -356,6 +357,8 @@ public class Bot extends TelegramLongPollingBot {
                     String SubjectId = text.substring(sIn+7);
                     setInline.setFiles(sendMessage,Univer.getFiles(TeacherId,SubjectId));
                     sendMessage.setText("Выберите документ");
+                } else if (button == 71) {
+                    setInline.setGoogle(sendMessage);
                 }
                 execute(sendMessage);
 
