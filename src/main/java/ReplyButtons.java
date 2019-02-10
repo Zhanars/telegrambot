@@ -19,17 +19,19 @@ public class ReplyButtons {
         KeyboardRow keyboardFirstRow = new KeyboardRow();
         KeyboardRow keyboardSecondRow = new KeyboardRow();
         KeyboardRow keyboardThirdRow = new KeyboardRow();
+        KeyboardRow keyboardfourthRow = new KeyboardRow();
         keyboardFirstRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":school:ИПК Универ")));
         keyboardFirstRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":clock830:Контроль доступа")));
         keyboardFirstRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":bar_chart:Статистика")));
         keyboardSecondRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":clipboard:Опросы")));
         keyboardSecondRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":newspaper:Для абитуриентов")));
-        keyboardSecondRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":man_student: :woman_student:Список вакансий")));
-        keyboardThirdRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":email:Обратная связь")));
-        keyboardThirdRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":telephone_receiver:Контакты")));
+        keyboardThirdRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":man_student: :woman_student:Список вакансий")));
+        keyboardfourthRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":email:Обратная связь")));
+        keyboardfourthRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":telephone_receiver:Контакты")));
         keyboardRowList.add(keyboardFirstRow);
         keyboardRowList.add(keyboardSecondRow);
         keyboardRowList.add(keyboardThirdRow);
+        keyboardRowList.add(keyboardfourthRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
     }
     public static void ContactButtons(SendMessage sendMessage) {
