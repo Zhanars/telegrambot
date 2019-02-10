@@ -101,6 +101,7 @@ public class Bot extends TelegramLongPollingBot {
                     case "Файлы преподователя":
                         break;
                     case "\uD83D\uDCCBОпросы":
+                        //sendMsg(message, "В форме вы можете пройти анкетирование \n Напоминаем что все анонимно.", 51);
                         if (!Quiz.hasAnswerQuiz(message.getChatId(), "Вам нравится наш бот?")) {
                             sendMsg(message, "Вам нравится наш бот?", 41);
                         } else {
@@ -173,9 +174,7 @@ public class Bot extends TelegramLongPollingBot {
                         }
                         break;
                     case "✉Обратная связь":
-                        sendMsg(message, "В форме вы можете оставить предложения, замечания, благодарности, нарушения и т.д. \n Напоминаю что все анонимно.", 71);
-                        break;
-                    case "Новости с универа":
+                        sendMsg(message, "В форме вы можете оставить предложения, замечания, благодарности, нарушения и т.д. \n Напоминаем что все анонимно.", 71);
                         break;
                     case "\uD83D\uDCC5Выписка на месяц":
                         try {
@@ -319,33 +318,47 @@ public class Bot extends TelegramLongPollingBot {
         sendMessage.setText(text);
             try {
                 if (button == 1){
+                    //Тут главый меню
                     ReplyButtons.firstButtons(sendMessage);
                 }else if (button == 201){
+                    //Тут контакт кнопки
                     ReplyButtons.ContactButtons(sendMessage);
                 }
                 else if (button == 0){
                     ReplyButtons.zeroButtons(sendMessage);
                 } else if (button == 10){
+                    //Тут кнопки для абитуриентов
                     setInline.setAbiturient(sendMessage);
                     sendMessage.setText(api.forAbiturient());
+                } else if (button == 51){
+                    //Тут анкетирование
+                    setInline.setQuiz(sendMessage);
+                    sendMessage.setText(api.forAbiturient());
                 } else if (button == 11){
+                    //Тут кнопки ИПК Универ
                     ReplyButtons.UniverButtons(sendMessage);
                 } else if (button == 21){
+                    //Тут кнопки электронной проходной
                     ReplyButtons.SKUDButtons(sendMessage);
                 } else if (button == 31){
                     ReplyButtons.CodeButtons(sendMessage);
                 } else if (button == 4){
+                    //Тут кнопки статистики
                     ReplyButtons.staticButtons(sendMessage);
                 } else if (button == 411){
+                    //Тут кнопки рейтинг
                     ReplyButtons.ratingButtons(sendMessage);
                 } else if (button == 41){
                     setInline.setInline(sendMessage);
                 } else if (button == 16){
+                    //Тут кнопки для выбора УМКД предметы
                     setInline.setSubject(sendMessage,Univer.getSubject(telegrambotsql.getIIN(message.getChatId())));
                 } else if (button == 161){
+                    //Тут кнопки для выбора преподавателя УМКД предметы
                     setInline.setTeacher(sendMessage,Univer.getTeachers(telegrambotsql.getIIN(message.getChatId()),text));
                     sendMessage.setText("Выберите преподавателя");
                 } else if (button == 162){
+                    //Тут кнопки для выбора УМКД предметы
                     int sIn = text.indexOf("SubjId:");
                     String TeacherId = text.substring(8, sIn);
                     String SubjectId = text.substring(sIn+7);

@@ -77,4 +77,16 @@ public class setInline {
         markupKeyboard.setKeyboard(buttons);
         sendMessage.setReplyMarkup(markupKeyboard);
     }
+
+    public static void setQuiz(SendMessage sendMessage) {
+        List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
+        List<InlineKeyboardButton> buttons1 = new ArrayList<>();
+        //
+        //Надо настроить URL на форму анкетирования
+        buttons1.add(new InlineKeyboardButton().setText(EmojiParser.parseToUnicode("Перейти к форме")).setUrl("http://ya.ru"));
+        buttons.add(buttons1);
+        InlineKeyboardMarkup markupKeyboard = new InlineKeyboardMarkup();
+        markupKeyboard.setKeyboard(buttons);
+        sendMessage.setReplyMarkup(markupKeyboard);
+    }
 }
