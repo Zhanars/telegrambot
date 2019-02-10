@@ -31,8 +31,6 @@ public class telegrambotsql {
                     }
                 }else{
                     countName = "ИИН используется";
-
-
                 }
             }else{
                 countName = "Такой иин не существует";
@@ -89,10 +87,29 @@ public class telegrambotsql {
         }
         return  bool;
     }
+
+
+
     public static Boolean checkChatId(Long ChatId){
         Boolean bool = false;
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             String SQL = "select chatid from [dbo].[bots] where chatid = '"+ChatId+"'";
+            ResultSet rs = stmt.executeQuery(SQL);
+            if (rs.next()) {
+                bool = true;
+            } else {
+                bool = false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return  bool;
+    }
+
+    public static Boolean checkContact(Long ChatId){
+        Boolean bool = false;
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
+            String SQL = "select ContactTelegram from [dbo].[bots] where chatid = '"+ChatId+"' and ContactTelegram != 'NULL' ";
             ResultSet rs = stmt.executeQuery(SQL);
             if (rs.next()) {
                 bool = true;

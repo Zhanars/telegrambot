@@ -68,11 +68,6 @@ public class Univer {
     public static int checkIINPersonalorStudent(String IIN) {
         int result = 0;
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
-            String SQL = "SELECT personal_identification_number FROM [atu_univer].[dbo].[univer_personal] WHERE [personal_identification_number] LIKE '%" + IIN + "%'";
-            ResultSet rs = stmt.executeQuery(SQL);
-            if (rs.next()) {
-                result = 2;
-            }
             String SQL1 = "SELECT students_identify_code FROM [atu_univer].[dbo].[univer_students] WHERE [students_identify_code] LIKE '%" + IIN + "%' and [student_edu_status_id] = 1 ";
             ResultSet rs1 = stmt.executeQuery(SQL1);
             if (rs1.next()) {

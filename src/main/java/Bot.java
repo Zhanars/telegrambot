@@ -59,6 +59,7 @@ public class Bot extends TelegramLongPollingBot {
                         try {
                             System.out.println(Univer.getAttendanceforweek(telegrambotsql.getIIN(message.getChatId()), Univer.getProgressforAttendence(telegrambotsql.getIIN(message.getChatId()))));
                             if (!Univer.getAttendanceforweek(telegrambotsql.getIIN(message.getChatId()), Univer.getProgressforAttendence(telegrambotsql.getIIN(message.getChatId()))).equals("")) {
+                                sendMsg(message, "Подготовка файла, подождите", 11);
                                 sendMsg(message, Univer.getAttendanceforweek(telegrambotsql.getIIN(message.getChatId()), Univer.getProgressforAttendence(telegrambotsql.getIIN(message.getChatId()))), 11);
                             } else {
                                 sendMsg(message, "Подготовка файла, подождите", 11);
@@ -70,6 +71,10 @@ public class Bot extends TelegramLongPollingBot {
                             e.printStackTrace();
                         }
                         break;
+                    case "\uD83D\uDCB0Задолжность по оплате":
+                        sendMsg(message, "Данная функция временно не доступна", 11);
+                        break;
+
                     case "\uD83D\uDD16Транскрипт":
                         sendMsg(message, "Подготовка файла, подождите", 11);
                         pdfMaker.createUniverTranskriptPdf(telegrambotsql.getfromBotsName(message.getChatId()), "Транскрипт", Univer.getTranskript(telegrambotsql.getIIN(message.getChatId())));
@@ -213,8 +218,16 @@ public class Bot extends TelegramLongPollingBot {
                         break;
                     default:
                         try {
+                            if(telegrambotsql.checkContact(message.getChatId())){
+                                if(telegrambotsql.registration(message.getText(), message.getChatId(), message.getText().length()).equals("ИИН подтвержден, Для взаимодействия с ботом необходимо отправить номер телефона. Это может использоваться для интеграции с другими сервисами")) {
+                                    sendMsg(message, "ИИН подтвержден, Для взаимодействия с ботом необходимо отправить номер телефона. Это может использоваться для интеграции с другими сервисами", 201);
+                                }else
+                                {
+                                    sendMsg(message, telegrambotsql.registration(message.getText(), message.getChatId(), message.getText().length()), 1);
+                                }
+                                }else{
                             sendMsg(message, telegrambotsql.registration(message.getText(), message.getChatId(), message.getText().length()), 201);
-                        } catch (IOException e) {
+                        }} catch (IOException e) {
                             e.printStackTrace();
                         } catch (SQLException e) {
                             e.printStackTrace();
