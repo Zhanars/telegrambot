@@ -296,7 +296,7 @@ public class telegrambotsql {
         int result = 0;
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password);
              Statement stmt = conn.createStatement()) {
-            SQL = "SELECT  IIN,round(realgpa,2) as gpa FROM [dbo].[statistics] where faculty_id = '" + getFacultetId(IIN) + "' AND curce = '" + getCourse(IIN) + "' and edu_levels_id = '"+getEduLevel(IIN)+"' ORDER BY rz desc";
+            SQL = "SELECT  IIN, round(realgpa,2) as gpa FROM [dbo].[statistics] where faculty_id = '" + getFacultetId(IIN) + "' AND curce = '" + getCourse(IIN) + "' and edu_levels_id = '"+getEduLevel(IIN)+"' ORDER BY rz desc";
             ResultSet rs = stmt.executeQuery(SQL);
             while (rs.next()){
                 result++;
@@ -317,7 +317,7 @@ public class telegrambotsql {
         int result = 0;
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password);
              Statement stmt = conn.createStatement()) {
-            SQL = "SELECT IIN,round(realgpa,2) as gpa FROM [dbo].[statistics] where speciality_id = '" + getSpecialId(IIN) + "' AND curce = '" + getCourse(IIN) + "' and edu_levels_id = '"+getEduLevel(IIN)+"' ORDER BY rz desc";
+            SQL = "SELECT IIN, round(realgpa,2) as gpa FROM [dbo].[statistics] where speciality_id = '" + getSpecialId(IIN) + "' AND curce = '" + getCourse(IIN) + "' and edu_levels_id = '"+getEduLevel(IIN)+"' ORDER BY rz desc";
             ResultSet rs = stmt.executeQuery(SQL);
             while (rs.next()){
                 result++;

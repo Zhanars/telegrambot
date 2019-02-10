@@ -135,9 +135,6 @@ public class Bot extends TelegramLongPollingBot {
                        // telegrambotsql.manageStatistics();
                         sendMsg(message,"Какой статистика вас интересует",4);
                         break;
-                    case "По курсу":
-                        sendMsg(message,"Какой рейтинг вас интересует",411);
-                        break;
                     case "Рейтинг по GPA":
                         sendMsg(message,telegrambotsql.getRatingforCourse(telegrambotsql.getIIN(message.getChatId())),411);
                         break;
@@ -156,6 +153,9 @@ public class Bot extends TelegramLongPollingBot {
                             e.printStackTrace();
                             sendMsg(message,"Пока вакансии нет",1);
                         }
+                        break;
+                    case "По курсу":
+                        sendMsg(message,telegrambotsql.getRatingforCourse(telegrambotsql.getIIN(message.getChatId())),411);
                         break;
                     case "По факультету":
                         sendMsg(message,telegrambotsql.getRatingforFacultet(telegrambotsql.getIIN(message.getChatId())),411);
@@ -249,22 +249,10 @@ public class Bot extends TelegramLongPollingBot {
                     } catch (TelegramApiException e) {
                         e.printStackTrace();
                     }
-                } else if (message.getText().equals("\uD83D\uDCF0Буклет")) {
-                    sendFile(message.getChatId(), "1.pdf");
-                } else if (message.getText().equals("⏪Вернуться на главную")){
-                    sendMsg(message, "Вы вернулись на главную", 0);
-                } else if (message.getText().equals("\uD83C\uDFACВидео")) {
-                    sendMsg(message,"Файл подготовливается, подождите", 10);
-                    SendVideo sendVideo = new SendVideo();
-                    sendVideo.setChatId(message.getChatId());
-                    File file = new File("Kazakhstan.mp4");
-                    sendVideo.setVideo(file);
-                    sendVideo.setCaption("ATUKazakhstan");
-                    try {
-                        execute(sendVideo);
-                    } catch (TelegramApiException e) {
-                        e.printStackTrace();
-                    }
+                } else if (message.getText().equals("Отчет по свободным местам в общежитии")){
+                    sendMsg(message, "Подготовка файла, подождите", 0);
+                    pdfMaker.createHostelPdf(api.getHostel());
+                    sendFile(message.getChatId(), "hostel_report.pdf");
                 } else if (message.getText().length() == 12 && Univer.checkIINPersonalorStudent(message.getText()) > 0) {
                     try {
                         sendMsg(message, telegrambotsql.registration(message.getText(), message.getChatId(), message.getText().length()), 201);
