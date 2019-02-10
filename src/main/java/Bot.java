@@ -127,10 +127,18 @@ public class Bot extends TelegramLongPollingBot {
                         break;
                     case "\uD83D\uDCCAСтатистика":
                        // telegrambotsql.manageStatistics();
-                        sendMsg(message,"Какой рейтинг Вас интересует?",4);
+                        sendMsg(message,"Какой статистика вас интересует",4);
                         break;
                     case "По курсу":
-                        sendMsg(message,telegrambotsql.getRatingforCourse(telegrambotsql.getIIN(message.getChatId())),4);
+                        sendMsg(message,"Какой рейтинг вас интересует",411);
+                        break;
+                    case "Рейтинг по GPA":
+                        sendMsg(message,telegrambotsql.getRatingforCourse(telegrambotsql.getIIN(message.getChatId())),411);
+                        break;
+                    case "Отчет по общежитию":
+                         sendMsg(message, "Подготовка файла, подождите", 4);
+                         pdfMaker.createHostelPdf(api.getHostel());
+                         sendFile(message.getChatId(), "hostel_report.pdf");
                         break;
                     case "\uD83D\uDC68\u200D\uD83C\uDF93 \uD83D\uDC69\u200D\uD83C\uDF93Список вакансий":
                         try {
@@ -144,10 +152,10 @@ public class Bot extends TelegramLongPollingBot {
                         }
                         break;
                     case "По факультету":
-                        sendMsg(message,telegrambotsql.getRatingforFacultet(telegrambotsql.getIIN(message.getChatId())),4);
+                        sendMsg(message,telegrambotsql.getRatingforFacultet(telegrambotsql.getIIN(message.getChatId())),411);
                         break;
                     case "По специальности":
-                        sendMsg(message,telegrambotsql.getRatingforSpecial(telegrambotsql.getIIN(message.getChatId())),4);
+                        sendMsg(message,telegrambotsql.getRatingforSpecial(telegrambotsql.getIIN(message.getChatId())),411);
                         break;
                     case "\uD83D\uDCF0Для абитуриентов":
                         sendMsg(message, "Выберите что Вас интересует", 10);
@@ -203,22 +211,6 @@ public class Bot extends TelegramLongPollingBot {
                         break;
                     case "\uD83D\uDCC1УМКД":
                         sendMsg(message, "Выберите предмет", 16);
-                        break;
-                    case "\uD83D\uDCF0Буклет":
-                        sendFile(message.getChatId(), "1.pdf");
-                        break;
-                    case "\uD83C\uDFACВидео":
-                        sendMsg(message,"Файл подготовливается, подождите", 10);
-                        SendVideo sendVideo = new SendVideo();
-                        sendVideo.setChatId(message.getChatId());
-                        File file = new File("Kazakhstan.mp4");
-                        sendVideo.setVideo(file);
-                        sendVideo.setCaption("ATUKazakhstan");
-                        try {
-                            execute(sendVideo);
-                        } catch (TelegramApiException e) {
-                            e.printStackTrace();
-                        }
                         break;
                     default:
                         try {
@@ -343,6 +335,8 @@ public class Bot extends TelegramLongPollingBot {
                 } else if (button == 31){
                     ReplyButtons.CodeButtons(sendMessage);
                 } else if (button == 4){
+                    ReplyButtons.staticButtons(sendMessage);
+                } else if (button == 411){
                     ReplyButtons.ratingButtons(sendMessage);
                 } else if (button == 41){
                     setInline.setInline(sendMessage);

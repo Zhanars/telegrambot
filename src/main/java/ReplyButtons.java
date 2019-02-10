@@ -174,4 +174,23 @@ public class ReplyButtons {
         keyboardRowList.add(keyboardFourthRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
     }
+    public static void staticButtons(SendMessage sendMessage) {
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        sendMessage.setReplyMarkup(replyKeyboardMarkup);
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(true);
+        List<KeyboardRow> keyboardRowList = new ArrayList<KeyboardRow>();
+        KeyboardRow keyboardFirstRow = new KeyboardRow();
+        KeyboardRow keyboardSecondRow = new KeyboardRow();
+        KeyboardRow keyboardThirdRow = new KeyboardRow();
+        KeyboardRow keyboardFourthRow = new KeyboardRow();
+        keyboardFirstRow.add(new KeyboardButton("Отчет по общежитию"));
+        keyboardSecondRow.add(new KeyboardButton("Рейтинг по GPA"));
+        keyboardFourthRow.add(new KeyboardButton(EmojiParser.parseToUnicode(":rewind:Вернуться на главную")));
+        keyboardRowList.add(keyboardFirstRow);
+        keyboardRowList.add(keyboardSecondRow);
+        keyboardRowList.add(keyboardFourthRow);
+        replyKeyboardMarkup.setKeyboard(keyboardRowList);
+    }
 }

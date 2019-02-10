@@ -288,6 +288,49 @@ public  class pdfMaker {
         document1.close();
 
     }
+    public static void createHostelPdf(String[][] Record){
+        Calendar today = new GregorianCalendar();
+        Document document1 = new Document();
+        try {
+            PdfWriter.getInstance(document1, new FileOutputStream("hostel_report.pdf"));
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        document1.open();
+        BaseFont bf = null;
+        try {
+            bf = BaseFont.createFont(FONT, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Font f1 = new Font(bf);
+        Font th = new Font(bf,12,Font.BOLD, BaseColor.DARK_GRAY);
+        try {
+
+            document1.add(new Paragraph("Выписка по свободным местам за " + today.get(Calendar.DAY_OF_MONTH) + "-"+ (today.get(Calendar.MONTH) + 1) +"-" + today.get(Calendar.YEAR) + " день \n\n\n", f1));
+            int colCount = Record[0].length;
+            int rowCount = Record.length;
+
+            PdfPTable table = new PdfPTable(colCount);
+            table.setHeaderRows(1);
+            for (int i=0; i < rowCount; i++){
+                for (int j=0; j < colCount; j++) {
+                    table.addCell(new Paragraph(Record[i][j], f1));
+                }
+            }
+
+            document1.add(table);
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        }
+        document1.close();
+
+    }
 
     public static void Schedulepdf(String Username, String Tablename, String[][] Record,String Semestr){
         Document document1 = new Document();

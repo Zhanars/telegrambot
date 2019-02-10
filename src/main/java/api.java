@@ -74,4 +74,37 @@ public class api {
         result += "Выберите что Вас интересует:";
         return result;
     }
+    public static String[][] getHostel(){
+        URL url = null;
+        try {
+            url = new URL("http://telegram.atu.kz/api/readHostel.php");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        Scanner in = null;
+        try {
+            in = new Scanner((InputStream) url.getContent());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String content="";
+        while (in.hasNext()){
+            content += in.nextLine();
+        }
+        JSONObject object = new JSONObject(content);
+        JSONArray getArray = object.getJSONArray("records");
+        String[][] result = new String[6][4];
+        result[0][0] = "Номер и адрес общежитии";
+        result[0][1] = "Занятые места";
+        result[0][2] = "Свободные места";
+        result[0][3] = "Всего";
+        for (int i = 1; i < 6; i++) {
+            JSONObject obj = getArray.getJSONObject(i-1);
+            result[i][0] = (String) obj.get("HouseId") + ", по адресу " + (String) obj.get("Address");
+            result[i][1] = (String) obj.get("countreg");
+            result[i][2] = String.valueOf(Integer.parseInt((String) obj.get("summa")) - Integer.parseInt((String) obj.get("countreg")));
+            result[i][3] = (String) obj.get("summa");
+        }
+        return result;
+    }
 }
