@@ -48,7 +48,6 @@ public class Bot extends TelegramLongPollingBot {
             if (telegrambotsql.checkChatId(message.getChatId())) {
                 switch (message.getText()) {
                     case "/start":
-
                         sendMsg(message, smiling_face_with_heart_eyes + "Здравствуйте " + telegrambotsql.getfromBotsName(message.getChatId()), 1);
 
                         break;
@@ -266,6 +265,7 @@ public class Bot extends TelegramLongPollingBot {
                 }
                 else {
                     sendMsg(message, EmojiParser.parseToUnicode(":lock:Здравствуйте! Для работы с ботом введите иин!"), 0);
+                    sendFile(message.getChatId(), "Руководство АТУБот.pdf");
                 }
             }
         } else if (message.hasContact() && (message.getContact().getFirstName().equals(message.getFrom().getFirstName())) && (message.getContact().getLastName().equals(message.getFrom().getLastName()))) {
@@ -412,7 +412,7 @@ public class Bot extends TelegramLongPollingBot {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (!fileSource.equals("1.pdf") && !fileSource.equals("Kazakhstan.mp4"))
+        if (!fileSource.equals("Руководство АТУБот.pdf") && !fileSource.equals("Kazakhstan.mp4"))
             new File(fileSource).delete();
     }
 
