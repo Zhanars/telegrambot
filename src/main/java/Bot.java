@@ -162,7 +162,7 @@ public class Bot extends TelegramLongPollingBot {
                         sendMsg(message, "Выберите что Вас интересует", 10);
                         break;
                     case "\uD83D\uDCDEКонтакты":
-                        sendMsg(message, "*АЛМАТИНСКИЙ ТЕХНОЛОГИЧЕСКИЙ УНИВЕРСИТЕТ* \n \uD83D\uDCDE: +7(727) 293-52-95, 221-88-08,\n 317-00-53, 293-52-96 \n \uD83C\uDFE0: 050012, г. Алматы, ул. Толе би 100 \n ✉️: rector@atu.kz", 1);
+                        sendMsg(message, "*АЛМАТИНСКИЙ ТЕХНОЛОГИЧЕСКИЙ УНИВЕРСИТЕТ* \n \uD83D\uDCDE: +7(727) 293-52-95, 221-88-08,\n 317-00-53, 293-52-96 \n \uD83C\uDFE0: 050012, г. Алматы, ул. Толе би 100 \n Сайт: https://atu.kz\n VK: http://vk.com/atumedia \n Facebook: https://www.facebook.com/atumedia2016 \n Instagram: https://www.instagram.com/atu\\_media/ \n Youtube: https://www.youtube.com/channel/UCckgmc8Fi-kWtbTSMakQi-w \n ✉️: rector@atu.kz", 1);
                         SendLocation sendLocation = new SendLocation();
                         sendLocation.setChatId(message.getChatId());
                         sendLocation.setLatitude((float) 43.252442);
@@ -226,7 +226,7 @@ public class Bot extends TelegramLongPollingBot {
                 if (message.getText().equals("\uD83D\uDCF0Для абитуриентов")) {
                     sendMsg(message, "Выберите что Вас интересует", 10);
                 } else if (message.getText().equals("\uD83D\uDCDEКонтакты")) {
-                    sendMsg(message, "*АЛМАТИНСКИЙ ТЕХНОЛОГИЧЕСКИЙ УНИВЕРСИТЕТ* \n \uD83D\uDCDE: +7(727) 293-52-95, 221-88-08,\n 317-00-53, 293-52-96 \n \uD83C\uDFE0: 050012, г. Алматы, ул. Толе би 100 \n ✉️: rector@atu.kz \n \uD83D\uDD79 https://www.instagram.com/atu_media/ ", 0);
+                    sendMsg(message, "*АЛМАТИНСКИЙ ТЕХНОЛОГИЧЕСКИЙ УНИВЕРСИТЕТ* \n \uD83D\uDCDE: +7(727) 293-52-95, 221-88-08,\n 317-00-53, 293-52-96 \n \uD83C\uDFE0: 050012, г. Алматы, ул. Толе би 100 \n Сайт: https://atu.kz\n VK: http://vk.com/atumedia \n Facebook: https://www.facebook.com/atumedia2016 \n Instagram: https://www.instagram.com/atu\\_media/ \n Youtube: https://www.youtube.com/channel/UCckgmc8Fi-kWtbTSMakQi-w \n ✉️: rector@atu.kz", 0);
                     SendLocation sendLocation = new SendLocation();
                     sendLocation.setChatId(message.getChatId());
                     sendLocation.setLatitude((float) 43.252442);
