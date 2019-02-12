@@ -268,7 +268,7 @@ public class Bot extends TelegramLongPollingBot {
                     sendFile(message.getChatId(), "Руководство АТУБот.pdf");
                 }
             }
-        } else if (message.hasContact() && (message.getContact().getFirstName().equals(message.getFrom().getFirstName())) && (message.getContact().getLastName().equals(message.getFrom().getLastName()))) {
+        } else if (message.hasContact() && (message.getContact().getFirstName().equals(message.getFrom().getFirstName())) ) {
             try {
                 sendMsg(message, telegrambotsql.ContactBot(message.getChatId(), message.getFrom().getLastName(), message.getFrom().getFirstName(), message.getContact().getPhoneNumber()), 1);
             } catch (IOException e) {
