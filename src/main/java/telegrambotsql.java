@@ -1,4 +1,5 @@
 import firstmenu.Configuration;
+import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.io.IOException;
 import java.sql.*;
@@ -75,7 +76,7 @@ public class telegrambotsql {
     public static Boolean checkIINandChatid(String IIN, Long ChatId){
         Boolean bool = false;
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
-            String SQL = "select IIN from [dbo].[bots] where IIN ='"+IIN+"' and chatid = '"+ChatId+"'";
+            String SQL = "select IIN from [dbo].[bots] where IIN ='" + IIN + "' and chatid = '" + ChatId + "'";
             ResultSet rs = stmt.executeQuery(SQL);
             if (rs.next()) {
                 bool = false;
@@ -209,7 +210,7 @@ public class telegrambotsql {
                     "curce INT," +
                     "edu_levels_id INT," +
                     "realgpa REAL," +
-                    "rz REAL" +
+                    "rz REAL," +
                     "dateupdate DATETIME);";
             stmt1.executeUpdate(createTable);
             SQL = " SELECT CONCAT (stu.[students_sname],' ',stu.[students_name],' ',stu.[students_father_name]) as fio " +
@@ -392,6 +393,15 @@ public class telegrambotsql {
             e.printStackTrace();
         }
         return result;
+    }
+    public static void insertLog(Message message){
+        try (Connection conn = DriverManager.getConnection(connectUrl, userName, password);
+             Statement stmt = conn.createStatement()) {
+            String SQL = "INSERT INTO [dbo].[logs] ([chatid], [mess], [firstNameTelegram], [lastNameTelegram], [IIN]) VALUES ('" + message.getChatId() + "',  '" + message.getText() + "' , '" + message.getFrom().getFirstName() + "', '" + message.getFrom().getLastName() + "' , '" + getIIN(message.getChatId()) + "' ) ";
+            stmt.executeUpdate(SQL);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

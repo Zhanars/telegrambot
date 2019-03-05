@@ -49,6 +49,7 @@ public class Bot extends TelegramLongPollingBot {
         CallbackQuery callbackQuery = update.getCallbackQuery();
         executorService.submit(() ->System.out.println(message));
         if (message != null && message.hasText()) {
+            executorService.submit(() -> telegrambotsql.insertLog(message));
             if (telegrambotsql.checkChatId(message.getChatId())) {
                 switch (message.getText()) {
                     case "/start":
@@ -70,14 +71,14 @@ public class Bot extends TelegramLongPollingBot {
                                 });
                             } else {
                                 executorService.submit(() ->sendMsg(message, "Подготовка файла, подождите", 11));
-                                executorService.submit(() -> {
+                                {
                                     try {
                                         pdfMaker.AttendenceCatch(telegrambotsql.getfromBotsName(message.getChatId()), "Оценки за семестр", Univer.getProgressforAttendence(telegrambotsql.getIIN(message.getChatId())), Univer.getSemestr(telegrambotsql.getIIN(message.getChatId())));
                                     } catch (SQLException e) {
                                         e.printStackTrace();
                                     }
-                                });
-                                executorService.submit(() ->sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf"));
+                                };
+                                sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf");
 
                             }
                         } catch (SQLException e) {
@@ -90,8 +91,8 @@ public class Bot extends TelegramLongPollingBot {
 
                     case "\uD83D\uDD16Транскрипт":
                         executorService.submit(() ->sendMsg(message, "Подготовка файла, подождите", 11));
-                        executorService.submit(() ->pdfMaker.createUniverTranskriptPdf(telegrambotsql.getfromBotsName(message.getChatId()), "Транскрипт", Univer.getTranskript(telegrambotsql.getIIN(message.getChatId()))));
-                        executorService.submit(() ->sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf"));
+                        pdfMaker.createUniverTranskriptPdf(telegrambotsql.getfromBotsName(message.getChatId()), "Транскрипт", Univer.getTranskript(telegrambotsql.getIIN(message.getChatId())));
+                        sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf");
                         break;
                     case "\uD83D\uDD11Сброс пароля":
                         String email = Univer.getEmail(telegrambotsql.getIIN(message.getChatId()));
@@ -108,13 +109,13 @@ public class Bot extends TelegramLongPollingBot {
                         break;
                     case "\uD83D\uDDFAРасписание занятий":
                         executorService.submit(() ->sendMsg(message, "Подготовка файла, подождите", 11));
-                        executorService.submit(() ->pdfMaker.Schedulepdf(telegrambotsql.getfromBotsName(message.getChatId()), "Расписание занятий", Univer.getSchedule(telegrambotsql.getIIN(message.getChatId())), Univer.getSemestr(telegrambotsql.getIIN(message.getChatId()))));
-                        executorService.submit(() ->sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf"));
+                        pdfMaker.Schedulepdf(telegrambotsql.getfromBotsName(message.getChatId()), "Расписание занятий", Univer.getSchedule(telegrambotsql.getIIN(message.getChatId())), Univer.getSemestr(telegrambotsql.getIIN(message.getChatId())));
+                        sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf");
                         break;
                     case "\uD83D\uDDFAРасписание экзаменов":
                         executorService.submit(() ->sendMsg(message, "Подготовка файла, подождите", 11));
-                        executorService.submit(() ->pdfMaker.createUniverExamSchudelePdf(telegrambotsql.getfromBotsName(message.getChatId()), "Расписание экзаменов", Univer.getExamSchedule(telegrambotsql.getIIN(message.getChatId()))));
-                        executorService.submit(() ->sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf"));
+                        pdfMaker.createUniverExamSchudelePdf(telegrambotsql.getfromBotsName(message.getChatId()), "Расписание экзаменов", Univer.getExamSchedule(telegrambotsql.getIIN(message.getChatId())));
+                        sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf");
                         break;
                     case "Файлы преподователя":
                         break;
@@ -128,7 +129,7 @@ public class Bot extends TelegramLongPollingBot {
                         break;
                     case "\uD83D\uDDD3Календарь":
                             executorService.submit(() ->sendMsg(message, "Подготовка файла, подождите", 11));
-                            executorService.submit(() -> {
+                             {
                                 try {
                                     pdfMaker.createNewPdf(telegrambotsql.getfromBotsName(message.getChatId()), "Академический календарь", Univer.getAcademcal(telegrambotsql.getIIN(message.getChatId())));
                                 } catch (IOException e) {
@@ -138,8 +139,8 @@ public class Bot extends TelegramLongPollingBot {
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                            });
-                            executorService.submit(() ->sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf"));
+                            };
+                            sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf");
                         break;
 
                     case "\uD83D\uDCDEКонтакты эдвайзера":
@@ -154,8 +155,8 @@ public class Bot extends TelegramLongPollingBot {
                         break;
                     case "Отчет по общежитию":
                         executorService.submit(() ->sendMsg(message, "Подготовка файла, подождите", 4));
-                        executorService.submit(() ->pdfMaker.createHostelPdf(api.getHostel()));
-                        executorService.submit(() ->sendFile(message.getChatId(), "hostel_report.pdf"));
+                        pdfMaker.createHostelPdf(api.getHostel());
+                        sendFile(message.getChatId(), "hostel_report.pdf");
                         break;
                     case "\uD83D\uDC68\u200D\uD83C\uDF93 \uD83D\uDC69\u200D\uD83C\uDF93Список вакансий":
                         try {
@@ -197,25 +198,25 @@ public class Bot extends TelegramLongPollingBot {
                         break;
                     case "\uD83D\uDCC5Выписка на месяц":
                             executorService.submit(() ->sendMsg(message, "Подготовка файла, подождите", 21));
-                            executorService.submit(() -> {
+                             {
                                         try {
                                             pdfMaker.createGuardPdf(telegrambotsql.getfromBotsName(message.getChatId()), "Контроль прохода", RusGuard.getReportForMonth(telegrambotsql.getIIN(message.getChatId()), 0), 0);
                                         } catch (SQLException e) {
                                             e.printStackTrace();
                                         }
-                                    });
-                        executorService.submit(() ->sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf"));
+                                    };
+                        sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf");
                         break;
                     case "\uD83D\uDCC5Выписка на прошлый месяц":
                             executorService.submit(() ->sendMsg(message, "Подготовка файла, подождите", 21));
-                            executorService.submit(() -> {
+                             {
                                 try {
                                     pdfMaker.createGuardPdf(telegrambotsql.getfromBotsName(message.getChatId()), "Контроль прохода", RusGuard.getReportForMonth(telegrambotsql.getIIN(message.getChatId()), -1), -1);
                                 } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
-                            });
-                        executorService.submit(() ->sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf"));
+                            };
+                        sendFile(message.getChatId(), telegrambotsql.getfromBotsName(message.getChatId()) + ".pdf");
                         break;
                     case "\uD83D\uDD63Контроль доступа":
                             executorService.submit(() -> {
@@ -291,8 +292,8 @@ public class Bot extends TelegramLongPollingBot {
                     }
                 } else if (message.getText().equals("Отчет по свободным местам в общежитии")){
                     executorService.submit(() ->sendMsg(message, "Подготовка файла, подождите", 0));
-                    executorService.submit(() ->pdfMaker.createHostelPdf(api.getHostel()));
-                    executorService.submit(() ->sendFile(message.getChatId(), "hostel_report.pdf"));
+                    pdfMaker.createHostelPdf(api.getHostel());
+                    sendFile(message.getChatId(), "hostel_report.pdf");
                 } else if (message.getText().length() == 12 && Univer.checkIINPersonalorStudent(message.getText()) > 0) {
                         executorService.submit(() -> {
                             try {
@@ -308,7 +309,7 @@ public class Bot extends TelegramLongPollingBot {
                 }
                 else {
                     executorService.submit(() ->sendMsg(message, EmojiParser.parseToUnicode(":lock:Здравствуйте! Для работы с ботом введите иин!"), 0));
-                    executorService.submit(() ->sendFile(message.getChatId(), "Руководство АТУБот.pdf"));
+                   sendFile(message.getChatId(), "Руководство АТУБот.pdf");
                 }
             }
         } else if (message.hasContact() && (message.getContact().getFirstName().equals(message.getFrom().getFirstName())) ) {
