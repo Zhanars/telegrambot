@@ -12,7 +12,7 @@ public class telegrambotsql {
     private static String userName = Configuration.getTelegramUsername();
     private static String password = Configuration.getPass();
     private static String connectUrl = Configuration.getTelegramBotHost();
-    public static String registration(String message, Long chatid, int gettextlength) throws IOException, ClassNotFoundException, SQLException {
+    public static synchronized String registration(String message, Long chatid, int gettextlength) {
         String date = new SimpleDateFormat("yyyyMMdd").format(Calendar.getInstance().getTime());
         if (gettextlength == 12) {
             if(Univer.checkIINPersonalorStudent(message) > 0) {
@@ -21,6 +21,8 @@ public class telegrambotsql {
                         String SQL = "DELETE from [dbo].[bots] WHERE [chatid]='"+chatid+"' and IIN != '"+message+"'";
                         stmt.executeUpdate(SQL);
                         countName = "ИИН удален";
+                    } catch (SQLException e) {
+                        e.printStackTrace();
                     }
                 }
                 if(checkIINandChatid(message, chatid)) {
@@ -29,6 +31,8 @@ public class telegrambotsql {
                         stmt.executeUpdate(SQL);
                         countName = "ИИН подтвержден, Для взаимодействия с ботом необходимо отправить номер телефона. Это может использоваться для интеграции с другими сервисами";
                         newsAtu.inserChatId(chatid);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
                     }
                 }else{
                     countName = "ИИН используется";
@@ -42,6 +46,8 @@ public class telegrambotsql {
                 try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
                     String SQL = "UPDATE [dbo].[bots] SET [temppassword] = NULL where [chatid] = '"+chatid+"' ";
                     stmt.executeUpdate(SQL);
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
                 Univer.resetPassword(getIIN(chatid));
                 countName = "Пароль сброшен ";
@@ -56,15 +62,17 @@ public class telegrambotsql {
 
     }
 
-    public static String ContactBot(Long chatid, String  lastName, String firstname, String Contact) throws IOException, ClassNotFoundException, SQLException {
+    public static synchronized String ContactBot(Long chatid, String  lastName, String firstname, String Contact) {
 
                 try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
                     String SQL = "UPDATE [dbo].[bots] SET  [firtsNameTelegram] = '"+firstname+"'" +
                             "      ,[lastNameTelegram] = '"+lastName+"'" +
                             "      ,[ContactTelegram] = '"+Contact+"' where [chatid] = '"+chatid+"' ";
                     stmt.executeUpdate(SQL);
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
-                countName = "Вы успешно авторизовались. Для изменения ИИНа введите новый иин";
+        countName = "Вы успешно авторизовались. Для изменения ИИНа введите новый иин";
 
         return countName;
 
@@ -73,7 +81,7 @@ public class telegrambotsql {
 
 
 
-    public static Boolean checkIINandChatid(String IIN, Long ChatId){
+    public static synchronized Boolean checkIINandChatid(String IIN, Long ChatId){
         Boolean bool = false;
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             String SQL = "select IIN from [dbo].[bots] where IIN ='" + IIN + "' and chatid = '" + ChatId + "'";
@@ -91,7 +99,7 @@ public class telegrambotsql {
 
 
 
-    public static Boolean checkChatId(Long ChatId){
+    public static synchronized Boolean checkChatId(Long ChatId){
         Boolean bool = false;
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             String SQL = "select chatid from [dbo].[bots] where chatid = '"+ChatId+"'";
@@ -107,7 +115,7 @@ public class telegrambotsql {
         return  bool;
     }
 
-    public static Boolean checkContact(Long ChatId){
+    public static synchronized Boolean checkContact(Long ChatId){
         Boolean bool = false;
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             String SQL = "select ContactTelegram from [dbo].[bots] where chatid = '"+ChatId+"' and ContactTelegram != 'NULL' ";
@@ -123,7 +131,7 @@ public class telegrambotsql {
         return  bool;
     }
 
-    public static String getIIN(Long ChatId){
+    public static synchronized String getIIN(Long ChatId){
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             String SQL = "select IIN from [dbo].[bots] where chatid = '"+ChatId+"'";
             ResultSet rs = stmt.executeQuery(SQL);
@@ -136,7 +144,7 @@ public class telegrambotsql {
         return countName;
     }
 
-    public static String getfromBotsName(Long ChatId){
+    public static synchronized String getfromBotsName(Long ChatId){
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             String SQL = "select firstName, lastName from [dbo].[bots] where chatid = '"+ChatId+"'";
             ResultSet rs = stmt.executeQuery(SQL);
@@ -149,7 +157,7 @@ public class telegrambotsql {
         return countName;
     }
 
-    public static int getStatus(String ChatId)
+    public static synchronized int getStatus(String ChatId)
     {
         int result = 0;
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
@@ -163,7 +171,7 @@ public class telegrambotsql {
         }
         return result;
     }
-    public static void sendCodeEmail(String email, Long ChatId){
+    public static synchronized void sendCodeEmail(String email, Long ChatId){
         int min = 1000;
         int max = 9999;
         int diff = max - min;
@@ -179,7 +187,7 @@ public class telegrambotsql {
             e.printStackTrace();
         }
     }
-    public static String getCode(Long ChatId){
+    public static synchronized String getCode(Long ChatId){
         String result = "";
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             String SQL = "select [temppassword] from [telegrambot].[dbo].[bots] where chatid = '"+ChatId+"'";
@@ -192,7 +200,7 @@ public class telegrambotsql {
         }
         return result;
     }
-    public static void manageStatistics() {
+    public static synchronized void manageStatistics() {
         String SQL = "";
         try (Connection conn = DriverManager.getConnection(Configuration.getUniverHost(), Configuration.getUniverUsername(), password);
              Statement stmt = conn.createStatement();
@@ -223,7 +231,7 @@ public class telegrambotsql {
                     "                   ,stu.edu_levels_id" +
                     "                   ,[dbo].[getGPAForStudent](stu.students_id,0,0) as gpa    " +
                     "                   ,(SELECT sum(isnull([dbo].[getProgressFinalRez]([controll_type_id],[progress_result_rk1]" +
-                    "                   ,[progress_result_rk2],[progress_result]),0)*pr.progress_credit)/case when SUM(pr.progress_credit)>0 then SUM(pr.progress_credit) else 1 end " +
+                    "                   ,[progress_result_rk2],[progress_result]),0)*pr.progress_credit) / case when SUM(pr.progress_credit) > 0 then SUM(pr.progress_credit) else 1 end " +
                     "                    from [univer_progress] pr left join [univer_mark_type] mt on mt.mark_type_id=pr.mark_type_id, [univer_students] st with (nolock) " +
                     "                    where st.students_id=pr.student_id and pr.status=1 and student_id=stu.students_id )  as rz " +
                     "                   from [atu_univer].[dbo].[univer_students] stu " +
@@ -271,7 +279,7 @@ public class telegrambotsql {
             e.printStackTrace();
         }
     }
-    public static String getRatingforCourse(String IIN){
+    public static synchronized String getRatingforCourse(String IIN){
         String SQL = "", res = "" , gpa = "";
         int result = 0;
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password);
@@ -292,7 +300,7 @@ public class telegrambotsql {
         res = res + result + ". Ваш gpa = " + gpa;
         return res;
     }
-    public static String getRatingforFacultet(String IIN){
+    public static synchronized String getRatingforFacultet(String IIN){
         String SQL = "", res = "", gpa = "";
         int result = 0;
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password);
@@ -313,7 +321,7 @@ public class telegrambotsql {
         res = res + result + ". Ваш gpa = " + gpa;
         return res;
     }
-    public static String getRatingforSpecial(String IIN){
+    public static synchronized String getRatingforSpecial(String IIN){
         String SQL = "", res="", gpa = "";
         int result = 0;
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password);
@@ -334,7 +342,7 @@ public class telegrambotsql {
         res = res + result + ". Ваш gpa = " + gpa;
         return res;
     }
-    public static int getCourse(String IIN){
+    public static synchronized int getCourse(String IIN){
         String SQL = "";
         int result = 0;
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password);
@@ -349,7 +357,7 @@ public class telegrambotsql {
         }
         return result;
     }
-    public static int getEduLevel(String IIN){
+    public static synchronized int getEduLevel(String IIN){
         String SQL = "";
         int result = 0;
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password);
@@ -364,7 +372,7 @@ public class telegrambotsql {
         }
         return result;
     }
-    public static int getFacultetId(String IIN){
+    public static synchronized int getFacultetId(String IIN){
         String SQL = "";
         int facultetid = 0;
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password);
@@ -379,7 +387,7 @@ public class telegrambotsql {
         }
         return facultetid;
     }
-    public static int getSpecialId(String IIN){
+    public static synchronized int getSpecialId(String IIN){
         String SQL = "";
         int result = 0;
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password);
@@ -394,7 +402,7 @@ public class telegrambotsql {
         }
         return result;
     }
-    public static void insertLog(Message message){
+    public static synchronized void insertLog(Message message){
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password);
              Statement stmt = conn.createStatement()) {
             String SQL = "INSERT INTO [dbo].[logs] ([chatid], [mess], [firstNameTelegram], [lastNameTelegram], [IIN]) VALUES ('" + message.getChatId() + "',  '" + message.getText() + "' , '" + message.getFrom().getFirstName() + "', '" + message.getFrom().getLastName() + "' , '" + getIIN(message.getChatId()) + "' ) ";

@@ -5,7 +5,7 @@ import okhttp3.*;
 import java.io.*;
 
 public class umkd {
-    public static void getUMKD(Long ChatId, String TeacherId, String fileName) {
+    public static synchronized void getUMKD(Long ChatId, String TeacherId, String fileName) {
         InputStream in = null;
         OutputStream out = null;
         String host = Configuration.getUMKDurl();

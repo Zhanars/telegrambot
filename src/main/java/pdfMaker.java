@@ -58,7 +58,7 @@ public  class pdfMaker {
 
     }
 
-    public static void createNewPdf(String Username, String Tablename, String[][] Record) {
+    public static synchronized void createNewPdf(String Username, String Tablename, String[][] Record) {
 
         Document document1 = new Document();
         try {
@@ -102,7 +102,7 @@ public  class pdfMaker {
 
 
 
-    public static void createGuardPdf(String Username, String Tablename, String[][] Record, int month) {
+    public static synchronized void createGuardPdf(String Username, String Tablename, String[][] Record, int month) {
 
         Document document1 = new Document();
         try {
@@ -155,7 +155,7 @@ public  class pdfMaker {
 
     }
 
-    public static void createUniverTranskriptPdf(String Username, String Tablename, String[][] Record) {
+    public static synchronized void createUniverTranskriptPdf(String Username, String Tablename, String[][] Record) {
 
         Document document1 = new Document();
         try {
@@ -231,7 +231,7 @@ public  class pdfMaker {
 
     }
 
-    public static void createUniverExamSchudelePdf(String Username, String Tablename, String[][] Record){
+    public static synchronized void createUniverExamSchudelePdf(String Username, String Tablename, String[][] Record){
         Document document1 = new Document();
         try {
             PdfWriter.getInstance(document1, new FileOutputStream(Username+".pdf"));
@@ -288,7 +288,7 @@ public  class pdfMaker {
         document1.close();
 
     }
-    public static void createHostelPdf(String[][] Record){
+    public static synchronized void createHostelPdf(String[][] Record){
         Calendar today = new GregorianCalendar();
         Document document1 = new Document();
         try {
@@ -332,7 +332,7 @@ public  class pdfMaker {
 
     }
 
-    public static void Schedulepdf(String Username, String Tablename, String[][] Record,String Semestr){
+    public static synchronized void Schedulepdf(String Username, String Tablename, String[][] Record,String Semestr){
         Document document1 = new Document();
         try {
             PdfWriter.getInstance(document1, new FileOutputStream(Username+".pdf"));
@@ -404,7 +404,7 @@ public  class pdfMaker {
         document1.close();
     }
 
-    public static void AttendenceCatch(String Username, String Tablename, String[][] Record,String Semestr) {
+    public static synchronized void AttendenceCatch(String Username, String Tablename, String[][] Record,String Semestr) {
 
         Document document1 = new Document();
         try {

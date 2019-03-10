@@ -12,7 +12,7 @@ import java.net.URLEncoder;
 
 public class newsAtu {
     private static String result = "";
-    public static void inserChatId(Long ChatId){
+    public synchronized static void inserChatId(Long ChatId){
         HttpClient httpClient = HttpClientBuilder.create().build();
         HttpPost request = new HttpPost("http://telegram.atu.kz/api/createChat.php");
         StringEntity params = null;

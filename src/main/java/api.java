@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class api {
 
-    public static String[] getVacancies(String special_id) throws IOException {
+    public static synchronized String[] getVacancies(String special_id) throws IOException {
 
         URL url = new URL("http://telegram.atu.kz/api/search.php?s=" + special_id);
         Scanner in = new Scanner((InputStream) url.getContent());
@@ -32,7 +32,7 @@ public class api {
         }
         return result;
     }
-    public static String[][] getDocs(){
+    public static synchronized String[][] getDocs(){
         URL url = null;
         try {
             url = new URL("http://telegram.atu.kz/api/readDoc.php");
@@ -61,7 +61,7 @@ public class api {
         }
         return result;
     }
-    public static String forAbiturient(){
+    public static synchronized String forAbiturient(){
         String result = "Следующие файлы готовы к загрузке: \n";
         String[][] record = getDocs();
         for (int i = 0; i < record.length; i++){
@@ -74,7 +74,7 @@ public class api {
         result += "Выберите что Вас интересует:";
         return result;
     }
-    public static String[][] getHostel(){
+    public static synchronized String[][] getHostel(){
         URL url = null;
         try {
             url = new URL("http://telegram.atu.kz/api/readHostel.php");

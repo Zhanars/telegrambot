@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ReplyButtons {
     //knopka v klave
-    public static void firstButtons(SendMessage sendMessage) {
+    public static synchronized void firstButtons(SendMessage sendMessage) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
         replyKeyboardMarkup.setSelective(true);
@@ -34,7 +34,7 @@ public class ReplyButtons {
         keyboardRowList.add(keyboardfourthRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
     }
-    public static void ContactButtons(SendMessage sendMessage) {
+    public static synchronized void ContactButtons(SendMessage sendMessage) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
         replyKeyboardMarkup.setSelective(true);
@@ -47,7 +47,7 @@ public class ReplyButtons {
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
     }
 
-    public static void UniverButtons(SendMessage sendMessage) {
+    public static synchronized void UniverButtons(SendMessage sendMessage) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
         replyKeyboardMarkup.setSelective(true);
@@ -84,7 +84,7 @@ public class ReplyButtons {
         keyboardRowList.add(keyboardSixthRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
     }
-    public static void SKUDButtons(SendMessage sendMessage) {
+    public static synchronized void SKUDButtons(SendMessage sendMessage) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
         replyKeyboardMarkup.setSelective(true);
@@ -100,7 +100,7 @@ public class ReplyButtons {
         keyboardRowList.add(keyboardSecondRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
     }
-    public static void CodeButtons(SendMessage sendMessage) {
+    public static synchronized void CodeButtons(SendMessage sendMessage) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
         replyKeyboardMarkup.setSelective(true);
@@ -120,7 +120,7 @@ public class ReplyButtons {
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
     }
 
-    public static void zeroButtons(SendMessage sendMessage) {
+    public static synchronized void zeroButtons(SendMessage sendMessage) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
         replyKeyboardMarkup.setSelective(true);
@@ -136,7 +136,7 @@ public class ReplyButtons {
         keyboardRowList.add(keyboardSecondRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
     }
-    public static void abiturientButtons(SendMessage sendMessage) {
+    public static synchronized void abiturientButtons(SendMessage sendMessage) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
         replyKeyboardMarkup.setSelective(true);
@@ -154,7 +154,7 @@ public class ReplyButtons {
         keyboardRowList.add(keyboardThirdRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
     }
-    public static void ratingButtons(SendMessage sendMessage) {
+    public static synchronized void ratingButtons(SendMessage sendMessage) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
         replyKeyboardMarkup.setSelective(true);
@@ -175,7 +175,7 @@ public class ReplyButtons {
         keyboardRowList.add(keyboardFourthRow);
         replyKeyboardMarkup.setKeyboard(keyboardRowList);
     }
-    public static void staticButtons(SendMessage sendMessage) {
+    public static synchronized void staticButtons(SendMessage sendMessage) {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         sendMessage.setReplyMarkup(replyKeyboardMarkup);
         replyKeyboardMarkup.setSelective(true);

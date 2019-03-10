@@ -13,7 +13,7 @@ public class gmail {
     private static String USER_NAME = Configuration.getGmailLogin();  // GMail user name (just the part before "@gmail.com")
     private static String PASSWORD = Configuration.getPass(); // GMail password
 
-    public static void main(String RECIPIENT, String text) {
+    public static synchronized void main(String RECIPIENT, String text) {
         String from = USER_NAME;
         String pass = PASSWORD;
         String to =  RECIPIENT; // list of recipient email addresses

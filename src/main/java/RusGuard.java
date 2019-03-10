@@ -12,7 +12,7 @@ public class RusGuard {
     private static String connectUrl = Configuration.getRusGuardHost();
 
 
-    public static String getCount(String message) throws IOException, ClassNotFoundException, SQLException {
+    public static synchronized String getCount(String message) throws IOException, ClassNotFoundException, SQLException {
         Calendar c = new GregorianCalendar();
         c.add(Calendar.DAY_OF_YEAR, -7);
         String date1 = new SimpleDateFormat("yyyyMMdd").format(c.getTime());
@@ -44,7 +44,7 @@ public class RusGuard {
         }
     }
 
-    public static String[][] getReportForMonth(String IIN, int month) throws SQLException {
+    public static synchronized String[][] getReportForMonth(String IIN, int month) throws SQLException {
         Calendar c = new GregorianCalendar();
         c.add(Calendar.DAY_OF_MONTH,1);
         String date2 = new SimpleDateFormat("yyyyMMdd").format(c.getTime());

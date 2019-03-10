@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class setInline {
-    public static void setInline(SendMessage sendMessage) {
+    public static synchronized void setInline(SendMessage sendMessage) {
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         List<InlineKeyboardButton> buttons1 = new ArrayList<>();
         buttons1.add(new InlineKeyboardButton().setText(EmojiParser.parseToUnicode(":thumbsup:Да")).setCallbackData("yes"));
@@ -18,7 +18,7 @@ public class setInline {
         markupKeyboard.setKeyboard(buttons);
         sendMessage.setReplyMarkup(markupKeyboard);
     }
-    public static void setGoogle(SendMessage sendMessage) {
+    public static synchronized void setGoogle(SendMessage sendMessage) {
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         List<InlineKeyboardButton> buttons1 = new ArrayList<>();
         buttons1.add(new InlineKeyboardButton().setText(EmojiParser.parseToUnicode("Перейти к форме")).setUrl(Configuration.getGoogleForm()));
@@ -27,7 +27,7 @@ public class setInline {
         markupKeyboard.setKeyboard(buttons);
         sendMessage.setReplyMarkup(markupKeyboard);
     }
-    public static void setSubject(SendMessage sendMessage, String[][] Record) {
+    public static synchronized void setSubject(SendMessage sendMessage, String[][] Record) {
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         int rowCount = Record.length;
         for (int i=0; i < rowCount; i++) {
@@ -39,7 +39,7 @@ public class setInline {
         markupKeyboard.setKeyboard(buttons);
         sendMessage.setReplyMarkup(markupKeyboard);
     }
-    public static void setTeacher(SendMessage sendMessage, String[][] Record) {
+    public static synchronized void setTeacher(SendMessage sendMessage, String[][] Record) {
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         int rowCount = Record.length;
         for (int i=0; i < rowCount; i++) {
@@ -51,7 +51,7 @@ public class setInline {
         markupKeyboard.setKeyboard(buttons);
         sendMessage.setReplyMarkup(markupKeyboard);
     }
-    public static void setFiles(SendMessage sendMessage, String[][] Record) {
+    public static synchronized void setFiles(SendMessage sendMessage, String[][] Record) {
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         int rowCount = Record.length;
         for (int i=0; i < rowCount; i++) {
@@ -63,7 +63,7 @@ public class setInline {
         markupKeyboard.setKeyboard(buttons);
         sendMessage.setReplyMarkup(markupKeyboard);
     }
-    public static void setAbiturient(SendMessage sendMessage){
+    public static synchronized void setAbiturient(SendMessage sendMessage){
         String[][] record = api.getDocs();
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         int rowCount = record.length;
@@ -78,7 +78,7 @@ public class setInline {
         sendMessage.setReplyMarkup(markupKeyboard);
     }
 
-    public static void setQuiz(SendMessage sendMessage) {
+    public static synchronized void setQuiz(SendMessage sendMessage) {
         List<List<InlineKeyboardButton>> buttons = new ArrayList<>();
         List<InlineKeyboardButton> buttons1 = new ArrayList<>();
         //

@@ -14,19 +14,21 @@ public class Univer {
     private static String userName = Configuration.getUniverUsername();
     private static String password = Configuration.getPass();
     private static String connectUrl = Configuration.getUniverHost();
-    public static String IIN(String message) throws IOException, ClassNotFoundException, SQLException {
+    public static synchronized String IIN(String message) {
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
-            countName = "";
             String SQL = "SELECT [students_sname], [students_name] FROM [atu_univer].[dbo].[univer_students] WHERE [students_identify_code] LIKE '%" + message + "%' and [student_edu_status_id] = 1";
             ResultSet rs = stmt.executeQuery(SQL);
             while (rs.next()) {
                 countName = countName + rs.getString("students_sname");
             }
-            return countName;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return countName;
     }
 
-    public static Boolean checkIIN(String IIN) {
+    public static synchronized Boolean checkIIN(String IIN) {
         Boolean bool = false;
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             String SQL = "SELECT students_identify_code FROM [atu_univer].[dbo].[univer_students] WHERE [students_identify_code] LIKE '%" + IIN + "%' and [student_edu_status_id] = 1 ";
@@ -42,9 +44,7 @@ public class Univer {
         return bool;
     }
 
-    public static String getStOrPersonName(String IIN) throws IOException, ClassNotFoundException, SQLException {
-
-
+    public static synchronized String getStOrPersonName(String IIN){
         String SQL = "";
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             if (checkIINPersonalorStudent(IIN) == 1) {
@@ -58,14 +58,14 @@ public class Univer {
                 countName = countName + "','";
                 countName = countName + rs.getString("sname");
             }
-            return countName;
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
-
+        return countName;
     }
 
 
-    public static int checkIINPersonalorStudent(String IIN) {
+    public static synchronized int checkIINPersonalorStudent(String IIN) {
         int result = 0;
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             String SQL1 = "SELECT students_identify_code FROM [atu_univer].[dbo].[univer_students] WHERE [students_identify_code] LIKE '%" + IIN + "%' and [student_edu_status_id] = 1 ";
@@ -80,7 +80,7 @@ public class Univer {
     }
 
 
-    public static String getAttendance(String IIN, String date3) throws IOException, ClassNotFoundException, SQLException {
+    public static synchronized String getAttendance(String IIN, String date3) {
         String SQL = "";
         String semestr = getSemestr(IIN);
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
@@ -130,13 +130,13 @@ public class Univer {
                     " cte_tbl.[att_date], cte_tbl.[ball], cte_tbl.[subject_id]  " +
                     " ORder BY cte_tbl.[subject_name_ru]";
             ResultSet rs = stmt.executeQuery(SQL);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return SQL;
     }
 
-    public static String getAttendanceforweek(String IIN , String[][] Record) throws SQLException {
-        countName = "";
-
+    public static synchronized String getAttendanceforweek(String IIN , String[][] Record) {
         Calendar c = new GregorianCalendar();
         c.add(Calendar.DAY_OF_YEAR, -7);
         String date1 = new SimpleDateFormat("yyyyMMdd").format(c.getTime());
@@ -210,22 +210,14 @@ public class Univer {
                 }
             } else {
                 countName = "123456";
-
             }
-
-        } catch (IOException e) {
-
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-
-
         return countName;
     }
 
-    public static ArrayList<String> getSumAttendance(String IIN) throws SQLException  {
+    public static synchronized ArrayList<String> getSumAttendance(String IIN) {
 
         ResultSet rs1 = null;
         int sumrk1 = -1, sumrk2 = -1, i = 1;
@@ -274,16 +266,12 @@ public class Univer {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
         }
 
         return  SumAttendance;
     }
 
-    public static String[][] getProgressforAttendence(String IIN) throws SQLException{
+    public static synchronized String[][] getProgressforAttendence(String IIN){
         String SQL = "";
         String semestr = getSemestr(IIN);
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
@@ -336,6 +324,9 @@ public class Univer {
                 j++;
             }
             return result;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new String[0][0];
         }
     }
 
@@ -343,7 +334,7 @@ public class Univer {
 
 
 
-    public static String getStartDate(String IIN) throws IOException, ClassNotFoundException, SQLException {
+    public static synchronized String getStartDate(String IIN) {
         String SQL = "";
         String semestr = getSemestr(IIN);
         Calendar c = new GregorianCalendar();
@@ -368,6 +359,8 @@ public class Univer {
                     countName = rs.getString("start");
                 }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return countName;
     }
@@ -376,7 +369,7 @@ public class Univer {
 
 
 
-    public static String[][] getTranskript(String IIN){
+    public static synchronized String[][] getTranskript(String IIN){
         String SQL = "";
         String SQL1 = "";
 
@@ -562,7 +555,7 @@ public class Univer {
     }
 
 
-    public static String[][] getExamSchedule(String IIN){
+    public static synchronized String[][] getExamSchedule(String IIN){
         Calendar c = new GregorianCalendar();
         String nowDate = new SimpleDateFormat("yyyyMMdd").format(c.getTime());
         c.add(Calendar.MONTH, -1);
@@ -632,7 +625,7 @@ public class Univer {
 
     }
 
-    public static String[][] getAcademcal(String IIN) throws IOException, ClassNotFoundException, SQLException {
+    public static synchronized String[][] getAcademcal(String IIN) {
         String SQL = "";
         String dataStart = getStartDate(IIN);
         String[][] result1 = new String[1][1];
@@ -676,10 +669,13 @@ public class Univer {
                 }
 
             return  result;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new String[0][0];
         }
     }
 
-    public static String getAdvicer(String IIN){
+    public static synchronized String getAdvicer(String IIN){
         countName = "Ваш эдвайзер \n";
         String SQL = "";
         int i = 1;
@@ -707,7 +703,7 @@ public class Univer {
         return  countName;
     }
 
-    public static String[][] getSubject(String IIN) throws IOException, ClassNotFoundException, SQLException {
+    public static synchronized String[][] getSubject(String IIN) {
         String SQL = "";
         String semestr = getSemestr(IIN);
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
@@ -736,9 +732,12 @@ public class Univer {
 
             return result;
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new String[0][0];
         }
     }
-    public static String[][] getTeachers(String IIN, String SubjectId) throws IOException, ClassNotFoundException, SQLException {
+    public static synchronized String[][] getTeachers(String IIN, String SubjectId) {
         String SQL = "";
         String semestr = getSemestr(IIN);
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
@@ -774,9 +773,12 @@ public class Univer {
 
             return result;
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new String[0][0];
         }
     }
-    public static String[][] getFiles(String TeacherId, String SubjectId) throws IOException, ClassNotFoundException, SQLException {
+    public static synchronized String[][] getFiles(String TeacherId, String SubjectId) {
         String SQL = "";
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             SQL = " SELECT [teacher_file_title]" +
@@ -799,10 +801,13 @@ public class Univer {
 
             return result;
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new String[0][0];
         }
     }
 
-    public static String resetPassword(String IIN){
+    public static synchronized String resetPassword(String IIN){
         countName = "";
         String SQL = "";
         String SQL1 = "";
@@ -836,7 +841,7 @@ public class Univer {
 
 
 
-    public static Double getGPA(String IIN){
+    public static synchronized Double getGPA(String IIN){
         int creditSum = 0;
         double result = 0 , summa = 0;
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
@@ -930,7 +935,7 @@ public class Univer {
         }
         return count;
     }
-    public static String getEmail(String IIN){
+    public static synchronized String getEmail(String IIN){
         String result = "";
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             String SQL = "SELECT [students_email]" +
@@ -949,7 +954,7 @@ public class Univer {
         return result;
 
     }
-    public static String getSpeciality(String IIN){
+    public static synchronized String getSpeciality(String IIN){
         String SQL = "", result = "";
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password);
              Statement stmt = conn.createStatement()) {

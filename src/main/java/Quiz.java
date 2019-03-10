@@ -8,7 +8,7 @@ public class Quiz {
     private static String userName = Configuration.getTelegramUsername();
     private static String password = Configuration.getPass();
     private static String connectUrl = Configuration.getTelegramBotHost();
-    public static String saveQuiz(Message message, String answer){
+    public static synchronized String saveQuiz(Message message, String answer){
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             String SQL = "INSERT INTO [dbo].[quizSample] ([ChatId], [question], [answer]) VALUES ('" + message.getChatId() + "',  '" + message.getText() + "' , '" + answer + "') ";
             stmt.executeUpdate(SQL);
@@ -18,7 +18,7 @@ public class Quiz {
         }
         return countName;
     }
-    public static Boolean hasAnswerQuiz(Long ChatId, String text){
+    public static synchronized Boolean hasAnswerQuiz(Long ChatId, String text){
         boolean result = false;
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {
             String SQL = "SELECT * from [dbo].[quizSample] WHERE ChatId ='"+ChatId+"' and question ='"+text+"'";
