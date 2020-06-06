@@ -115,6 +115,10 @@ public class telegrambotsql {
         return  bool;
     }
 
+
+
+
+
     public static synchronized Boolean checkContact(Long ChatId){
         Boolean bool = false;
         try (Connection conn = DriverManager.getConnection(connectUrl, userName, password); Statement stmt = conn.createStatement();) {

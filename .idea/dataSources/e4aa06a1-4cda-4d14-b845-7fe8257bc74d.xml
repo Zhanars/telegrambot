@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dataSource name="jdbc:sqlserver://185.97.115.131\\RUSGUARD:49181;database=telegrambot">
+<dataSource name="jdbc:sqlserver://185.97.115.131\\RUSGUARD:49181;database=RusGuardDB">
   <database-model serializer="dbm" rdbms="MSSQL" format-version="4.9">
     <root id="1">
       <ServerVersion>12.0.200</ServerVersion>
